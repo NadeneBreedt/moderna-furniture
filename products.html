@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products - Moderna Office Furniture</title>
+
+  <!-- Basic CSS for a two-column layout -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fafaf9; /* stone-50 */
+      color: #44403c; /* stone-700 */
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .product-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-top: 2rem;
+    }
+    .product-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .product-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Left column: image */
+    .product-images {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .main-image {
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+    /* Right column: product info */
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .product-info h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .product-info p {
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+    /* Quote form */
+    .quote-form {
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .quote-form input[type="number"] {
+      width: 80px;
+      padding: 0.4rem;
+      font-size: 1rem;
+    }
+    .quote-form button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .quote-form button:hover {
+      background-color: #555;
+    }
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #fafaf9; /* stone-50 */
+      border: 1px solid #57534e; /* stone-600 */
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    .toast-icon {
+      background-color: #57534e; /* stone-600 */
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .toast-text {
+      font-size: 14px;
+      color: #57534e; /* stone-600 */
+    }
+    .products-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem;
+    }
+    .products-top {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .products-header {
+      flex: 1;
+      text-align: center;
+      margin-right: 88px; /* Approximately the width of the back button to center the heading */
+    }
+    .products-header h1 {
+      font-size: 2.5rem;
+      color: #292524; /* stone-800 */
+    }
+    .products-header p {
+      color: #78716c; /* stone-500 */
+      font-size: 1.1rem;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4rem;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    .product-card {
+      text-decoration: none;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      aspect-ratio: 3/4;
+      position: relative;
+      border: 1px solid #e7e5e4;
+      max-width: 300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+      border-color: #d6d3d1; /* stone-300 */
+    }
+    .product-image {
+      position: relative;
+      height: 75%;
+      background: white;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 1rem;
+    }
+    .product-info {
+      padding: 1.5rem;
+      text-align: center;
+      background: white;
+      height: 25%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .product-info h3 {
+      font-size: 1.25rem;
+      color: #292524; /* stone-800 */
+      margin-bottom: 0.5rem;
+    }
+    .product-info p {
+      margin: 0 0 1.25rem 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .enquire-btn {
+      display: inline-block;
+      background: #57534e; /* stone-600 */
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .enquire-btn:hover {
+      background: #44403c; /* stone-700 */
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #a8a29e;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      color: #57534e;
+    }
+    .back-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    @media (max-width: 1200px) {
+      .products-container {
+        padding: 2rem;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+      }
+    }
+    @media (max-width: 768px) {
+      .products-container {
+        padding: 1rem;
+      }
+      
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .product-card {
+        max-width: 280px;
+      }
+    }
+    .add-to-quote {
+      display: inline-block;
+      background: #57534e;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .add-to-quote:hover {
+      background: #44403c;
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: #78716c;
+      font-size: 0.75rem;
+    }
+    .breadcrumb a {
+      color: #78716c;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover {
+      color: #292524;
+    }
+  </style>
+</head>
+<body>
+  <!-- Load Header -->
+  <div id="my-header"></div>
+  <div id="main-content">
+    <div class="products-container">
+      <header class="products-header">
+        <h1 id="category-title">Products</h1>
+        <p id="category-description">Loading products...</p>
+      </header>
+      <div class="breadcrumb">
+        <a href="collections.html">Collections</a>
+        <span>/</span>
+        <span id="category-name">Category</span>
+      </div>
+
+      <div class="products-grid">
+        <!-- Products will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <span class="toast-icon">✔</span>
+      <span class="toast-text">Added to quote</span>
+    </div>
+  </div>
+
+  <!-- Load Quote Modal -->
+  <div id="quote-modal-container"></div>
+  <script type="module">
+    import { QuoteModal } from './js/modal.js';
+    fetch('quote-modal.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('quote-modal-container').innerHTML = data;
+        // Initialize new instance of QuoteModal after HTML is loaded
+        window.quoteModal = new QuoteModal();
+      })
+      .catch(err => console.error('Error loading quote modal:', err));
+  </script>
+
+  <!-- Load header snippet -->
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('my-header').innerHTML = data;
+      })
+      .catch(err => console.error('Error loading header:', err));
+  </script>
+
+  <!-- Main Script: fetch product details & handle "Add to Quote" -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+    const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadProducts() {
+      // Get category ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoryId = urlParams.get('category');
+
+      if (!categoryId) {
+        window.location.href = 'collections.html';
+        return;
+      }
+
+      // Load category details
+      const { data: category } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('id', categoryId)
+        .single();
+
+      if (category) {
+        document.getElementById('category-title').textContent = category.name;
+        document.getElementById('category-description').textContent = 
+          category.description || `Browse our collection of ${category.name}`;
+      }
+
+      // Load products for this category
+      const { data: products, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          product_categories!inner (
+            category_id
+          )
+        `)
+        .eq('product_categories.category_id', categoryId);
+
+      if (error) {
+        console.error('Error loading products:', error);
+        return;
+      }
+
+      const productsGrid = document.querySelector('.products-grid');
+      productsGrid.innerHTML = products.map(product => `
+        <div class="product-card">
+          <div class="product-image">
+            <a href="product-detail.html?id=${product.id}">
+              <img src="${product.image_url}" alt="${product.name}">
+            </a>
+          </div>
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <button class="add-to-quote" onclick="addToQuote({
+              id: ${product.id},
+              name: '${product.name}',
+              image_url: '${product.image_url}',
+              quantity: 1
+            })">Add to Quote</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Load products
+    loadProducts();
+
+    // Function to show toast notification
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Global function to add product to quote
+    window.addToQuote = function(productData) {
+      // Get existing quote items from localStorage
+      let quoteItems = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+      
+      // Check if product already exists in quote
+      const existingItem = quoteItems.find(item => item.id === productData.id);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        quoteItems.push(productData);
+      }
+      
+      // Save back to localStorage
+      localStorage.setItem('quoteItems', JSON.stringify(quoteItems));
+      
+      // Show success toast
+      showToast();
+      
+      // Update quote modal if it exists
+      if (window.quoteModal) {
+        window.quoteModal.refreshQuoteTable();
+      }
+    };
+  </script>
+  <!-- WhatsApp Button -->
+  <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
+    </svg>
+  </a>
+
+  <style>
+    .whatsapp-button {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background-color: #ffffff;
+      color: white;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    .whatsapp-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      animation: none;
+    }
+
+    .whatsapp-button svg {
+      width: 38px;
+      height: 38px;
+      color: #25D366;
+    }
+
+    @media (max-width: 768px) {
+      .whatsapp-button {
+        width: 45px;
+        height: 45px;
+        bottom: 16px;
+        left: 16px;
+      }
+      
+      .whatsapp-button svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+
+  <script>
+    // Function to shake the WhatsApp button
+    function shakeWhatsAppButton() {
+      const whatsappButton = document.querySelector('.whatsapp-button');
+      whatsappButton.classList.add('shake');
+      
+      // Remove shake class after animation completes
+      setTimeout(() => {
+        whatsappButton.classList.remove('shake');
+      }, 1000);
+    }
+
+    // Initial shake after 5 seconds
+    setTimeout(shakeWhatsAppButton, 5000);
+
+    // Shake every 3 minutes thereafter
+    setInterval(shakeWhatsAppButton, 180000);
+  </script>
+</body>
+</html>

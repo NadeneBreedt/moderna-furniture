@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details - Moderna Office Furniture</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #fafaf9;
+      color: #292524;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: #78716c;
+      font-size: 0.75rem;
+      justify-content: flex-start;
+    }
+
+    .breadcrumb a {
+      color: #78716c;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: #292524;
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .product-gallery {
+      padding: 2rem;
+      background: #fafaf9;
+    }
+
+    .main-image {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .main-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white;
+    }
+
+    .thumbnail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .thumbnail {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .thumbnail:hover {
+      border-color: #57534e;
+    }
+
+    .thumbnail.active {
+      border-color: #292524;
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 3rem;
+    }
+
+    .product-category {
+      font-size: 0.75rem;
+      color: #78716c;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .product-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #292524;
+      text-align: center;
+    }
+
+    .product-description {
+      color: #57534e;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .product-features {
+      margin-bottom: 2rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #57534e;
+      font-size: 0.9rem;
+    }
+
+    .feature-item svg {
+      width: 20px;
+      height: 20px;
+      color: #292524;
+    }
+
+    .quote-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e7e5e4;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: fit-content;
+    }
+
+    .quantity-selector label {
+      font-weight: 500;
+      color: #292524;
+      font-size: 0.9rem;
+    }
+
+    .quantity-input {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid #d6d3d1;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background-color: #fafaf9;
+      transition: all 0.2s ease;
+    }
+
+    .quantity-input:hover,
+    .quantity-input:focus {
+      border-color: #78716c;
+      outline: none;
+      background-color: white;
+    }
+
+    .add-to-quote-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: #292524;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .add-to-quote-btn:hover {
+      background: #44403c;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #292524;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1024px) {
+      .product-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .product-gallery {
+        padding: 1.5rem;
+      }
+
+      .product-info {
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .thumbnail-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .quantity-selector {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+      }
+      
+      .input-group {
+        width: 100%;
+      }
+      
+      .variants-select {
+        width: 100%;
+      }
+
+      .quantity-input {
+        width: 100%;
+      }
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #a8a29e;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      color: #57534e;
+    }
+
+    .back-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 1.1rem;
+      color: #44403c;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #292524;
+    }
+
+    .login-btn {
+      background: #292524;
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #44403c;
+    }
+
+    /* Add blur effect styles */
+    .blur {
+      filter: blur(5px);
+      transition: filter 0.3s ease;
+      pointer-events: none;
+    }
+
+    /* Ensure modal stays sharp when background is blurred */
+    #quote-modal-overlay {
+      backdrop-filter: none;
+      z-index: 1000;
+    }
+
+    /* Ensure WhatsApp button stays above blur but below modal */
+    .whatsapp-button {
+      z-index: 999;
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background-color: #ffffff;
+      color: white;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    .whatsapp-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      animation: none;
+    }
+
+    .whatsapp-button svg {
+      width: 38px;
+      height: 38px;
+      color: #25D366;
+    }
+
+    @media (max-width: 768px) {
+      .whatsapp-button {
+        width: 45px;
+        height: 45px;
+        bottom: 16px;
+        left: 16px;
+      }
+      
+      .whatsapp-button svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .variants-select {
+      min-width: 180px;
+      padding: 0.5rem;
+      border: 1px solid #d6d3d1;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #292524;
+      background-color: #fafaf9;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2378716c'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1.2em;
+      padding-right: 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .variants-select:hover,
+    .variants-select:focus {
+      border-color: #78716c;
+      outline: none;
+      background-color: white;
+    }
+
+    .input-group label {
+      font-weight: 500;
+      color: #57534e;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .products-top {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Load Header -->
+  <div id="my-header"></div>
+
+  <main class="container">
+    <h1 class="product-title" id="product-title"></h1>
+    <div class="breadcrumb">
+      <a href="collections.html">Collections</a>
+      <span>/</span>
+      <a href="#" id="category-link">Category</a>
+      <span>/</span>
+      <span id="product-name">Product</span>
+    </div>
+
+    <div class="product-container">
+      <div class="product-gallery">
+        <div class="main-image">
+          <img id="main-product-image" src="" alt="">
+        </div>
+        <div class="thumbnail-grid" id="thumbnail-grid">
+          <!-- Thumbnails will be loaded here -->
+        </div>
+      </div>
+
+      <div class="product-info">
+        <div class="product-category" id="product-category"></div>
+        <p class="product-description" id="product-description"></p>
+
+        <div class="product-features">
+          <ul class="feature-list" id="feature-list">
+            <!-- Features will be loaded here -->
+          </ul>
+        </div>
+
+        <div class="quote-section">
+          <div class="quantity-selector">
+            <div class="input-group">
+              <label for="quantity">Quantity:</label>
+              <input type="number" id="quantity" class="quantity-input" value="1" min="1">
+            </div>
+            <div class="input-group" id="variants-section">
+              <label for="variant-select">Variant:</label>
+              <select id="variant-select" class="variants-select">
+                <!-- Variants will be loaded here -->
+              </select>
+            </div>
+          </div>
+          <button class="add-to-quote-btn" onclick="handleAddToQuote()">
+            Add to Quote
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M7 10l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Added to quote</span>
+  </div>
+
+  <!-- Load Quote Modal -->
+  <div id="quote-modal-container"></div>
+
+  <!-- Add WhatsApp Button -->
+  <a href="https://wa.me/your_number" class="whatsapp-button" target="_blank">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+    import { QuoteModal } from './js/modal.js';
+
+    const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Load product details
+    async function loadProductDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+
+      console.log('Loading product ID:', productId); // Debug log
+
+      if (!productId) {
+        window.location.href = 'collections.html';
+        return;
+      }
+
+      const { data: product, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          product_categories(
+            category_id,
+            categories(name)
+          ),
+          product_options(
+            id,
+            option_name,
+            option_type,
+            option_values(*)
+          )
+        `)
+        .eq('id', productId)
+        .single();
+
+      console.log('Raw product data:', product);
+
+      if (error) {
+        console.error('Error loading product:', error);
+        return;
+      }
+
+      console.log('Product data:', product); // Debug log to see what we're getting
+
+      try {
+        // Update page content
+        document.title = `${product.name} - Moderna Office Furniture`;
+        document.getElementById('product-name').textContent = product.name;
+        document.getElementById('product-title').textContent = product.name;
+        document.getElementById('product-description').textContent = product.description;
+        document.getElementById('main-product-image').src = product.image_url;
+
+        // Check if we have category data before trying to access it
+        if (product.product_categories && product.product_categories[0] && product.product_categories[0].categories) {
+          document.getElementById('product-category').textContent = 
+            product.product_categories[0].categories.name;
+          
+          // Update category link
+          const categoryLink = document.getElementById('category-link');
+          categoryLink.textContent = product.product_categories[0].categories.name;
+          categoryLink.href = `products.html?category=${product.product_categories[0].category_id}`;
+        }
+
+        // Load features
+        if (product.features) {
+          const featureList = document.getElementById('feature-list');
+          featureList.innerHTML = product.features.map(feature => `
+            <li class="feature-item">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <path d="M7 10l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              ${feature}
+            </li>
+          `).join('');
+        }
+
+        // Load thumbnails
+        if (product.gallery_images) {
+          const thumbnailGrid = document.getElementById('thumbnail-grid');
+          thumbnailGrid.innerHTML = [product.image_url, ...product.gallery_images].map((image, index) => `
+            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="switchMainImage('${image}', this)">
+              <img src="${image}" alt="${product.name} view ${index + 1}">
+            </div>
+          `).join('');
+        }
+
+        // Load variants with better error handling
+        const variantSelect = document.getElementById('variant-select');
+        const variantSection = document.getElementById('variants-section');
+        
+        if (product.product_options && product.product_options.length > 0) {
+            console.log('Product options:', product.product_options);
+            
+            // Get the first option (assuming it's the size/variant option)
+            const option = product.product_options[0];
+            
+            if (option.option_values && option.option_values.length > 0) {
+                // Create options for each value
+                variantSelect.innerHTML = option.option_values
+                    .map(value => `
+                        <option value="${value.value}">
+                            ${value.value}${value.price_adjustment > 0 ? ` (+$${value.price_adjustment})` : ''}
+                        </option>
+                    `)
+                    .join('');
+                
+                variantSection.style.display = 'flex';
+            } else {
+                console.log('No option values found');
+                variantSection.style.display = 'none';
+            }
+        } else {
+            console.log('No product options found');
+            variantSection.style.display = 'none';
+        }
+      } catch (err) {
+        console.error('Error updating page content:', err);
+      }
+    }
+
+    // Initialize page
+    loadProductDetails();
+    
+    // Load quote modal
+    fetch('quote-modal.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('quote-modal-container').innerHTML = data;
+        window.quoteModal = new QuoteModal();
+      });
+
+    // Load header
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('my-header').innerHTML = data;
+      });
+
+    // Global functions
+    window.switchMainImage = function(imageUrl, thumbnailElement) {
+      document.getElementById('main-product-image').src = imageUrl;
+      document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+      thumbnailElement.classList.add('active');
+    };
+
+    window.handleAddToQuote = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = parseInt(urlParams.get('id'));
+      const quantity = parseInt(document.getElementById('quantity').value);
+      const variantSelect = document.getElementById('variant-select');
+      
+      const product = {
+        id: productId,
+        name: document.getElementById('product-title').textContent,
+        image_url: document.getElementById('main-product-image').src,
+        quantity: quantity
+      };
+
+      // Add variant information if available
+      if (variantSelect && variantSelect.value) {
+        product.variant = variantSelect.value;
+      }
+
+      // Get existing quote items
+      let quoteItems = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+      
+      // Check if product already exists with same variant
+      const existingItemIndex = quoteItems.findIndex(item => 
+        item.id === productId && 
+        item.variant === product.variant
+      );
+      
+      if (existingItemIndex !== -1) {
+        // Update existing item
+        quoteItems[existingItemIndex].quantity += quantity;
+      } else {
+        // Add new item
+        quoteItems.push(product);
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('quoteItems', JSON.stringify(quoteItems));
+      
+      // Show toast
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+      
+      // Update quote modal if it exists
+      if (window.quoteModal) {
+        window.quoteModal.refreshQuoteTable();
+      }
+    };
+  </script>
+
+  <script>
+    // Function to shake the WhatsApp button
+    function shakeWhatsAppButton() {
+      const whatsappButton = document.querySelector('.whatsapp-button');
+      if (whatsappButton) {
+        whatsappButton.classList.add('shake');
+        
+        // Remove shake class after animation completes
+        setTimeout(() => {
+          whatsappButton.classList.remove('shake');
+        }, 1000);
+      }
+    }
+
+    // Initial shake after 5 seconds
+    setTimeout(shakeWhatsAppButton, 5000);
+
+    // Shake every 3 minutes thereafter
+    setInterval(shakeWhatsAppButton, 180000);
+  </script>
+</body>
+</html>

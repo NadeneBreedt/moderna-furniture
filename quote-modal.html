@@ -1,0 +1,146 @@
+<link rel="stylesheet" href="styles/modal.css">
+
+<!-- Floating Quote Button -->
+<button id="quote-floating-btn" class="quote-floating-btn">
+  View Quote
+</button>
+
+<!-- Quote Modal (initially hidden) -->
+<div id="quote-modal-overlay" class="quote-modal-overlay">
+  <div id="quote-modal" class="quote-modal">
+    <span id="quote-modal-close" class="quote-modal-close">&times;</span>
+    
+    <h2 class="quote-modal-title">Your Quote</h2>
+    
+    <style>
+      .quote-modal {
+        max-width: 800px;
+        width: 90%;
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .quote-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+      }
+
+      .quote-table th {
+        text-align: left;
+        padding: 1rem;
+        background: #f5f5f4;
+        border-bottom: 2px solid #e7e5e4;
+      }
+
+      .quote-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #e7e5e4;
+        vertical-align: top;
+      }
+
+      .product-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .product-variant {
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      .variant-select {
+        font-size: 14px;
+      }
+      
+      .variant-select:focus {
+        outline: none;
+        border-color: #666;
+      }
+      
+      .quantity-btn {
+        padding: 4px 8px;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        cursor: pointer;
+      }
+      
+      .quantity-input {
+        width: 40px;
+        text-align: center;
+        margin: 0 8px;
+        border: 1px solid #ddd;
+        padding: 4px;
+      }
+    </style>
+
+    <!-- Quote Items Table -->
+    <table id="quote-items-table" class="quote-table">
+      <thead>
+        <tr>
+          <th style="width: 50%;">Product</th>
+          <th style="width: 25%; text-align: center;">Quantity</th>
+          <th style="width: 25%; text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Items will be injected here dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Contact Form -->
+    <form id="quote-form" class="quote-form">
+      <div class="form-group">
+        <label for="quote-name" class="form-label">Name:</label>
+        <input type="text" id="quote-name" class="form-input" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="quote-email" class="form-label">Email:</label>
+        <input type="email" id="quote-email" class="form-input" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="quote-phone" class="form-label">Phone:</label>
+        <input type="tel" id="quote-phone" class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="quote-attachment" class="form-label">
+          Attachment (Optional - PDF, JPEG, PNG)
+        </label>
+        <input 
+          type="file" 
+          id="quote-attachment" 
+          class="form-input file-input" 
+          accept=".pdf,.jpg,.jpeg,.png"
+        >
+        <small class="file-help">Maximum file size: 5MB</small>
+      </div>
+      
+      <button type="submit" id="quote-submit-btn" class="submit-btn">
+        Submit Quote
+      </button>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/modal.js"></script>
+
+<script>
+  export class QuoteModal {
+    open(productInfo) {
+      this.modal.style.display = 'block';
+      document.getElementById('quote-product-name').textContent = productInfo.name;
+      const optionsElem = document.getElementById('quote-product-options');
+      if (productInfo.selectedOptions) {
+        optionsElem.innerHTML = `<strong>Selected Options:</strong> ${productInfo.selectedOptions}`;
+        optionsElem.style.display = 'block';
+      } else {
+        optionsElem.style.display = 'none';
+      }
+    }
+  }
+</script>

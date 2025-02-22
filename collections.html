@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Moderna Office Furniture - Collections</title>
+  <style>
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fafaf9; /* stone-50 */
+      color: #44403c; /* stone-700 */
+      line-height: 1.5;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .collections-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .collections-header h1 {
+      font-size: 2.5rem;
+      color: #292524; /* stone-800 */
+      margin-bottom: 1rem;
+    }
+
+    .collections-header p {
+      color: #78716c; /* stone-500 */
+      font-size: 1.1rem;
+    }
+
+    /* Layout: 3 columns on large screens, 2 on tablets, 1 on mobile */
+    .collections-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      justify-items: center;
+    }
+    @media (max-width: 992px) {
+      .collections-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 576px) {
+      .collections-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Category cards */
+    .collection-card {
+      width: 100%;
+      max-width: 300px;
+      background-color: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      overflow: hidden;
+      text-align: center;
+      transition: box-shadow 0.2s;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .collection-card:hover {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Aspect ratio for images */
+    .image-wrapper {
+      width: 100%;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Text styling */
+    .collection-card h3 {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      font-weight: 600;
+    }
+    .collection-card p {
+      font-size: 0.95rem;
+      margin: 0 1rem 1rem;
+      color: #555;
+      flex-grow: 1;
+    }
+    .collection-card a {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* Modern styling */
+    .collections-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4rem;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+
+    .category-card {
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      display: block;
+      aspect-ratio: 3/4;
+      position: relative;
+      border: 1px solid #e7e5e4; /* stone-200 */
+      max-width: 300px;
+      margin: 0 auto;
+      width: 100%;
+      text-decoration: none;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+      border-color: #d6d3d1; /* stone-300 */
+    }
+
+    .category-image {
+      position: relative;
+      height: 75%;
+      background: white;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .category-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 1rem;
+    }
+
+    .category-info {
+      padding: 1.5rem;
+      text-align: center;
+      background: white;
+      height: 25%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .category-info h3 {
+      font-size: 1.25rem;
+      color: #292524; /* stone-800 */
+      margin-bottom: 0.5rem;
+    }
+
+    .view-products {
+      display: inline-block;
+      background: #57534e; /* stone-600 */
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .category-card:hover .view-products {
+      background: #44403c; /* stone-700 */
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+      position: relative;
+      padding-top: 75%; /* 4:3 aspect ratio */
+      overflow: hidden;
+    }
+
+    .product-image img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .product-info {
+      padding: 1.5rem;
+    }
+
+    .product-info h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 1.25rem;
+      color: #1f2937;
+    }
+
+    .product-info p {
+      margin: 0 0 1.25rem 0;
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .enquire-btn {
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .enquire-btn:hover {
+      background: #2563eb;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .collections-container {
+        padding: 2rem;
+      }
+      
+      .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .collections-container {
+        padding: 1rem;
+      }
+      
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .category-card {
+        max-width: 280px;
+      }
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: #78716c;
+      font-size: 0.75rem;
+    }
+    .breadcrumb a {
+      color: #78716c;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover {
+      color: #292524;
+    }
+  </style>
+</head>
+<body>
+  <!-- Load Header -->
+  <div id="my-header"></div>
+  <div id="main-content">
+    <div class="collections-container">
+      <header class="collections-header">
+        <h1>Browse Our Collections</h1>
+        <p>Explore our range of modern office furniture categories</p>
+      </header>
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <span>Collections</span>
+      </div>
+
+      <div class="categories-grid">
+        <!-- Categories will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Quote Modal -->
+  <div id="quote-modal-container"></div>
+  <script type="module">
+    import { QuoteModal } from './js/modal.js';
+    fetch('quote-modal.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('quote-modal-container').innerHTML = data;
+        window.quoteModal = new QuoteModal();
+      })
+      .catch(err => console.error('Error loading quote modal:', err));
+  </script>
+
+  <!-- Load Header -->
+  <script>
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('my-header').innerHTML = data;
+      })
+      .catch(err => console.error('Error loading header:', err));
+  </script>
+
+  <!-- Supabase Script to Load Categories Dynamically -->
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    async function loadCategories() {
+        console.log('Loading categories...');
+        const { data: categories, error: categoriesError } = await supabase
+            .from('categories')
+            .select('*');
+
+        if (categoriesError) {
+            console.error('Error loading categories:', categoriesError);
+            return;
+        }
+
+        const categoriesGrid = document.querySelector('.categories-grid');
+        
+        categoriesGrid.innerHTML = `
+            ${categories.map(category => `
+                <a href="products.html?category=${category.id}" class="category-card">
+                    <div class="category-image">
+                        <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
+                    </div>
+                    <div class="category-info">
+                        <h3>${category.name}</h3>
+                        <span class="view-products">View Products</span>
+                    </div>
+                </a>
+            `).join('')}
+        `;
+    }
+
+    // Load categories on page load
+    loadCategories();
+  </script>
+
+  <!-- WhatsApp Button -->
+  <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
+    </svg>
+  </a>
+
+  <style>
+    .whatsapp-button {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background-color: #ffffff;
+      color: white;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+    }
+
+    .whatsapp-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      animation: none;
+    }
+
+    .whatsapp-button svg {
+      width: 38px;
+      height: 38px;
+      color: #25D366;
+    }
+
+    @media (max-width: 768px) {
+      .whatsapp-button {
+        width: 45px;
+        height: 45px;
+        bottom: 16px;
+        left: 16px;
+      }
+      
+      .whatsapp-button svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</body>
+</html>

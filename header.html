@@ -1,0 +1,89 @@
+<!-- header.html -->
+<header style="
+  width: 100%;
+  padding: 1rem 0;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+">
+  <div class="container" style="
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+  ">
+    <h1 style="font-size: 1.5rem; font-weight: 600;">
+      <a href="index.html">
+        <img 
+          src="images/moderna.jpg" 
+          alt="Moderna Office Furniture" 
+          style="height: 40px;"
+        />
+      </a>
+    </h1>
+    <nav>
+      <ul style="
+        list-style: none; 
+        display: flex; 
+        gap: 1.5rem;
+      ">
+        <li><a href="index.html" style="font-weight: 500;">Home</a></li>
+        <li><a href="collections.html" style="font-weight: 500;">Products</a></li>
+        <li><a href="#about" style="font-weight: 500;">About</a></li>
+        <li><a href="#contact" style="font-weight: 500;">Contact</a></li>
+        <li id="admin-nav-item">
+          <a href="admin-login.html" id="admin-link" style="
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background: #333;
+            color: #fff;
+            border-radius: 4px;
+          ">Login</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  fetch('header.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('my-header').innerHTML = data;
+    })
+    .catch(err => console.error('Error loading header:', err));
+
+  // Check if user is logged in
+  const adminSession = localStorage.getItem('adminSession');
+  const adminLink = document.getElementById('admin-link');
+  
+  if (adminSession) {
+    // User is logged in, show dashboard link
+    adminLink.href = 'admin-dashboard.html';
+    adminLink.textContent = 'Dashboard';
+  } else {
+    // User is not logged in, show login link
+    adminLink.href = 'admin-login.html';
+    adminLink.textContent = 'Login';
+  }
+</script>
+
+<style>
+  .view-quote {
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #292524;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .view-quote:hover {
+    background: #f5f5f4;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+</style>

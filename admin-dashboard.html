@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Moderna Office Furniture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #44403c; /* stone-700 */
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #292524; /* stone-800 */
+            margin: 0;
+        }
+
+        .logout-btn {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.6rem 1.2rem;
+            background: #78716c; /* stone-500 */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #57534e; /* stone-600 */
+        }
+
+        .product-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Category dropdown styles */
+        .category-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .category-select:focus {
+            outline: none;
+            border-color: #57534e; /* stone-600 */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #57534e; /* stone-600 */
+            text-align: center;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #57534e; /* stone-600 */
+        }
+
+        .file-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Searchable Dropdown Styles */
+        .image-select-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .image-search {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .image-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e7e5e4;
+        }
+
+        .image-option:hover {
+            background: #f5f5f4;
+        }
+
+        .image-option img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #d6d3d1; /* stone-300 */
+        }
+
+        .submit-btn {
+            padding: 0.8rem 1.5rem;
+            background: #57534e; /* stone-600 */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #44403c; /* stone-700 */
+        }
+
+        .products-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e7e5e4; /* stone-200 */
+            transition: background 0.3s ease;
+        }
+
+        .product-item:hover {
+            background: #f5f5f4; /* stone-100 */
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.25rem;
+            color: #2d3748;
+        }
+
+        .product-info p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .edit-btn {
+            padding: 0.5rem 1rem;
+            background: #78716c; /* stone-500 */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: #57534e; /* stone-600 */
+        }
+
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            background: #a8a29e; /* stone-400 */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #78716c; /* stone-500 */
+        }
+
+        /* Add these styles */
+        .product-select-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .product-search {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .product-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .product-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e7e5e4; /* stone-200 */
+            min-height: 70px;
+        }
+
+        .product-option:hover {
+            background: #f5f5f4; /* stone-100 */
+        }
+
+        .product-option img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 1rem;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .update-btn {
+            background: #57534e; /* stone-600 */
+        }
+
+        .update-btn:hover {
+            background: #44403c; /* stone-700 */
+        }
+
+        .cancel-btn {
+            padding: 0.8rem 1.5rem;
+            background: #e7e5e4; /* stone-200 */
+            color: #57534e; /* stone-600 */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #d6d3d1; /* stone-300 */
+        }
+
+        /* Center all section headings */
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #44403c; /* stone-700 */
+            font-size: 1.5rem;
+        }
+
+        /* Center file input labels */
+        .file-input-group label {
+            text-align: center;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #57534e; /* stone-600 */
+        }
+
+        /* Center the upload section */
+        .upload-section {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Make all headings consistent */
+        h1, h2 {
+            text-align: center;
+            color: #292524; /* stone-800 */
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-section {
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .value-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        
+        form > * {
+            margin-bottom: 1rem;
+        }
+        
+        input, select {
+            padding: 0.5rem;
+            width: 100%;
+        }
+        
+        button {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .option-group {
+            border: 1px solid #e7e5e4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .option-values {
+            margin-left: 1rem;
+        }
+
+        .add-option-btn, .add-value-btn {
+            background: #57534e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+
+        .remove-option-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .value-row input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .add-option-btn {
+            background: #57534e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .value-row button {
+            padding: 0.5rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-variant-btn {
+            background: #57534e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .button-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .value-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .value-row input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d6d3d1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .value-row button {
+            padding: 0.5rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .home-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #57534e;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .home-link:hover {
+            color: #292524;
+        }
+
+        .home-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .gallery-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .gallery-input-group input {
+            flex: 1;
+        }
+
+        .add-btn {
+            padding: 0.5rem 1rem;
+            background: #57534e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .add-btn:hover {
+            background: #44403c;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <div class="admin-header">
+                <a href="index.html" class="home-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Home
+                </a>
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="product-form">
+            <div class="form-group">
+                <label>Search Existing Product (Optional)</label>
+                <div class="product-select-container">
+                    <input 
+                        type="text" 
+                        class="product-search" 
+                        placeholder="Search for a product to edit..."
+                    >
+                    <div class="product-dropdown"></div>
+                </div>
+            </div>
+
+            <form id="product-form">
+                <h2 id="form-title">Add New Product</h2>
+                
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category" required>
+                        <!-- Categories loaded dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Main Product Image URL:</label>
+                    <div class="image-select-container">
+                        <input 
+                            type="text" 
+                            class="image-search" 
+                            id="image-url"
+                            placeholder="Search existing images or paste URL..."
+                            required
+                        >
+                        <div class="image-dropdown"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gallery Images:</label>
+                    <div id="gallery-container">
+                        <div class="gallery-input-group">
+                            <div class="image-select-container">
+                                <input 
+                                    type="text" 
+                                    class="image-search gallery-image-url" 
+                                    placeholder="Search existing images or paste URL..."
+                                >
+                                <div class="image-dropdown"></div>
+                            </div>
+                            <button type="button" onclick="removeGalleryImage(this)" class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addGalleryImage()" class="add-btn">Add Another Image</button>
+                </div>
+
+                <!-- Variants Section -->
+                <div class="form-group" id="variants-section">
+                    <label>Product Variants</label>
+                    <div id="values-container">
+                        <div class="value-row">
+                            <input type="text" placeholder="Enter variant (e.g., Small)" required>
+                            <button type="button" onclick="removeValue(this)" class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addValueRow()" class="add-variant-btn">
+                        Add Another Variant
+                    </button>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="submit-btn" class="submit-btn">Add Product</button>
+                </div>
+                <input type="hidden" id="editing-product-id">
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+        const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Check authentication
+        const session = JSON.parse(localStorage.getItem('adminSession'));
+        if (!session) {
+            window.location.href = 'admin-login.html';
+        }
+
+        // Global variables
+        let isEditing = false;
+        const submitBtn = document.getElementById('submit-btn');
+        const productForm = document.getElementById('product-form');
+        const formTitle = document.getElementById('form-title');
+
+        // Helper Functions
+        function renderImageDropdown(images, dropdown) {
+            dropdown.innerHTML = images.map(image => {
+                const imageUrl = supabase.storage
+                    .from('moderna')
+                    .getPublicUrl(image.name).data.publicUrl;
+                
+                const escapedUrl = imageUrl.replace(/'/g, "\\'");
+                
+                return `
+                    <div class="image-option" onclick="window.selectImage('${escapedUrl}', this)">
+                        <img src="${escapedUrl}" alt="${image.name}">
+                        <span>${image.name}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderProductDropdown(products, dropdown) {
+            dropdown.innerHTML = products.map(product => `
+                <div class="product-option" onclick="window.selectProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                    <img src="${product.image_url || ''}" alt="${product.name}">
+                    <span>${product.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // Setup Functions
+        async function setupImageDropdowns() {
+            const searchInputs = document.querySelectorAll('.image-search');
+            
+            searchInputs.forEach(input => {
+                const dropdown = input.nextElementSibling;
+                
+                // Remove old listeners
+                const newInput = input.cloneNode(true);
+                input.parentNode.replaceChild(newInput, input);
+                
+                // Add new focus listener
+                newInput.addEventListener('focus', async () => {
+                    const { data: images, error } = await supabase.storage
+                        .from('moderna')
+                        .list();
+                    
+                    if (error) {
+                        console.error('Error fetching images:', error);
+                        return;
+                    }
+                    
+                    renderImageDropdown(images, dropdown);
+                    dropdown.style.display = 'block';
+                });
+                
+                // Add new input listener for filtering
+                newInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const options = dropdown.querySelectorAll('.image-option');
+                    
+                    options.forEach(option => {
+                        const imageName = option.querySelector('span').textContent.toLowerCase();
+                        option.style.display = imageName.includes(searchTerm) ? 'flex' : 'none';
+                    });
+                });
+            });
+        }
+
+        async function setupProductDropdown() {
+            const searchInput = document.querySelector('.product-search');
+            const dropdown = document.querySelector('.product-dropdown');
+            
+            if (!searchInput || !dropdown) return;
+
+            searchInput.addEventListener('focus', async () => {
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*');
+
+                if (error) {
+                    console.error('Error loading products:', error);
+                    return;
+                }
+
+                renderProductDropdown(products, dropdown);
+                dropdown.style.display = 'block';
+            });
+
+            searchInput.addEventListener('input', async (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const { data: products, error } = await supabase
+                    .from('products')
+                    .select('*');
+
+                if (error) {
+                    console.error('Error searching products:', error);
+                    return;
+                }
+
+                const filtered = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+
+                renderProductDropdown(filtered, dropdown);
+                dropdown.style.display = 'block';
+            });
+        }
+
+        // Global function declarations
+        window.selectImage = function(imageUrl, element) {
+            const container = element.closest('.image-select-container');
+            const input = container.querySelector('.image-search');
+            const dropdown = container.querySelector('.image-dropdown');
+            
+            input.value = imageUrl;
+            
+            if (input.id === 'image-url') {
+                const previewImg = document.getElementById('selected-image');
+                if (previewImg) {
+                    previewImg.src = imageUrl;
+                    previewImg.style.display = 'block';
+                }
+            }
+            
+            dropdown.style.display = 'none';
+        };
+
+        window.selectProduct = function(product) {
+            setEditMode(product);
+            document.querySelector('.product-dropdown').style.display = 'none';
+            document.querySelector('.product-search').value = product.name;
+        };
+
+        window.addGalleryImage = function() {
+            const container = document.getElementById('gallery-container');
+            const div = document.createElement('div');
+            div.className = 'gallery-input-group';
+            div.innerHTML = `
+                <div class="image-select-container">
+                    <input 
+                        type="text" 
+                        class="image-search gallery-image-url" 
+                        placeholder="Search existing images or paste URL..."
+                    >
+                    <div class="image-dropdown"></div>
+                </div>
+                <button type="button" onclick="window.removeGalleryImage(this)" class="remove-btn">Remove</button>
+            `;
+            container.appendChild(div);
+            setupImageDropdowns();
+        };
+
+        window.removeGalleryImage = function(button) {
+            button.parentElement.remove();
+        };
+
+        // Event Listeners
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.image-select-container')) {
+                document.querySelectorAll('.image-dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+            if (!e.target.closest('.product-select-container')) {
+                const dropdown = document.querySelector('.product-dropdown');
+                if (dropdown) dropdown.style.display = 'none';
+            }
+        });
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setupImageDropdowns();
+            setupProductDropdown();
+            loadCategories();
+        });
+
+        // Load categories function
+        async function loadCategories() {
+            console.log('Loading categories...');
+            const { data: categories, error } = await supabase
+                .from('categories')
+                .select('*');
+
+            if (error) {
+                console.error('Error loading categories:', error);
+                alert('Error loading categories: ' + error.message);
+                return;
+            }
+
+            const categorySelect = document.getElementById('category');
+            
+            if (!categorySelect) {
+                console.error('Category select not found!');
+                return;
+            }
+
+            // Clear existing options
+            categorySelect.innerHTML = '<option value="">Select a category</option>';
+
+            // Add new options
+            if (categories && categories.length > 0) {
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
+                });
+            } else {
+                // Add default categories if none exist
+                const defaultCategories = [
+                    { name: 'Desks', description: 'Office desks and workstations' },
+                    { name: 'Chairs', description: 'Office chairs and seating' },
+                    { name: 'Storage', description: 'Filing cabinets and storage solutions' },
+                    { name: 'Tables', description: 'Conference and meeting tables' }
+                ];
+
+                const { data: insertedCategories, error: insertError } = await supabase
+                    .from('categories')
+                    .insert(defaultCategories)
+                    .select();
+
+                if (insertError) {
+                    console.error('Error inserting default categories:', insertError);
+                    return;
+                }
+
+                // Add the newly inserted categories to the select
+                insertedCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Set edit mode function
+        async function setEditMode(product) {
+            isEditing = true;
+            formTitle.textContent = 'Edit Product';
+            submitBtn.textContent = 'Update Product';
+            document.getElementById('editing-product-id').value = product.id;
+            
+            // Fill form with product data
+            document.getElementById('name').value = product.name;
+            document.getElementById('description').value = product.description;
+            
+            // Get product category
+            const { data: categoryData, error: categoryError } = await supabase
+                .from('product_categories')
+                .select('category_id')
+                .eq('product_id', product.id)
+                .single();
+
+            if (categoryError) {
+                console.error('Error fetching category:', categoryError);
+            }
+
+            if (categoryData) {
+                document.getElementById('category').value = categoryData.category_id;
+            }
+            
+            // Set main image
+            const imageUrlInput = document.getElementById('image-url');
+            if (imageUrlInput) {
+                imageUrlInput.value = product.image_url;
+                const previewImg = document.getElementById('selected-image');
+                if (previewImg) {
+                    previewImg.src = product.image_url;
+                    previewImg.style.display = 'block';
+                }
+            }
+            
+            // Load product options and values
+            const { data: options, error: optionError } = await supabase
+                .from('product_options')
+                .select(`
+                    id,
+                    option_name,
+                    option_values (
+                        id,
+                        value,
+                        price_adjustment
+                    )
+                `)
+                .eq('product_id', product.id);
+
+            if (optionError) {
+                console.error('Error loading options:', optionError);
+                return;
+            }
+
+            const container = document.getElementById('values-container');
+            container.innerHTML = ''; // Clear existing values
+
+            if (options && options.length > 0) {
+                options.forEach(option => {
+                    option.option_values.forEach(value => {
+                        const div = document.createElement('div');
+                        div.className = 'value-row';
+                        div.innerHTML = `
+                            <input type="text" 
+                                value="${value.value}"
+                                placeholder="Enter variant (e.g., Small)" 
+                                required
+                            >
+                            <button type="button" onclick="window.removeValue(this)" class="remove-btn">Remove</button>
+                        `;
+                        container.appendChild(div);
+                    });
+                });
+            } else {
+                // Add one empty value row if none exist
+                const div = document.createElement('div');
+                div.className = 'value-row';
+                div.innerHTML = `
+                    <input type="text" placeholder="Enter variant (e.g., Small)" required>
+                    <button type="button" onclick="window.removeValue(this)" class="remove-btn">Remove</button>
+                `;
+                container.appendChild(div);
+            }
+
+            // After handling the main image, add this code to handle gallery images:
+            const galleryContainer = document.getElementById('gallery-container');
+            galleryContainer.innerHTML = ''; // Clear existing gallery inputs
+
+            // If the product has gallery images, add them
+            if (product.gallery_images && product.gallery_images.length > 0) {
+                product.gallery_images.forEach(imageUrl => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-input-group';
+                    div.innerHTML = `
+                        <div class="image-select-container">
+                            <input 
+                                type="text" 
+                                class="image-search gallery-image-url" 
+                                value="${imageUrl}"
+                                placeholder="Search existing images or paste URL..."
+                            >
+                            <div class="image-dropdown"></div>
+                        </div>
+                        <button type="button" onclick="window.removeGalleryImage(this)" class="remove-btn">Remove</button>
+                    `;
+                    galleryContainer.appendChild(div);
+                });
+            } else {
+                // Add one empty gallery input if none exist
+                window.addGalleryImage();
+            }
+
+            // Reinitialize dropdowns for gallery images
+            setupImageDropdowns();
+        }
+
+        // Add these helper functions for variants
+        window.addValueRow = function() {
+            const container = document.getElementById('values-container');
+            const div = document.createElement('div');
+            div.className = 'value-row';
+            div.innerHTML = `
+                <input type="text" placeholder="Enter variant (e.g., Small)" required>
+                <button type="button" onclick="window.removeValue(this)" class="remove-btn">Remove</button>
+            `;
+            container.appendChild(div);
+        };
+
+        window.removeValue = function(button) {
+            button.parentElement.remove();
+        };
+
+        // Add this function before your form submission handler
+        function resetForm() {
+            // Reset form state
+            isEditing = false;
+            formTitle.textContent = 'Add New Product';
+            submitBtn.textContent = 'Add Product';
+            document.getElementById('editing-product-id').value = '';
+            
+            // Reset form fields
+            productForm.reset();
+            
+            // Reset image preview
+            const previewImg = document.getElementById('selected-image');
+            if (previewImg) {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
+
+            // Reset gallery images
+            const galleryContainer = document.getElementById('gallery-container');
+            galleryContainer.innerHTML = `
+                <div class="gallery-input-group">
+                    <div class="image-select-container">
+                        <input 
+                            type="text" 
+                            class="image-search gallery-image-url" 
+                            placeholder="Search existing images or paste URL..."
+                        >
+                        <div class="image-dropdown"></div>
+                    </div>
+                    <button type="button" onclick="window.removeGalleryImage(this)" class="remove-btn">Remove</button>
+                </div>
+            `;
+
+            // Reset variants
+            const valuesContainer = document.getElementById('values-container');
+            if (valuesContainer) {
+                valuesContainer.innerHTML = `
+                    <div class="value-row">
+                        <input type="text" placeholder="Enter variant (e.g., Small)" required>
+                        <button type="button" onclick="window.removeValue(this)" class="remove-btn">Remove</button>
+                    </div>
+                `;
+            }
+
+            // Reinitialize dropdowns
+            setupImageDropdowns();
+        }
+
+        // Add the form submission handler if it's missing, or update it if it exists
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const productId = document.getElementById('editing-product-id').value;
+            const isUpdate = !!productId;
+            const category_id = document.getElementById('category').value;
+
+            // Gather form data
+            const productData = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                image_url: document.getElementById('image-url').value,
+            };
+
+            // Get gallery images
+            const galleryUrls = Array.from(document.querySelectorAll('.gallery-image-url'))
+                .map(input => input.value)
+                .filter(url => url.trim() !== '');
+
+            if (galleryUrls.length > 0) {
+                productData.gallery_images = galleryUrls;
+            }
+
+            try {
+                if (isUpdate) {
+                    // Update existing product
+                    const { error: productError } = await supabase
+                        .from('products')
+                        .update(productData)
+                        .eq('id', productId);
+
+                    if (productError) throw productError;
+
+                    // Update category
+                    const { error: deleteCategoryError } = await supabase
+                        .from('product_categories')
+                        .delete()
+                        .eq('product_id', productId);
+
+                    if (deleteCategoryError) throw deleteCategoryError;
+
+                    const { error: categoryError } = await supabase
+                        .from('product_categories')
+                        .insert([{ product_id: productId, category_id }]);
+
+                    if (categoryError) throw categoryError;
+
+                    // Update options and values
+                    const variantInputs = document.querySelectorAll('#values-container input');
+                    const variants = Array.from(variantInputs)
+                        .map(input => input.value.trim())
+                        .filter(value => value !== '');
+
+                    // First, get all existing options for this product
+                    const { data: existingOptions } = await supabase
+                        .from('product_options')
+                        .select('id')
+                        .eq('product_id', productId);
+
+                    if (existingOptions && existingOptions.length > 0) {
+                        // Delete all option_values first
+                        for (const option of existingOptions) {
+                            const { error: deleteValuesError } = await supabase
+                                .from('option_values')
+                                .delete()
+                                .eq('option_id', option.id);
+
+                            if (deleteValuesError) throw deleteValuesError;
+                        }
+
+                        // Then delete the options
+                        const { error: deleteOptionError } = await supabase
+                            .from('product_options')
+                            .delete()
+                            .eq('product_id', productId);
+
+                        if (deleteOptionError) throw deleteOptionError;
+                    }
+
+                    // Add new option and values if there are variants
+                    if (variants.length > 0) {
+                        // Create the option
+                        const { data: newOption, error: optionError } = await supabase
+                            .from('product_options')
+                            .insert({
+                                product_id: productId,
+                                option_name: 'Size',
+                                option_type: 'select'
+                            })
+                            .select()
+                            .single();
+
+                        if (optionError) throw optionError;
+
+                        // Create the values
+                        const valueData = variants.map(variant => ({
+                            option_id: newOption.id,
+                            value: variant,
+                            price_adjustment: 0
+                        }));
+
+                        const { error: valueError } = await supabase
+                            .from('option_values')
+                            .insert(valueData);
+
+                        if (valueError) throw valueError;
+                    }
+                } else {
+                    // Create new product
+                    const { data: newProduct, error: productError } = await supabase
+                        .from('products')
+                        .insert([productData])
+                        .select()
+                        .single();
+
+                    if (productError) throw productError;
+
+                    // Insert category
+                    const { error: categoryError } = await supabase
+                        .from('product_categories')
+                        .insert([{ product_id: newProduct.id, category_id }]);
+
+                    if (categoryError) throw categoryError;
+
+                    // Create option and values for the new product
+                    const variantInputs = document.querySelectorAll('#values-container input');
+                    const variants = Array.from(variantInputs)
+                        .map(input => input.value.trim())
+                        .filter(value => value !== '');
+
+                    if (variants.length > 0) {
+                        // Create the option
+                        const { data: newOption, error: optionError } = await supabase
+                            .from('product_options')
+                            .insert({
+                                product_id: newProduct.id,
+                                option_name: 'Size',
+                                option_type: 'select'
+                            })
+                            .select()
+                            .single();
+
+                        if (optionError) throw optionError;
+
+                        // Create the values
+                        const valueData = variants.map(variant => ({
+                            option_id: newOption.id,
+                            value: variant,
+                            price_adjustment: 0
+                        }));
+
+                        const { error: valueError } = await supabase
+                            .from('option_values')
+                            .insert(valueData);
+
+                        if (valueError) throw valueError;
+                    }
+                }
+
+                alert(`Product ${isUpdate ? 'updated' : 'added'} successfully!`);
+                resetForm();
+                
+                // Clear all gallery inputs except the first one
+                const galleryContainer = document.getElementById('gallery-container');
+                galleryContainer.innerHTML = '';
+                window.addGalleryImage();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error ' + (isUpdate ? 'updating' : 'adding') + ' product: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

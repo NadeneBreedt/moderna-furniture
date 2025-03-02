@@ -125,6 +125,8 @@ export class QuoteModal {
       return;
     }
 
+    console.log('Quote items before submission:', items);
+
     try {
       // Get form data
       const formData = {
@@ -164,14 +166,26 @@ export class QuoteModal {
 
       if (quoteError) throw quoteError;
 
-      // Insert quote items
-      const quoteItems = items.map(item => ({
-        quote_request_id: quoteData.id,
-        product_id: item.id,
-        product_name: item.name,
-        quantity: item.quantity || item.qty,
-        specifications: item.specifications || ''
-      }));
+      // Insert quote items with variant_id
+      const quoteItems = items.map(item => {
+        // Create the basic quote item
+        const quoteItem = {
+          quote_request_id: quoteData.id,
+          product_id: item.id,
+          product_name: item.name,
+          quantity: item.quantity || item.qty || 1,
+          specifications: item.specifications || item.variant || ''
+        };
+        
+        // Add the selected_variant_id if it exists
+        if (item.variant_id) {
+          quoteItem.selected_variant_id = item.variant_id;
+        }
+        
+        return quoteItem;
+      });
+
+      console.log('Quote items to be inserted:', quoteItems);
 
       const { error: itemsError } = await supabase
         .from('quote_items')
@@ -190,5 +204,22 @@ export class QuoteModal {
       console.error('Error submitting quote:', error);
       alert('Error submitting quote. Please try again.');
     }
+  }
+
+  addToQuote(product, selectedVariant, variantId) {
+    const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+    
+    // Create the quote item with variant information
+    const quoteItem = {
+        id: product.id,
+        name: product.name,
+        quantity: 1,
+        variant: selectedVariant,  // The variant value/name
+        variant_id: variantId,    // Store the variant ID
+        option_id: product.option_id // Store the option ID if available
+    };
+    
+    items.push(quoteItem);
+    localStorage.setItem('quoteItems', JSON.stringify(items));
   }
 } 

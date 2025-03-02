@@ -618,7 +618,7 @@
                 // Create options for each value
                 variantSelect.innerHTML = option.option_values
                     .map(value => `
-                        <option value="${value.value}">
+                        <option value="${value.value}" data-variant-id="${value.id}">
                             ${value.value}${value.price_adjustment > 0 ? ` (+$${value.price_adjustment})` : ''}
                         </option>
                     `)
@@ -679,6 +679,14 @@
       // Add variant information if available
       if (variantSelect && variantSelect.value) {
         product.variant = variantSelect.value;
+        
+        // Get the selected option element
+        const selectedOption = variantSelect.options[variantSelect.selectedIndex];
+        
+        // Get the variant ID from the data attribute
+        if (selectedOption.dataset.variantId) {
+          product.variant_id = parseInt(selectedOption.dataset.variantId);
+        }
       }
 
       // Get existing quote items

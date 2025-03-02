@@ -562,6 +562,250 @@
         .add-btn:hover {
             background: #44403c;
         }
+
+        /* Add new styles for quote management */
+        .dashboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: #f5f5f4; /* stone-100 */
+            color: #57534e; /* stone-600 */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #57534e; /* stone-600 */
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .quotes-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .quote-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quote-section {
+            margin-bottom: 1rem;
+            border: 1px solid #e7e5e4; /* stone-200 */
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: #f5f5f4; /* stone-100 */
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: #e7e5e4; /* stone-200 */
+        }
+
+        .section-header h3 {
+            font-size: 1.1rem;
+            color: #44403c; /* stone-700 */
+            margin: 0;
+        }
+
+        .toggle-icon {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .section-header.collapsed + .section-content {
+            max-height: 0;
+        }
+
+        .quotes-list {
+            padding: 1rem;
+        }
+
+        .quote-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e7e5e4; /* stone-200 */
+            transition: background 0.3s ease;
+        }
+
+        .quote-item:last-child {
+            border-bottom: none;
+        }
+
+        .quote-item:hover {
+            background: #f5f5f4; /* stone-100 */
+        }
+
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .quote-customer {
+            flex: 1;
+        }
+
+        .quote-customer h4 {
+            margin: 0 0 0.5rem 0;
+            color: #292524; /* stone-800 */
+        }
+
+        .quote-customer p {
+            margin: 0;
+            color: #78716c; /* stone-500 */
+            font-size: 0.9rem;
+        }
+
+        .quote-date {
+            color: #a8a29e; /* stone-400 */
+            font-size: 0.85rem;
+        }
+
+        .quote-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-select {
+            padding: 0.5rem;
+            border: 1px solid #d6d3d1; /* stone-300 */
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .quote-items {
+            margin-top: 1rem;
+            border-top: 1px solid #e7e5e4; /* stone-200 */
+            padding-top: 1rem;
+        }
+
+        .quote-items h5 {
+            margin: 0 0 0.75rem 0;
+            color: #44403c; /* stone-700 */
+            font-size: 1rem;
+        }
+
+        .item-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .quote-item-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: #f5f5f4; /* stone-100 */
+            border-radius: 6px;
+        }
+
+        .item-details h6 {
+            margin: 0 0 0.25rem 0;
+            color: #44403c; /* stone-700 */
+        }
+
+        .item-details p {
+            margin: 0;
+            color: #78716c; /* stone-500 */
+            font-size: 0.85rem;
+        }
+
+        .item-quantity {
+            font-weight: 500;
+            color: #57534e; /* stone-600 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e7e5e4; /* stone-200 */
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            height: fit-content;
+        }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 2rem;
+            color: #a8a29e; /* stone-400 */
+        }
+
+        .empty-list {
+            text-align: center;
+            padding: 2rem;
+            color: #a8a29e; /* stone-400 */
+            font-style: italic;
+        }
+
+        .attachment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #57534e; /* stone-600 */
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .attachment-link:hover {
+            text-decoration: underline;
+        }
+
+        .attachment-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .variant-tag {
+            display: inline-block;
+            background: #e7e5e4; /* stone-200 */
+            color: #44403c; /* stone-700 */
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -579,90 +823,165 @@
             </div>
         </div>
 
-        <div class="product-form">
-            <div class="form-group">
-                <label>Search Existing Product (Optional)</label>
-                <div class="product-select-container">
-                    <input 
-                        type="text" 
-                        class="product-search" 
-                        placeholder="Search for a product to edit..."
-                    >
-                    <div class="product-dropdown"></div>
-                </div>
-            </div>
+        <!-- Add navigation tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" data-tab="products">Products</button>
+            <button class="tab-btn" data-tab="quotes">Quote Requests</button>
+        </div>
 
-            <form id="product-form">
-                <h2 id="form-title">Add New Product</h2>
-                
+        <!-- Products Tab Content -->
+        <div class="tab-content active" id="products-tab">
+            <div class="product-form">
                 <div class="form-group">
-                    <label>Product Name</label>
-                    <input type="text" id="name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="description" rows="4" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="category" required>
-                        <!-- Categories loaded dynamically -->
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="image">Main Product Image URL:</label>
-                    <div class="image-select-container">
+                    <label>Search Existing Product (Optional)</label>
+                    <div class="product-select-container">
                         <input 
                             type="text" 
-                            class="image-search" 
-                            id="image-url"
-                            placeholder="Search existing images or paste URL..."
-                            required
+                            class="product-search" 
+                            placeholder="Search for a product to edit..."
                         >
-                        <div class="image-dropdown"></div>
+                        <div class="product-dropdown"></div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Gallery Images:</label>
-                    <div id="gallery-container">
-                        <div class="gallery-input-group">
-                            <div class="image-select-container">
-                                <input 
-                                    type="text" 
-                                    class="image-search gallery-image-url" 
-                                    placeholder="Search existing images or paste URL..."
-                                >
-                                <div class="image-dropdown"></div>
+                <form id="product-form">
+                    <h2 id="form-title">Add New Product</h2>
+                    
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="description" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="category" required>
+                            <!-- Categories loaded dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Main Product Image URL:</label>
+                        <div class="image-select-container">
+                            <input 
+                                type="text" 
+                                class="image-search" 
+                                id="image-url"
+                                placeholder="Search existing images or paste URL..."
+                                required
+                            >
+                            <div class="image-dropdown"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gallery Images:</label>
+                        <div id="gallery-container">
+                            <div class="gallery-input-group">
+                                <div class="image-select-container">
+                                    <input 
+                                        type="text" 
+                                        class="image-search gallery-image-url" 
+                                        placeholder="Search existing images or paste URL..."
+                                    >
+                                    <div class="image-dropdown"></div>
+                                </div>
+                                <button type="button" onclick="removeGalleryImage(this)" class="remove-btn">Remove</button>
                             </div>
-                            <button type="button" onclick="removeGalleryImage(this)" class="remove-btn">Remove</button>
+                        </div>
+                        <button type="button" onclick="addGalleryImage()" class="add-btn">Add Another Image</button>
+                    </div>
+
+                    <!-- Variants Section -->
+                    <div class="form-group" id="variants-section">
+                        <label>Product Variants</label>
+                        <div id="values-container">
+                            <div class="value-row">
+                                <input type="text" placeholder="Enter variant (e.g., Small)" required>
+                                <button type="button" onclick="removeValue(this)" class="remove-btn">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addValueRow()" class="add-variant-btn">
+                            Add Another Variant
+                        </button>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" id="submit-btn" class="submit-btn">Add Product</button>
+                    </div>
+                    <input type="hidden" id="editing-product-id">
+                </form>
+            </div>
+        </div>
+
+        <!-- Quotes Tab Content -->
+        <div class="tab-content" id="quotes-tab">
+            <div class="quotes-container">
+                <h2>Quote Requests</h2>
+                
+                <!-- Quote status sections -->
+                <div class="quote-sections">
+                    <!-- To Quote Section -->
+                    <div class="quote-section">
+                        <div class="section-header" data-status="To Quote">
+                            <h3>To Quote</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="quotes-list" id="to-quote-list">
+                                <!-- Quotes will be loaded here -->
+                                <div class="loading-indicator">Loading...</div>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" onclick="addGalleryImage()" class="add-btn">Add Another Image</button>
-                </div>
-
-                <!-- Variants Section -->
-                <div class="form-group" id="variants-section">
-                    <label>Product Variants</label>
-                    <div id="values-container">
-                        <div class="value-row">
-                            <input type="text" placeholder="Enter variant (e.g., Small)" required>
-                            <button type="button" onclick="removeValue(this)" class="remove-btn">Remove</button>
+                    
+                    <!-- Quoted Section -->
+                    <div class="quote-section">
+                        <div class="section-header" data-status="Quoted">
+                            <h3>Quoted</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="quotes-list" id="quoted-list">
+                                <!-- Quotes will be loaded here -->
+                                <div class="loading-indicator">Loading...</div>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" onclick="addValueRow()" class="add-variant-btn">
-                        Add Another Variant
-                    </button>
+                    
+                    <!-- Quote Revised Section -->
+                    <div class="quote-section">
+                        <div class="section-header" data-status="Quote Revised">
+                            <h3>Quote Revised</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="quotes-list" id="quote-revised-list">
+                                <!-- Quotes will be loaded here -->
+                                <div class="loading-indicator">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Placed Section -->
+                    <div class="quote-section">
+                        <div class="section-header" data-status="Order Placed">
+                            <h3>Order Placed</h3>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="quotes-list" id="order-placed-list">
+                                <!-- Quotes will be loaded here -->
+                                <div class="loading-indicator">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="button-group">
-                    <button type="submit" id="submit-btn" class="submit-btn">Add Product</button>
-                </div>
-                <input type="hidden" id="editing-product-id">
-            </form>
+            </div>
         </div>
     </div>
 
@@ -857,6 +1176,12 @@
             setupImageDropdowns();
             setupProductDropdown();
             loadCategories();
+            
+            // Add logout functionality
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('adminSession');
+                window.location.href = 'admin-login.html';
+            });
         });
 
         // Load categories function
@@ -1275,6 +1600,221 @@
                 alert('Error ' + (isUpdate ? 'updating' : 'adding') + ' product: ' + error.message);
             }
         });
+
+        // Tab Navigation
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                // Update active tab button
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show active tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabName}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // Load quotes when switching to quotes tab
+                if (tabName === 'quotes') {
+                    loadQuotes();
+                }
+            });
+        });
+
+        // Quote Section Collapsing
+        const sectionHeaders = document.querySelectorAll('.section-header');
+        sectionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('collapsed');
+            });
+        });
+
+        // Format date function
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Load quotes function
+        async function loadQuotes() {
+            try {
+                // Fetch all quote requests with their items
+                const { data: quotes, error } = await supabase
+                    .from('quote_requests')
+                    .select(`
+                        *,
+                        quote_items (*)
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                console.log("Loaded quotes:", quotes);
+
+                // For each quote item, try to extract variant information from specifications
+                for (const quote of quotes) {
+                    if (quote.status === 'new') {
+                        quote.status = 'To Quote';
+                    }
+                    
+                    // Process each quote item
+                    for (const item of quote.quote_items) {
+                        // If specifications exists, use it directly
+                        if (item.specifications) {
+                            // No need to parse, just use as is
+                            console.log(`Item ${item.id} has specifications: ${item.specifications}`);
+                        }
+                    }
+                }
+
+                // Group quotes by status
+                const statusGroups = {
+                    'To Quote': [],
+                    'Quoted': [],
+                    'Quote Revised': [],
+                    'Order Placed': []
+                };
+
+                // Add to appropriate group
+                quotes.forEach(quote => {
+                    if (statusGroups[quote.status]) {
+                        statusGroups[quote.status].push(quote);
+                    } else {
+                        statusGroups['To Quote'].push(quote);
+                    }
+                });
+
+                // Render each status group
+                Object.keys(statusGroups).forEach(status => {
+                    const listId = status.toLowerCase().replace(' ', '-') + '-list';
+                    const listElement = document.getElementById(listId);
+                    
+                    if (listElement) {
+                        if (statusGroups[status].length === 0) {
+                            listElement.innerHTML = '<div class="empty-list">No quote requests</div>';
+                        } else {
+                            listElement.innerHTML = statusGroups[status].map(quote => renderQuoteItem(quote)).join('');
+                        }
+                    }
+                });
+
+                // Add event listeners to status selects
+                document.querySelectorAll('.status-select').forEach(select => {
+                    select.addEventListener('change', updateQuoteStatus);
+                });
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+            }
+        }
+
+        // Render a quote item
+        function renderQuoteItem(quote) {
+            return `
+                <div class="quote-item" data-id="${quote.id}">
+                    <div class="quote-header">
+                        <div class="quote-customer">
+                            <h4>${quote.customer_name}</h4>
+                            <p>Email: ${quote.customer_email}</p>
+                            <p>Phone: ${quote.customer_phone}</p>
+                            ${quote.attachment_url ? `
+                                <a href="${quote.attachment_url}" target="_blank" class="attachment-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                                    </svg>
+                                    View Attachment
+                                </a>
+                            ` : ''}
+                        </div>
+                        <div class="quote-date">
+                            ${formatDate(quote.created_at)}
+                        </div>
+                    </div>
+                    <div class="quote-status">
+                        <label>Status:</label>
+                        <select class="status-select" data-quote-id="${quote.id}">
+                            <option value="To Quote" ${quote.status === 'To Quote' ? 'selected' : ''}>To Quote</option>
+                            <option value="Quoted" ${quote.status === 'Quoted' ? 'selected' : ''}>Quoted</option>
+                            <option value="Quote Revised" ${quote.status === 'Quote Revised' ? 'selected' : ''}>Quote Revised</option>
+                            <option value="Order Placed" ${quote.status === 'Order Placed' ? 'selected' : ''}>Order Placed</option>
+                        </select>
+                    </div>
+                    <div class="quote-items">
+                        <h5>Requested Items:</h5>
+                        <div class="item-list">
+                            ${quote.quote_items.map(item => `
+                                <div class="quote-item-row">
+                                    <div class="item-details">
+                                        <h6>${item.product_name}</h6>
+                                        ${item.specifications ? 
+                                            `<p class="variant-tag">${item.specifications}</p>` : 
+                                            ''}
+                                    </div>
+                                    <div class="item-quantity">
+                                        Qty: ${item.quantity}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update quote status
+        async function updateQuoteStatus(e) {
+            const select = e.target;
+            const quoteId = select.dataset.quoteId;
+            const newStatus = select.value;
+            
+            try {
+                const { error } = await supabase
+                    .from('quote_requests')
+                    .update({ status: newStatus })
+                    .eq('id', quoteId);
+                
+                if (error) throw error;
+                
+                // Move the quote to the appropriate section
+                const quoteElement = select.closest('.quote-item');
+                const currentList = quoteElement.parentElement;
+                const targetListId = newStatus.toLowerCase().replace(' ', '-') + '-list';
+                const targetList = document.getElementById(targetListId);
+                
+                if (targetList) {
+                    // Remove empty message if it exists
+                    const emptyMessage = targetList.querySelector('.empty-list');
+                    if (emptyMessage) {
+                        emptyMessage.remove();
+                    }
+                    
+                    // Move the quote element
+                    targetList.appendChild(quoteElement);
+                    
+                    // Add empty message to current list if it's now empty
+                    if (currentList.children.length === 0) {
+                        currentList.innerHTML = '<div class="empty-list">No quote requests</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating quote status:', error);
+                alert('Failed to update quote status. Please try again.');
+                // Reset the select to its previous value
+                select.value = select.querySelector('option[selected]').value;
+            }
+        }
     </script>
 </body>
 </html>

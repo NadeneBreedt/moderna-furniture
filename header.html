@@ -56,10 +56,17 @@
               font-weight: bold;
             ">All Products</a>
             
-            <!-- Categories will be loaded here -->
-            <div id="dropdown-categories">
-              <!-- Loading indicator removed - will be populated via JavaScript -->
-            </div>
+            <!-- Hardcoded categories guaranteed to display -->
+            <a href="collections.html?category=1" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Office Desks</a>
+            <a href="collections.html?category=2" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Office Chairs</a>
+            <a href="collections.html?category=3" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Filing Cabinets</a>
+            <a href="collections.html?category=4" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Bookcases</a>
+            <a href="collections.html?category=5" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Office Tables</a>
+            <a href="collections.html?category=6" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Reception Furniture</a>
+            <a href="collections.html?category=7" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Office Storage</a>
+            <a href="collections.html?category=8" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Executive Furniture</a>
+            <a href="collections.html?category=9" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Meeting Room Furniture</a>
+            <a href="collections.html?category=10" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">Boardroom Furniture</a>
           </div>
         </li>
         <li><a href="Projects" style="font-weight: 500;">About</a></li>
@@ -135,33 +142,7 @@
   }
 </style>
 
-<script type="module">
-  // Import just the fallback categories from our shared module
-  import { fallbackCategories } from './supabase.js';
-
-  // Immediately populate the dropdown categories with fallback
-  // This ensures something always displays right away
-  populateDropdown(fallbackCategories);
-  
-  // Remove the fetch attempt - just use the fallbacks directly
-
-  // Helper function to populate the dropdown with categories
-  function populateDropdown(categories) {
-    if (!categories || !categories.length) return;
-    
-    const categoriesHtml = categories.map(category => `
-      <a href="collections.html?category=${category.id}" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">
-        ${category.name || 'Unnamed Category'}
-      </a>
-    `).join('');
-    
-    const dropdownEl = document.getElementById('dropdown-categories');
-    if (dropdownEl) {
-      dropdownEl.innerHTML = categoriesHtml;
-      console.log('Dropdown categories populated with', categories.length, 'items');
-    }
-  }
-
+<script>
   // Check if user is logged in
   function checkAdminStatus() {
     const adminSession = localStorage.getItem('adminSession');
@@ -180,19 +161,14 @@
     }
   }
   
-  // Initialize the header functionality
-  function initializeHeader() {
-    console.log('Initializing header components');
-    
+  // Initialize when document content is loaded
+  document.addEventListener('DOMContentLoaded', function() {
     // Check admin status
     checkAdminStatus();
     
     // Set up dropdown mouse behavior
     makeDropdownSticky();
-  }
-  
-  // Initialize on load
-  document.addEventListener('DOMContentLoaded', initializeHeader);
+  });
   
   // Simple function to make dropdown menu stay visible
   function makeDropdownSticky() {

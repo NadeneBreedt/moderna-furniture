@@ -124,9 +124,17 @@
     .product-title {
       font-size: 2rem;
       font-weight: 600;
-      margin-bottom: 0.75rem;
       color: #292524;
-      text-align: center;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      padding-top: 1rem;
+      line-height: 1.2;
+      clear: both;
+      width: 100%;
+      display: block;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
     }
 
     .product-description {
@@ -220,28 +228,45 @@
       background: #44403c;
     }
 
-    /* Toast notification */
-    .toast {
+    /* Toast notification styling */
+    .toast-notification {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #292524;
+      bottom: 20px;
+      right: 20px;
+      background-color: #292524;
       color: white;
-      padding: 0.75rem 1.25rem;
+      padding: 0;
       border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      transform: translateY(150%);
+      transition: transform 0.3s ease;
+    }
+    
+    .toast-notification.show {
+      transform: translateY(0);
+    }
+    
+    .toast-content {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      transform: translateY(100%);
-      transition: all 0.3s ease;
-      font-size: 0.85rem;
+      padding: 12px 20px;
+      gap: 12px;
     }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
+    
+    .toast-content svg {
+      width: 20px;
+      height: 20px;
+      color: #10b981; /* Green checkmark */
+    }
+    
+    @media (max-width: 768px) {
+      .toast-notification {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+      }
     }
 
     @media (max-width: 1024px) {
@@ -440,6 +465,144 @@
       gap: 2rem;
       margin-bottom: 2rem;
     }
+
+    .product-action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .primary-button {
+      background: #292524;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .primary-button:hover {
+      background: #44403c;
+    }
+
+    .secondary-button {
+      background: none;
+      color: #292524;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #292524;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .secondary-button:hover {
+      background: #f3f4f6;
+    }
+
+    /* Product layout styling */
+    .product-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .product-image-container {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .product-image-container img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .product-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .product-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #292524;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      padding-top: 1rem;
+      line-height: 1.2;
+      clear: both;
+      width: 100%;
+      display: block;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+    
+    .product-description {
+      font-size: 1rem;
+      color: #57534e;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Product variant options */
+    .variant-options {
+      margin-bottom: 1.5rem;
+    }
+    
+    .variant-options h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    
+    .variant-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .variant-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    
+    /* Responsive layout */
+    @media (min-width: 768px) {
+      .product-main {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      
+      .product-image-container {
+        flex: 0 0 45%;
+        margin-bottom: 0;
+      }
+      
+      .product-details {
+        flex: 0 0 50%;
+      }
+      
+      .product-title {
+        margin-top: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -447,62 +610,70 @@
   <div id="my-header"></div>
 
   <main class="container">
-    <h1 class="product-title" id="product-title"></h1>
     <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
       <a href="collections.html">Collections</a>
       <span>/</span>
-      <a href="#" id="category-link">Category</a>
+      <a id="category-link" href="#">Category</a>
       <span>/</span>
       <span id="product-name">Product</span>
     </div>
 
-    <div class="product-container">
-      <div class="product-gallery">
-        <div class="main-image">
-          <img id="main-product-image" src="" alt="">
-        </div>
-        <div class="thumbnail-grid" id="thumbnail-grid">
-          <!-- Thumbnails will be loaded here -->
-        </div>
+    <!-- Product details section -->
+    <div class="product-main">
+      <div class="product-image-container">
+        <img id="product-image" src="images/placeholder.jpg" alt="Product Image">
       </div>
-
-      <div class="product-info">
-        <div class="product-category" id="product-category"></div>
-        <p class="product-description" id="product-description"></p>
-
-        <div class="product-features">
-          <ul class="feature-list" id="feature-list">
-            <!-- Features will be loaded here -->
-          </ul>
-        </div>
-
-        <div class="quote-section">
-          <div class="quantity-selector">
-            <div class="input-group">
-              <label for="quantity">Quantity:</label>
-              <input type="number" id="quantity" class="quantity-input" value="1" min="1">
-            </div>
-            <div class="input-group" id="variants-section">
-              <label for="variant-select">Variant:</label>
-              <select id="variant-select" class="variants-select">
-                <!-- Variants will be loaded here -->
-              </select>
-            </div>
+      
+      <div class="product-details">
+        <h1 class="product-title">Loading product...</h1>
+        
+        <p id="product-description" class="product-description">
+          Loading product description...
+        </p>
+        
+        <!-- Variants selection -->
+        <div id="variants-container" class="variant-options">
+          <h3>Select Variant</h3>
+          <div id="variants-list" class="variant-selector">
+            <!-- Variants will be loaded here -->
           </div>
-          <button class="add-to-quote-btn" onclick="handleAddToQuote()">
+        </div>
+        
+        <!-- Add product to quote -->
+        <div class="product-action-buttons">
+          <button id="add-to-quote" class="primary-button">
             Add to Quote
           </button>
+        </div>
+        
+        <div class="product-metadata">
+          <div class="metadata-item">
+            <span class="metadata-label">Category:</span>
+            <span class="metadata-value" id="product-category">Loading...</span>
+          </div>
+          <div class="metadata-item">
+            <span class="metadata-label">Item Code:</span>
+            <span class="metadata-value" id="product-code">Loading...</span>
+          </div>
+          <div class="metadata-item quality-guarantee">
+            <span class="check-icon">✓</span> 5-Year Warranty
+          </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M7 10l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span>Added to quote</span>
+  <!-- Toast notification -->
+  <div id="toast" class="toast-notification">
+    <div class="toast-content">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>Product added to quote</span>
+    </div>
   </div>
 
   <!-- Load Quote Modal -->
@@ -568,7 +739,7 @@
         document.getElementById('product-name').textContent = product.name;
         document.getElementById('product-title').textContent = product.name;
         document.getElementById('product-description').textContent = product.description;
-        document.getElementById('main-product-image').src = product.image_url;
+        document.getElementById('product-image').src = product.image_url;
 
         // Check if we have category data before trying to access it
         if (product.product_categories && product.product_categories[0] && product.product_categories[0].categories) {
@@ -658,7 +829,7 @@
 
     // Global functions
     window.switchMainImage = function(imageUrl, thumbnailElement) {
-      document.getElementById('main-product-image').src = imageUrl;
+      document.getElementById('product-image').src = imageUrl;
       document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
       thumbnailElement.classList.add('active');
     };
@@ -672,7 +843,7 @@
       const product = {
         id: productId,
         name: document.getElementById('product-title').textContent,
-        image_url: document.getElementById('main-product-image').src,
+        image_url: document.getElementById('product-image').src,
         quantity: quantity
       };
 
@@ -740,6 +911,72 @@
 
     // Shake every 3 minutes thereafter
     setInterval(shakeWhatsAppButton, 180000);
+  </script>
+
+  <script>
+    document.getElementById('enquire-single').addEventListener('click', function() {
+      const product = {
+        id: new URLSearchParams(window.location.search).get('id'),
+        name: document.querySelector('h1').textContent
+      };
+      
+      // Add the product to quote
+      if (typeof window.addToQuote === 'function') {
+        const selectedVariant = document.querySelector('input[name="variant"]:checked');
+        let variantName = '';
+        let variantId = null;
+        
+        if (selectedVariant) {
+          variantName = selectedVariant.nextElementSibling.textContent.trim();
+          variantId = selectedVariant.value;
+        }
+        
+        window.addToQuote(product.id, product.name, variantName, variantId);
+      } else {
+        // Fallback implementation
+        const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+        items.push({
+          id: product.id,
+          name: product.name,
+          quantity: 1
+        });
+        localStorage.setItem('quoteItems', JSON.stringify(items));
+      }
+      
+      // Open the quote modal
+      const modalOverlay = document.getElementById('quote-modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.style.display = 'flex';
+        if (typeof refreshQuoteTable === 'function') {
+          refreshQuoteTable();
+        }
+      }
+    });
+  </script>
+
+  <script>
+    document.getElementById('add-to-quote').addEventListener('click', () => {
+      const productId = productData.id;
+      const productName = productData.name;
+      const selectedVariant = document.querySelector('input[name="variant"]:checked');
+      let variantName = '';
+      let variantId = null;
+      
+      if (selectedVariant) {
+        variantName = selectedVariant.nextElementSibling.textContent.trim();
+        variantId = selectedVariant.value;
+      }
+      
+      console.log('Adding to quote:', {
+        productId,
+        productName,
+        variantName,
+        variantId
+      });
+      
+      // Add to quote with the selected variant
+      window.addToQuote(productId, productName, variantName, variantId);
+    });
   </script>
 </body>
 </html>

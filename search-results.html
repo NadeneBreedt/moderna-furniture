@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Search Results - Moderna Office Furniture</title>
+
+  <!-- Base Reset & Simple Font Setup -->
+  <style>
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background-color: #FFFFFF;
+      color: #333;
+      line-height: 1.5;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    header, footer, main, section {
+      display: block;
+    }
+    /* Basic utility classes */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: #78716c;
+      font-size: 0.75rem;
+    }
+    .breadcrumb a {
+      color: #78716c;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb a:hover {
+      color: #292524;
+    }
+    .search-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .search-form {
+      display: flex;
+      margin-bottom: 2rem;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+    }
+    .search-button {
+      padding: 0.75rem 1.5rem;
+      background-color: #292524;
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .search-button:hover {
+      background-color: #44403c;
+    }
+    .search-results {
+      margin-top: 2rem;
+    }
+    .result-item {
+      display: flex;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #f5f5f4;
+    }
+    .result-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      margin-right: 1.5rem;
+      border-radius: 4px;
+    }
+    .result-content h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .result-content p {
+      color: #78716c;
+      margin-bottom: 1rem;
+    }
+    .result-price {
+      font-weight: 600;
+      color: #292524;
+      margin-bottom: 0.5rem;
+    }
+    .result-category {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: #f5f5f4;
+      color: #78716c;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    .no-results {
+      text-align: center;
+      padding: 3rem 0;
+      color: #78716c;
+    }
+    #results-count {
+      margin-bottom: 1.5rem;
+      color: #78716c;
+    }
+  </style>
+</head>
+<body>
+  <!-- Load Header -->
+  <div id="my-header"></div>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span>Search</span>
+    </div>
+
+    <div class="search-container">
+      <h1 style="margin-bottom: 1.5rem; font-size: 1.8rem; color: #292524;">Search Products</h1>
+      
+      <form class="search-form" id="search-form">
+        <input 
+          type="text" 
+          id="search-input" 
+          class="search-input" 
+          placeholder="Search for products..."
+          autocomplete="off"
+        >
+        <button type="submit" class="search-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline-block; vertical-align: middle;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          Search
+        </button>
+      </form>
+
+      <div id="results-count"></div>
+      
+      <div class="search-results" id="search-results">
+        <div class="no-results">
+          <p>Enter a search term to find products</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: #fff;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+    margin-top: 4rem;
+  ">
+    <p style="font-size: 0.9rem; color: #777;">
+      © 2025 Moderna Office Furniture. All rights reserved.
+    </p>
+  </footer>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+    // Load the header
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('my-header').innerHTML = data;
+      })
+      .catch(err => console.error('Error loading header:', err));
+
+    // Initialize Supabase client
+    const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Get query parameter if any
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    
+    // Function to perform search
+    async function performSearch(searchTerm) {
+      if (!searchTerm) return;
+      
+      document.getElementById('search-input').value = searchTerm;
+      document.getElementById('search-results').innerHTML = '<div class="no-results"><p>Searching...</p></div>';
+      
+      try {
+        // Search products by name or description
+        const { data: products, error } = await supabase
+          .from('products')
+          .select('*, categories(*)')
+          .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
+          .order('name', { ascending: true });
+        
+        if (error) throw error;
+        
+        if (products.length === 0) {
+          document.getElementById('results-count').textContent = 'No products found.';
+          document.getElementById('search-results').innerHTML = `
+            <div class="no-results">
+              <p>No products found matching "${searchTerm}"</p>
+              <p style="margin-top: 1rem;">Try different keywords or browse our <a href="collections.html" style="color: #292524; text-decoration: underline;">product categories</a>.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Update results count
+        document.getElementById('results-count').textContent = `Found ${products.length} product${products.length === 1 ? '' : 's'}`;
+        
+        // Display results
+        const resultsHTML = products.map(product => `
+          <div class="result-item">
+            <img src="${product.image_url || 'images/placeholder.jpg'}" alt="${product.name}" class="result-image">
+            <div class="result-content">
+              <h3><a href="product-detail.html?id=${product.id}">${product.name}</a></h3>
+              <p>${product.description ? product.description.substring(0, 120) + '...' : 'No description available'}</p>
+              <div class="result-price">R${product.price}</div>
+              <div class="result-category">${product.categories ? product.categories.name : 'Uncategorized'}</div>
+            </div>
+          </div>
+        `).join('');
+        
+        document.getElementById('search-results').innerHTML = resultsHTML;
+        
+      } catch (error) {
+        console.error('Error searching products:', error);
+        document.getElementById('search-results').innerHTML = `
+          <div class="no-results">
+            <p>Error searching products. Please try again later.</p>
+          </div>
+        `;
+      }
+    }
+    
+    // Handle form submission
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const searchTerm = document.getElementById('search-input').value.trim();
+      if (searchTerm) {
+        // Update URL with search query
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('q', searchTerm);
+        window.history.pushState({}, '', newUrl);
+        
+        performSearch(searchTerm);
+      }
+    });
+    
+    // If query param exists, perform search
+    if (query) {
+      performSearch(query);
+    }
+  </script>
+</body>
+</html> 

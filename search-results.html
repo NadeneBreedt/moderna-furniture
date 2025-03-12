@@ -52,83 +52,247 @@
     .breadcrumb a:hover {
       color: #292524;
     }
-    .search-container {
-      max-width: 800px;
-      margin: 2rem auto;
+    
+    /* Search container styling */
+    .collections-container {
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 2rem;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-    .search-form {
-      display: flex;
+    
+    .collections-header {
+      text-align: center;
       margin-bottom: 2rem;
     }
-    .search-input {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 1px solid #e5e5e5;
-      border-radius: 4px 0 0 4px;
-      outline: none;
-    }
-    .search-button {
-      padding: 0.75rem 1.5rem;
-      background-color: #292524;
-      color: white;
-      border: none;
-      border-radius: 0 4px 4px 0;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .search-button:hover {
-      background-color: #44403c;
-    }
-    .search-results {
-      margin-top: 2rem;
-    }
-    .result-item {
-      display: flex;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid #f5f5f4;
-    }
-    .result-image {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      margin-right: 1.5rem;
-      border-radius: 4px;
-    }
-    .result-content h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-    .result-content p {
-      color: #78716c;
-      margin-bottom: 1rem;
-    }
-    .result-price {
-      font-weight: 600;
+    
+    .collections-header h1 {
+      font-size: 2rem;
       color: #292524;
       margin-bottom: 0.5rem;
     }
-    .result-category {
+    
+    .collections-header p {
+      font-size: 1rem;
+      color: #78716c;
+    }
+    
+    .search-form {
+      display: flex;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      border: 1px solid #e7e5e4;
+      border-right: none;
+      outline: none;
+    }
+    
+    .search-button {
+      padding: 0.75rem 1.25rem;
+      background-color: #292524;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .search-button:hover {
+      background-color: #44403c;
+    }
+    
+    /* Products grid styling */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid #e7e5e4;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .product-image {
+      position: relative;
+      padding-top: 85%; /* Higher aspect ratio to give more room for taller images */
+      overflow: hidden;
+      background-color: #ffffff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .product-image img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Changed from cover to contain to show full image */
+      padding: 1rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .product-card:hover .product-image img {
+      transform: scale(1.03);
+    }
+    
+    .product-info {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      text-align: center;
+    }
+    
+    .product-info h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+      color: #292524;
+      text-align: center;
+      font-weight: 600;
+    }
+    
+    .product-info p {
+      margin: 0 0 1.5rem 0;
+      color: #78716c;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .product-metadata {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-direction: column;
+    }
+    
+    .product-price {
+      font-weight: 600;
+      color: #292524;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .product-category {
       display: inline-block;
-      padding: 0.25rem 0.5rem;
+      padding: 0.2rem 0.4rem;
       background-color: #f5f5f4;
       color: #78716c;
       border-radius: 4px;
-      font-size: 0.875rem;
+      font-size: 0.75rem;
     }
+    
+    .product-action-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: auto;
+      padding: 0 0.5rem 0.5rem;
+      width: 100%;
+    }
+    
+    .primary-button {
+      background-color: #292524;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .primary-button:hover {
+      background-color: #44403c;
+    }
+    
+    /* Results count styling */
+    #results-count {
+      margin-bottom: 2rem;
+      color: #78716c;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    
+    /* No results styling */
     .no-results {
       text-align: center;
       padding: 3rem 0;
       color: #78716c;
+      background-color: #f8fafc;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    #results-count {
-      margin-bottom: 1.5rem;
-      color: #78716c;
+    
+    .no-results p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .no-results a {
+      color: #292524;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .collections-container {
+        padding: 2rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .collections-container {
+        padding: 1rem;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .search-input {
+        width: 100%;
+        border-right: 1px solid #e7e5e4;
+        border-bottom: none;
+      }
     }
   </style>
 </head>
@@ -136,42 +300,54 @@
   <!-- Load Header -->
   <div id="my-header"></div>
 
-  <div class="container">
+  <div class="collections-container">
+    <header class="collections-header">
+      <h1>Search Products</h1>
+      <p>Find the perfect furniture for your office space</p>
+    </header>
+    
     <div class="breadcrumb">
       <a href="index.html">Home</a>
-      <span>›</span>
+      <span>/</span>
       <span>Search</span>
     </div>
 
-    <div class="search-container">
-      <h1 style="margin-bottom: 1.5rem; font-size: 1.8rem; color: #292524;">Search Products</h1>
-      
-      <form class="search-form" id="search-form">
-        <input 
-          type="text" 
-          id="search-input" 
-          class="search-input" 
-          placeholder="Search for products..."
-          autocomplete="off"
-        >
-        <button type="submit" class="search-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline-block; vertical-align: middle;">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          Search
-        </button>
-      </form>
+    <form class="search-form" id="search-form">
+      <input 
+        type="text" 
+        id="search-input" 
+        class="search-input" 
+        placeholder="Search for products..."
+        autocomplete="off"
+      >
+      <button type="submit" class="search-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Search
+      </button>
+    </form>
 
-      <div id="results-count"></div>
-      
-      <div class="search-results" id="search-results">
-        <div class="no-results">
-          <p>Enter a search term to find products</p>
-        </div>
-      </div>
+    <div id="results-count"></div>
+    
+    <div class="products-grid" id="search-results">
+      <!-- Products will be displayed here -->
     </div>
   </div>
+
+  <!-- Load Quote Modal -->
+  <div id="quote-modal-container"></div>
+  <script type="module">
+    import { QuoteModal } from './js/modal.js';
+    fetch('quote-modal.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('quote-modal-container').innerHTML = data;
+        window.quoteModal = new QuoteModal();
+      })
+      .catch(err => console.error('Error loading quote modal:', err));
+  </script>
 
   <!-- FOOTER -->
   <footer style="
@@ -206,60 +382,139 @@
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
     
-    // Function to perform search
-    async function performSearch(searchTerm) {
-      if (!searchTerm) return;
-      
-      document.getElementById('search-input').value = searchTerm;
-      document.getElementById('search-results').innerHTML = '<div class="no-results"><p>Searching...</p></div>';
+    // Store all products globally for filtering
+    let allProducts = [];
+    
+    // Function to load all products
+    async function loadAllProducts() {
+      document.getElementById('search-results').innerHTML = '<div class="no-results"><p>Loading products...</p></div>';
       
       try {
-        // Search products by name or description
+        // Fetch all products
         const { data: products, error } = await supabase
           .from('products')
           .select('*, categories(*)')
-          .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
           .order('name', { ascending: true });
         
         if (error) throw error;
         
+        // Store products globally
+        allProducts = products;
+        
         if (products.length === 0) {
-          document.getElementById('results-count').textContent = 'No products found.';
+          document.getElementById('results-count').textContent = 'No products available.';
           document.getElementById('search-results').innerHTML = `
             <div class="no-results">
-              <p>No products found matching "${searchTerm}"</p>
-              <p style="margin-top: 1rem;">Try different keywords or browse our <a href="collections.html" style="color: #292524; text-decoration: underline;">product categories</a>.</p>
+              <p>No products are currently available.</p>
             </div>
           `;
           return;
         }
         
-        // Update results count
-        document.getElementById('results-count').textContent = `Found ${products.length} product${products.length === 1 ? '' : 's'}`;
-        
-        // Display results
-        const resultsHTML = products.map(product => `
-          <div class="result-item">
-            <img src="${product.image_url || 'images/placeholder.jpg'}" alt="${product.name}" class="result-image">
-            <div class="result-content">
-              <h3><a href="product-detail.html?id=${product.id}">${product.name}</a></h3>
-              <p>${product.description ? product.description.substring(0, 120) + '...' : 'No description available'}</p>
-              <div class="result-price">R${product.price}</div>
-              <div class="result-category">${product.categories ? product.categories.name : 'Uncategorized'}</div>
-            </div>
-          </div>
-        `).join('');
-        
-        document.getElementById('search-results').innerHTML = resultsHTML;
+        // Display all products
+        displayProducts(products);
+        document.getElementById('results-count').textContent = `Showing all ${products.length} products`;
         
       } catch (error) {
-        console.error('Error searching products:', error);
+        console.error('Error loading products:', error);
         document.getElementById('search-results').innerHTML = `
           <div class="no-results">
-            <p>Error searching products. Please try again later.</p>
+            <p>Error loading products. Please try again later.</p>
           </div>
         `;
       }
+    }
+    
+    // Function to display products
+    function displayProducts(products) {
+      const resultsHTML = products.map(product => `
+        <div class="product-card">
+          <div class="product-image">
+            <a href="product-detail.html?id=${product.id}">
+              <img src="${product.image_url || 'images/placeholder.jpg'}" alt="${product.name}">
+            </a>
+          </div>
+          <div class="product-info">
+            <h3>${product.name || ''}</h3>
+            <p>${product.description ? product.description.substring(0, 60) + (product.description.length > 60 ? '...' : '') : ''}</p>
+            <div class="product-action-buttons">
+              <button class="primary-button add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name || 'Product'}">
+                Add to Quote
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      document.getElementById('search-results').innerHTML = resultsHTML;
+      
+      // Set up add to quote buttons
+      document.querySelectorAll('.add-to-quote-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = this.dataset.productId;
+          const productName = this.dataset.productName;
+          
+          // If addToQuote function exists (defined in modal.js), use it
+          if (typeof window.addToQuote === 'function') {
+            window.addToQuote(productId, productName);
+          } else {
+            // Otherwise, open the quote modal directly if it exists
+            const modalOverlay = document.getElementById('quote-modal-overlay');
+            if (modalOverlay) {
+              modalOverlay.style.display = 'flex';
+            }
+          }
+        });
+      });
+    }
+    
+    // Function to perform search
+    function performSearch(searchTerm) {
+      if (!searchTerm) {
+        // If search is cleared, show all products
+        displayProducts(allProducts);
+        document.getElementById('results-count').textContent = `Showing all ${allProducts.length} products`;
+        return;
+      }
+      
+      document.getElementById('search-input').value = searchTerm;
+      
+      // Filter the already loaded products
+      const filteredProducts = allProducts.filter(product => 
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      
+      if (filteredProducts.length === 0) {
+        document.getElementById('results-count').textContent = 'No products found.';
+        document.getElementById('search-results').innerHTML = `
+          <div class="no-results">
+            <p>No products found matching "${searchTerm}"</p>
+            <p style="margin-top: 1rem;">Try different keywords or <a href="#" id="clear-search">view all products</a>.</p>
+          </div>
+        `;
+        
+        // Add event listener to clear search link
+        document.getElementById('clear-search').addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('search-input').value = '';
+          displayProducts(allProducts);
+          document.getElementById('results-count').textContent = `Showing all ${allProducts.length} products`;
+          
+          // Update URL by removing query parameter
+          const newUrl = new URL(window.location);
+          newUrl.searchParams.delete('q');
+          window.history.pushState({}, '', newUrl);
+        });
+        
+        return;
+      }
+      
+      // Update results count
+      document.getElementById('results-count').textContent = `Found ${filteredProducts.length} product${filteredProducts.length === 1 ? '' : 's'} matching "${searchTerm}"`;
+      
+      // Display filtered results
+      displayProducts(filteredProducts);
     }
     
     // Handle form submission
@@ -271,15 +526,26 @@
         const newUrl = new URL(window.location);
         newUrl.searchParams.set('q', searchTerm);
         window.history.pushState({}, '', newUrl);
-        
-        performSearch(searchTerm);
+      } else {
+        // If search field is empty, remove query parameter
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('q');
+        window.history.pushState({}, '', newUrl);
       }
+      
+      performSearch(searchTerm);
     });
     
-    // If query param exists, perform search
-    if (query) {
-      performSearch(query);
-    }
+    // Initialize
+    window.addEventListener('DOMContentLoaded', async function() {
+      // First load all products
+      await loadAllProducts();
+      
+      // If query param exists, perform search
+      if (query) {
+        performSearch(query);
+      }
+    });
   </script>
 </body>
 </html> 

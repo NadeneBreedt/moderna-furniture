@@ -34,6 +34,14 @@ export class QuoteModal {
         this.updateSpecifications(index, e.target.value);
       }
     });
+
+    const submitBtn = document.querySelector('#quote-form button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', (e) => {
+        // Remove any validation that checks if items exist
+        // Allow form submission regardless of whether items are in the quote
+      });
+    }
   }
 
   getQuoteItems() {
@@ -120,10 +128,11 @@ export class QuoteModal {
   async handleSubmit(e) {
     e.preventDefault();
     const items = this.getQuoteItems();
-    if (!items.length) {
-      alert('Please add items to your quote first.');
-      return;
-    }
+    // Remove the validation check that was blocking submission
+    // if (!items.length) {
+    //   alert('Please add items to your quote first.');
+    //   return;
+    // }
 
     console.log('Quote items before submission:', items);
 
@@ -136,6 +145,12 @@ export class QuoteModal {
         status: 'new',
         created_at: new Date().toISOString()
       };
+
+      // Add comments if present
+      const comments = document.getElementById('quote-comments');
+      if (comments && comments.value) {
+        formData.customer_comments = comments.value;
+      }
 
       // Handle file upload if present
       const fileInput = document.getElementById('quote-attachment');
@@ -166,32 +181,35 @@ export class QuoteModal {
 
       if (quoteError) throw quoteError;
 
-      // Insert quote items with variant_id
-      const quoteItems = items.map(item => {
-        // Create the basic quote item
-        const quoteItem = {
-          quote_request_id: quoteData.id,
-          product_id: item.id,
-          product_name: item.name,
-          quantity: item.quantity || item.qty || 1,
-          specifications: item.specifications || item.variant || ''
-        };
-        
-        // Add the selected_variant_id if it exists
-        if (item.variant_id) {
-          quoteItem.selected_variant_id = item.variant_id;
-        }
-        
-        return quoteItem;
-      });
+      // Only insert quote items if there are any
+      if (items.length > 0) {
+        // Insert quote items with variant_id
+        const quoteItems = items.map(item => {
+          // Create the basic quote item
+          const quoteItem = {
+            quote_request_id: quoteData.id,
+            product_id: item.id,
+            product_name: item.name,
+            quantity: item.quantity || item.qty || 1,
+            specifications: item.specifications || item.variant || ''
+          };
+          
+          // Add the selected_variant_id if it exists
+          if (item.variant_id) {
+            quoteItem.selected_variant_id = item.variant_id;
+          }
+          
+          return quoteItem;
+        });
 
-      console.log('Quote items to be inserted:', quoteItems);
+        console.log('Quote items to be inserted:', quoteItems);
 
-      const { error: itemsError } = await supabase
-        .from('quote_items')
-        .insert(quoteItems);
+        const { error: itemsError } = await supabase
+          .from('quote_items')
+          .insert(quoteItems);
 
-      if (itemsError) throw itemsError;
+        if (itemsError) throw itemsError;
+      }
 
       // Success! Clear form and close modal
       alert('Quote submitted successfully!');

@@ -321,6 +321,11 @@
     justify-content: center;
     gap: 0.5rem;
   }
+  
+  /* Hide the validation popup */
+  .validation-popup {
+    display: none !important;
+  }
 </style>
 
 <script>
@@ -389,4 +394,125 @@
       refreshQuoteTable();
     }
   });
+
+  // Override any existing form submission to ensure it doesn't check for items
+  const quoteForm = document.getElementById('quote-form');
+  if (quoteForm) {
+    quoteForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      try {
+        // Get form values
+        const name = document.getElementById('quote-name').value;
+        const email = document.getElementById('quote-email').value;
+        const phone = document.getElementById('quote-phone').value;
+        const comments = document.getElementById('quote-comments').value;
+        
+        // Get quote items (now optional)
+        const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+        
+        // Create data object to send - no validation on items.length
+        const quoteData = {
+          name: name,
+          email: email,
+          phone: phone,
+          comments: comments,
+          items: items
+        };
+        
+        console.log('Submitting quote request:', quoteData);
+        
+        // Send the data to your server using the existing function
+        if (typeof window.submitQuoteToServer === 'function') {
+          await window.submitQuoteToServer(quoteData);
+        } else {
+          // Fallback - simplified version
+          alert('Thank you for your quote request. We will be in touch soon!');
+        }
+        
+        // Clear quote items
+        localStorage.removeItem('quoteItems');
+        
+        // Reset form
+        this.reset();
+        
+        // Close modal
+        document.getElementById('quote-modal-overlay').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Error submitting quote:', error);
+        alert('There was an error submitting your quote. Please try again.');
+      }
+    }, true); // true for useCapture to override any other handlers
+  }
+
+  // Remove the validation dialog that might be showing
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find and close any validation dialogs
+    const closeButtons = document.querySelectorAll('.close-validation-message');
+    closeButtons.forEach(btn => btn.click());
+  });
+
+  // Specific fix for the "Please add items to your quote first" dialog
+  document.addEventListener('DOMContentLoaded', function() {
+    // Override the form submission
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+      quoteForm.addEventListener('submit', function(e) {
+        // Get all dialogs/popups that might be validation messages
+        const validationPopups = document.querySelectorAll('div[role="dialog"], .validation-message, .error-popup');
+        validationPopups.forEach(popup => {
+          if (popup.textContent.includes('add items') || 
+              popup.textContent.includes('Please add items to your quote first')) {
+            popup.style.display = 'none';
+            // Find and click any close buttons
+            const closeButtons = popup.querySelectorAll('button');
+            closeButtons.forEach(btn => btn.click());
+          }
+        });
+        
+        // Continue with form submission regardless of items
+        return true;
+      });
+    }
+    
+    // Add a global click handler for the submit button
+    document.addEventListener('click', function(e) {
+      if (e.target && (e.target.type === 'submit' || 
+                       (e.target.tagName === 'BUTTON' && 
+                        e.target.closest('#quote-form')))) {
+        // Check if there's a validation popup showing
+        const popup = document.querySelector('.validation-popup, div[role="dialog"]');
+        if (popup && (popup.textContent.includes('add items') || 
+                     popup.textContent.includes('Please add items to your quote first'))) {
+          // Close it and allow form submission
+          popup.style.display = 'none';
+          // Find and click any close buttons
+          const closeButtons = popup.querySelectorAll('button');
+          closeButtons.forEach(btn => {
+            if (btn.textContent.includes('Close')) {
+              btn.click();
+            }
+          });
+        }
+      }
+    }, true);
+  });
+  
+  // Close the validation popup if it exists
+  function closeValidationPopup() {
+    const popup = document.querySelector('div[role="dialog"]');
+    if (popup && popup.textContent.includes('Please add items to your quote first')) {
+      // Find the close button and click it
+      const closeBtn = popup.querySelector('button');
+      if (closeBtn) {
+        closeBtn.click();
+      }
+      return true;
+    }
+    return false;
+  }
+  
+  // Call this periodically to close any validation popups
+  setInterval(closeValidationPopup, 500);
 </script>

@@ -14,11 +14,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 ">
   <div id="quote-modal" style="
     background-color: white;
@@ -29,6 +29,7 @@
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   ">
     <button id="quote-modal-close" style="
       position: absolute;
@@ -313,18 +314,25 @@
     background: #f5f5f4;
   }
   
-  /* Removed conflicting floating quote button styling */
-  
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  
   /* Hide the validation popup */
   .validation-popup {
     display: none !important;
+  }
+  
+  /* Simplified blur effect */
+  .blur {
+    opacity: 0.8;
+  }
+  
+  /* Make sure the modal stays visible */
+  #quote-modal {
+    opacity: 1 !important;
+    background-color: white !important;
+  }
+  
+  /* Make sure the overlay is on top */
+  #quote-modal-overlay {
+    z-index: 9999 !important;
   }
 </style>
 
@@ -385,6 +393,11 @@
     
     // Show the notification
     showQuoteNotification();
+    
+    // When viewing the quote, apply blur
+    document.getElementById('view-quote-btn').addEventListener('click', function() {
+      applyBlurToBackground();
+    });
   };
   
   // Add event listener to the floating quote button
@@ -513,6 +526,52 @@
     return false;
   }
   
-  // Call this periodically to close any validation popups
-  setInterval(closeValidationPopup, 500);
+  // Additional function to ensure blur is maintained with simpler approach
+  function applyBlurToBackground() {
+    const mainContent = document.getElementById('main-content');
+    const header = document.getElementById('my-header');
+    
+    if (mainContent) {
+      mainContent.classList.add('blur');
+      mainContent.style.opacity = '0.8';
+    }
+    
+    if (header) {
+      header.classList.add('blur');
+      header.style.opacity = '0.8';
+    }
+  }
+
+  // Function to remove blur
+  function removeBlurFromBackground() {
+    const mainContent = document.getElementById('main-content');
+    const header = document.getElementById('my-header');
+    
+    if (mainContent) {
+      mainContent.classList.remove('blur');
+      mainContent.style.opacity = '1';
+    }
+    
+    if (header) {
+      header.classList.remove('blur');
+      header.style.opacity = '1';
+    }
+  }
+
+  // Add direct event handlers to the buttons that open/close the modal
+  document.getElementById('quote-floating-btn').addEventListener('click', function() {
+    applyBlurToBackground();
+  });
+
+  document.getElementById('quote-modal-close').addEventListener('click', function() {
+    removeBlurFromBackground();
+  });
+
+  // Also add event handlers to the view quote button
+  document.getElementById('view-quote-btn').addEventListener('click', function() {
+    applyBlurToBackground();
+  });
+
+  // Call this periodically to close any validation popups, but not too frequently
+  setInterval(closeValidationPopup, 1000);
 </script>

@@ -9,6 +9,7 @@ export class QuoteModal {
     this.items = [];
     this.initElements();
     this.initEventListeners();
+    this.blurObserver = null;
   }
 
   initElements() {
@@ -114,15 +115,93 @@ export class QuoteModal {
     this.refreshQuoteTable();
     this.modalOverlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    this.mainContent?.classList.add('blur');
-    document.getElementById('my-header')?.classList.add('blur');
+    
+    // Clear any previous intervals to prevent multiple instances
+    if (this.blurInterval) {
+      clearInterval(this.blurInterval);
+      this.blurInterval = null;
+    }
+    
+    // Apply simple visibility modifications instead of complex filters
+    const mainContent = document.getElementById('main-content');
+    const header = document.getElementById('my-header');
+    
+    if (mainContent) {
+      mainContent.classList.add('blur');
+      mainContent.style.opacity = '0.8'; // Use opacity instead of filter
+    }
+    
+    if (header) {
+      header.classList.add('blur');
+      header.style.opacity = '0.8'; // Use opacity instead of filter
+    }
+    
+    // Make sure modal is fully visible
+    const modal = document.getElementById('quote-modal');
+    if (modal) {
+      modal.style.opacity = '1';
+    }
+    
+    // Safety timeout to ensure the page doesn't remain blank
+    this.safetyTimeout = setTimeout(() => {
+      // If something goes wrong, make sure everything is visible
+      const allContent = document.querySelectorAll('*');
+      allContent.forEach(element => {
+        if (element !== this.modalOverlay && !this.modalOverlay.contains(element)) {
+          element.style.opacity = '1';
+          element.style.filter = 'none';
+        }
+      });
+    }, 5000); // After 5 seconds
+  }
+
+  setupBlurObserver(mainContent, header) {
+    // We'll skip the mutation observer approach as it might be causing issues
   }
 
   closeModal() {
     this.modalOverlay.style.display = 'none';
     document.body.style.overflow = '';
-    this.mainContent?.classList.remove('blur');
-    document.getElementById('my-header')?.classList.remove('blur');
+    
+    const mainContent = document.getElementById('main-content');
+    const header = document.getElementById('my-header');
+    
+    if (mainContent) {
+      mainContent.classList.remove('blur');
+      mainContent.style.opacity = '1';
+      mainContent.style.filter = '';
+    }
+    
+    if (header) {
+      header.classList.remove('blur');
+      header.style.opacity = '1';
+      header.style.filter = '';
+    }
+    
+    // Disconnect the observer when modal is closed
+    if (this.blurObserver) {
+      this.blurObserver.disconnect();
+      this.blurObserver = null;
+    }
+    
+    // Clear the interval when the modal is closed
+    if (this.blurInterval) {
+      clearInterval(this.blurInterval);
+      this.blurInterval = null;
+    }
+    
+    // Clear safety timeout
+    if (this.safetyTimeout) {
+      clearTimeout(this.safetyTimeout);
+      this.safetyTimeout = null;
+    }
+    
+    // Ensure everything is visible
+    const allContent = document.querySelectorAll('*');
+    allContent.forEach(element => {
+      element.style.opacity = '';
+      element.style.filter = '';
+    });
   }
 
   async handleSubmit(e) {

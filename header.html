@@ -27,11 +27,55 @@
         list-style: none; 
         display: flex; 
         gap: 1.5rem;
+        align-items: center;
       ">
         <li><a href="index.html" style="font-weight: 500;">Home</a></li>
-        <li><a href="collections.html" style="font-weight: 500;">Products</a></li>
+        <li class="products-dropdown" style="position: relative;">
+          <a href="collections.html" style="font-weight: 500;">Products</a>
+          <div class="dropdown-content" style="
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            min-width: 220px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 0.75rem 0;
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+          ">
+            <a href="collections.html" style="
+              display: block;
+              padding: 0.5rem 1rem;
+              color: #333;
+              text-decoration: none;
+              transition: background-color 0.2s;
+              font-weight: bold;
+            ">All Products</a>
+            
+            <!-- Categories will be loaded here -->
+            <div id="dropdown-categories">
+              <!-- Loading indicator removed - will be populated via JavaScript -->
+            </div>
+          </div>
+        </li>
         <li><a href="Projects" style="font-weight: 500;">About</a></li>
         <li><a href="contact.html" style="font-weight: 500;">Contact</a></li>
+        <li>
+          <a href="search-results.html" style="
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.25rem;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </a>
+        </li>
         <li id="admin-nav-item">
           <a href="admin-login.html" id="admin-link" style="
             font-weight: 500;
@@ -46,30 +90,33 @@
   </div>
 </header>
 
-<script>
-  fetch('header.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('my-header').innerHTML = data;
-    })
-    .catch(err => console.error('Error loading header:', err));
-
-  // Check if user is logged in
-  const adminSession = localStorage.getItem('adminSession');
-  const adminLink = document.getElementById('admin-link');
-  
-  if (adminSession) {
-    // User is logged in, show dashboard link
-    adminLink.href = 'admin-dashboard.html';
-    adminLink.textContent = 'Dashboard';
-  } else {
-    // User is not logged in, show login link
-    adminLink.href = 'admin-login.html';
-    adminLink.textContent = 'Login';
-  }
-</script>
-
 <style>
+  body {
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* The gap between the Products link and dropdown */
+  .dropdown-content {
+    margin-top: 10px;
+  }
+  
+  /* Show dropdown on hover */
+  .products-dropdown:hover .dropdown-content {
+    display: block !important;
+  }
+  
+  /* Keep dropdown visible when hovering over it */
+  .dropdown-content:hover {
+    display: block !important;
+  }
+  
+  /* Hover effect for category links */
+  .dropdown-content a:hover {
+    background-color: #f5f5f5;
+  }
+  
   .view-quote {
     padding: 0.75rem 1.5rem;
     background: #ffffff;
@@ -87,3 +134,122 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 </style>
+
+<script type="module">
+  // Import just the fallback categories from our shared module
+  import { fallbackCategories } from './supabase.js';
+
+  // Immediately populate the dropdown categories with fallback
+  // This ensures something always displays right away
+  populateDropdown(fallbackCategories);
+  
+  // Remove the fetch attempt - just use the fallbacks directly
+
+  // Helper function to populate the dropdown with categories
+  function populateDropdown(categories) {
+    if (!categories || !categories.length) return;
+    
+    const categoriesHtml = categories.map(category => `
+      <a href="collections.html?category=${category.id}" style="display: block; padding: 0.5rem 1rem; color: #333; text-decoration: none;">
+        ${category.name || 'Unnamed Category'}
+      </a>
+    `).join('');
+    
+    const dropdownEl = document.getElementById('dropdown-categories');
+    if (dropdownEl) {
+      dropdownEl.innerHTML = categoriesHtml;
+      console.log('Dropdown categories populated with', categories.length, 'items');
+    }
+  }
+
+  // Check if user is logged in
+  function checkAdminStatus() {
+    const adminSession = localStorage.getItem('adminSession');
+    const adminLink = document.getElementById('admin-link');
+    
+    if (adminLink) {
+      if (adminSession) {
+        // User is logged in, show dashboard link
+        adminLink.href = 'admin-dashboard.html';
+        adminLink.textContent = 'Dashboard';
+      } else {
+        // User is not logged in, show login link
+        adminLink.href = 'admin-login.html';
+        adminLink.textContent = 'Login';
+      }
+    }
+  }
+  
+  // Initialize the header functionality
+  function initializeHeader() {
+    console.log('Initializing header components');
+    
+    // Check admin status
+    checkAdminStatus();
+    
+    // Set up dropdown mouse behavior
+    makeDropdownSticky();
+  }
+  
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', initializeHeader);
+  
+  // Simple function to make dropdown menu stay visible
+  function makeDropdownSticky() {
+    const dropdown = document.querySelector('.products-dropdown');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    
+    if (!dropdown || !dropdownContent) return;
+    
+    // Variables to track hover state
+    let isDropdownOpen = false;
+    let hideTimer = null;
+    
+    // Create a connection between Products link and dropdown
+    dropdown.addEventListener('mouseenter', function() {
+      clearTimeout(hideTimer);
+      dropdownContent.style.display = 'block';
+      isDropdownOpen = true;
+    });
+    
+    // When mouse leaves Products link, start timer
+    dropdown.addEventListener('mouseleave', function(e) {
+      // Check if mouse has moved to the dropdown
+      if (e.relatedTarget === dropdownContent || dropdownContent.contains(e.relatedTarget)) {
+        return;
+      }
+      
+      // Start timer to hide dropdown
+      hideTimer = setTimeout(function() {
+        if (!isDropdownOpen) {
+          dropdownContent.style.display = 'none';
+        }
+      }, 500);
+      
+      isDropdownOpen = false;
+    });
+    
+    // When mouse enters dropdown, keep it open
+    dropdownContent.addEventListener('mouseenter', function() {
+      clearTimeout(hideTimer);
+      isDropdownOpen = true;
+    });
+    
+    // When mouse leaves dropdown, check if it moved back to Products link
+    dropdownContent.addEventListener('mouseleave', function(e) {
+      // Check if mouse has moved back to the Products link
+      if (e.relatedTarget === dropdown || dropdown.contains(e.relatedTarget)) {
+        return;
+      }
+      
+      // Start timer to hide dropdown
+      hideTimer = setTimeout(function() {
+        if (!isDropdownOpen) {
+          dropdownContent.style.display = 'none';
+        }
+      }, 500);
+      
+      isDropdownOpen = false;
+    });
+  }
+</script>

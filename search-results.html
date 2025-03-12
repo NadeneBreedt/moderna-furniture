@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Products - Moderna Office Furniture</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .search-container {
+      padding: 2rem 0;
+      text-align: center;
+    }
+    
+    .search-form {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      background: white;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: none;
+      font-size: 1rem;
+    }
+    
+    .search-button {
+      padding: 0.75rem 1.5rem;
+      background: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .page-title {
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: white;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #f5f5f5;
+      padding: 1rem;
+    }
+    
+    .product-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .product-info {
+      padding: 1rem;
+    }
+    
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 3rem 0;
+      color: #666;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 3rem 0;
+      color: #666;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin: 2rem 0;
+    }
+    
+    .no-results p {
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div id="my-header"></div>
+  
+  <div class="container">
+    <div class="search-container">
+      <h1 class="page-title">Search Products</h1>
+      <form class="search-form" id="search-form">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="search-input" 
+          placeholder="Search for products..."
+          value=""
+        >
+        <button type="submit" class="search-button">Search</button>
+      </form>
+    </div>
+    
+    <div id="loading" class="loading">
+      <p>Loading products...</p>
+    </div>
+    
+    <div id="products-grid" class="products-grid" style="display: none;"></div>
+    
+    <div id="no-results" class="no-results" style="display: none;">
+      <p>No products found matching your search.</p>
+    </div>
+  </div>
+  
+  <!-- Quote Modal Container -->
+  <div id="quote-modal-container"></div>
+  
+  <script>
+    // Load header and quote modal
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('my-header').innerHTML = data;
+        
+        // After header is loaded, initialize dropdown functionality
+        const headerScript = document.createElement('script');
+        headerScript.innerHTML = `
+          // Initialize header functions
+          document.addEventListener('DOMContentLoaded', function() {
+            if (typeof checkAdminStatus === 'function') {
+              checkAdminStatus();
+            }
+            if (typeof loadCategories === 'function') {
+              loadCategories();
+            }
+          });
+        `;
+        document.body.appendChild(headerScript);
+        
+        return fetch('quote-modal.html');
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('quote-modal-container').innerHTML = data;
+        
+        // After components are loaded, get search query and load products
+        const searchParams = new URLSearchParams(window.location.search);
+        const query = searchParams.get('q') || '';
+        
+        // Set the search input value
+        document.getElementById('search-input').value = query;
+        
+        // Load products
+        loadProducts(query);
+      })
+      .catch(err => console.error('Error loading components:', err));
+    
+    // Form submission handler
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = document.getElementById('search-input').value.trim();
+      
+      // Update URL with the search query
+      const url = new URL(window.location);
+      if (query) {
+        url.searchParams.set('q', query);
+      } else {
+        url.searchParams.delete('q');
+      }
+      window.history.pushState({}, '', url);
+      
+      // Load products with the search query
+      loadProducts(query);
+    });
+    
+    // Load products from Supabase
+    function loadProducts(query = '') {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('products-grid').style.display = 'none';
+      document.getElementById('no-results').style.display = 'none';
+      
+      let apiUrl = 'https://rpncvcioutyrxntqvlnd.supabase.co/rest/v1/products?select=*';
+      
+      // Add search filter if query is provided
+      if (query) {
+        apiUrl += `&or=(name.ilike.%25${encodeURIComponent(query)}%25,description.ilike.%25${encodeURIComponent(query)}%25)`;
+      }
+      
+      fetch(apiUrl, {
+        headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ'
+        }
+      })
+      .then(response => response.json())
+      .then(products => {
+        document.getElementById('loading').style.display = 'none';
+        
+        if (products && products.length > 0) {
+          displayProducts(products);
+        } else {
+          document.getElementById('no-results').style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading products:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('no-results').style.display = 'block';
+      });
+    }
+    
+    // Display products in the grid
+    function displayProducts(products) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '';
+      
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        
+        const productImage = document.createElement('div');
+        productImage.className = 'product-image';
+        
+        const img = document.createElement('img');
+        img.src = product.image_url || 'images/placeholder.jpg';
+        img.alt = product.name;
+        
+        const productInfo = document.createElement('div');
+        productInfo.className = 'product-info';
+        
+        const productTitle = document.createElement('h3');
+        productTitle.className = 'product-title';
+        productTitle.textContent = product.name;
+        
+        const addToQuoteBtn = document.createElement('a');
+        addToQuoteBtn.className = 'add-to-quote';
+        addToQuoteBtn.textContent = 'Add to Quote';
+        addToQuoteBtn.href = '#';
+        addToQuoteBtn.dataset.productId = product.id;
+        addToQuoteBtn.dataset.productName = product.name;
+        addToQuoteBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          addToQuote(product.id, product.name);
+        });
+        
+        productImage.appendChild(img);
+        productInfo.appendChild(productTitle);
+        productInfo.appendChild(addToQuoteBtn);
+        
+        productCard.appendChild(productImage);
+        productCard.appendChild(productInfo);
+        
+        grid.appendChild(productCard);
+      });
+      
+      grid.style.display = 'grid';
+    }
+    
+    // Add product to quote
+    function addToQuote(productId, productName) {
+      // Create item object
+      const item = {
+        id: productId,
+        name: productName,
+        quantity: 1
+      };
+      
+      // Get existing items
+      const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+      
+      // Check if this product is already in the cart
+      const existingItemIndex = items.findIndex(i => i.id === productId);
+      
+      if (existingItemIndex >= 0) {
+        // If already in cart, increase quantity
+        items[existingItemIndex].quantity = (items[existingItemIndex].quantity || 1) + 1;
+      } else {
+        // Add new item to cart
+        items.push(item);
+      }
+      
+      // Save updated cart to localStorage
+      localStorage.setItem('quoteItems', JSON.stringify(items));
+      
+      // Show confirmation
+      alert('Item added to your quote!');
+    }
+  </script>
+</body>
+</html> 

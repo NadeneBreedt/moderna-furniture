@@ -368,37 +368,38 @@
 
   <!-- Supabase Script to Load Categories Dynamically -->
   <script type="module">
-    // Only import the fallback categories
-    import { fallbackCategories } from './supabase.js';
+    import { supabase } from './supabase.js';
 
-    // Display fallback categories directly
-    displayCategories(fallbackCategories);
+    async function loadCategories() {
+        console.log('Loading categories...');
+        const { data: categories, error: categoriesError } = await supabase
+            .from('categories')
+            .select('*');
 
-    // Helper function to display categories in the grid
-    function displayCategories(categories) {
-        if (!categories || !categories.length) return;
-        
-        const categoriesGrid = document.querySelector('.categories-grid');
-        if (!categoriesGrid) {
-            console.error('Categories grid element not found');
+        if (categoriesError) {
+            console.error('Error loading categories:', categoriesError);
             return;
         }
+
+        const categoriesGrid = document.querySelector('.categories-grid');
         
-        const categoriesHtml = categories.map(category => `
-            <a href="products.html?category=${category.id}" class="category-card">
-                <div class="category-image">
-                    <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name || 'Category'}">
-                </div>
-                <div class="category-info">
-                    <h3>${category.name || 'Category'}</h3>
-                    <span class="view-products">View Products</span>
-                </div>
-            </a>
-        `).join('');
-        
-        categoriesGrid.innerHTML = categoriesHtml;
-        console.log('Displayed', categories.length, 'categories on collections page');
+        categoriesGrid.innerHTML = `
+            ${categories.map(category => `
+                <a href="products.html?category=${category.id}" class="category-card">
+                    <div class="category-image">
+                        <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
+                    </div>
+                    <div class="category-info">
+                        <h3>${category.name}</h3>
+                        <span class="view-products">View Products</span>
+                    </div>
+                </a>
+            `).join('')}
+        `;
     }
+
+    // Load categories on page load
+    loadCategories();
   </script>
 
   <!-- WhatsApp Button -->

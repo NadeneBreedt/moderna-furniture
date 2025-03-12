@@ -3,20 +3,25 @@
   position: fixed;
   top: 30%;
   right: 0;
-  transform: translateY(-70%);
-  background: #333;
-  opacity: 1;
+  transform: translateY(-50%);
+  background: #292524;
   color: #fff;
-  padding: 1rem;
+  padding: 0.4rem 0.2rem;
   border: none;
-  border-radius: 6px 0 0 6px;
+  border-radius: 4px 0 0 4px;
   cursor: pointer;
   z-index: 9999;
   box-shadow: -2px 2px 5px rgba(0,0,0,0.2);
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  transform-origin: right;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
+  width: auto;
+  transition: background-color 0.2s ease, padding 0.2s ease;
+}
+
+.quote-floating-btn:hover {
+  background-color: #44403c;
+  padding-right: 0.4rem;
 }
 
 /* Modal Overlay */

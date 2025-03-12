@@ -39,6 +39,7 @@ function initQuoteModal() {
     }
 
     items.forEach((item, index) => {
+      console.log('Rendering quote item:', item);
       const row = document.createElement('tr');
       
       row.innerHTML = `
@@ -109,13 +110,9 @@ function initQuoteModal() {
     quoteForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const items = getQuoteItems();
-      if (!items.length) {
-        alert('Please add items to your quote first.');
-        return;
-      }
-
-      // Debug: Log the items to see their structure
-      console.log('Items before processing:', items);
+      
+      // Remove mandatory check for items
+      // Items are now optional
 
       try {
         // Handle file upload if there's an attachment
@@ -150,6 +147,7 @@ function initQuoteModal() {
             customer_name: document.getElementById('quote-name').value,
             customer_email: document.getElementById('quote-email').value,
             customer_phone: document.getElementById('quote-phone').value,
+            customer_comments: document.getElementById('quote-comments')?.value || '',
             status: 'new',
             attachment_url: attachmentUrl
           })
@@ -163,57 +161,51 @@ function initQuoteModal() {
         // Create the quote items with variant information
         const quoteItems = [];
 
-        for (const item of items) {
-          // Log each item to see its structure
-          console.log('Processing item:', item);
-          
-          // Create the basic quote item
-          const quoteItem = {
-            quote_request_id: quoteRequest.id,
-            product_id: item.id,
-            product_name: item.name,
-            quantity: item.quantity || 1,
-            specifications: item.specifications || item.variant || ''
-          };
-          
-          // Explicitly check for variant_id
-          console.log('Item variant_id:', item.variant_id);
-          
-          // Add the selected_variant_id if it exists
-          if (item.variant_id) {
-            quoteItem.selected_variant_id = item.variant_id;
-            console.log('Added variant_id to quote item:', item.variant_id);
+        // Only process items if there are any
+        if (items.length > 0) {
+          for (const item of items) {
+            // Log each item to see its structure
+            console.log('Processing item:', item);
+            
+            // Create the basic quote item
+            const quoteItem = {
+              quote_request_id: quoteRequest.id,
+              product_id: item.id,
+              product_name: item.name,
+              quantity: item.quantity || 1,
+              specifications: item.specifications || item.variant || ''
+            };
+            
+            // Explicitly check for variant_id
+            console.log('Item variant_id:', item.variant_id);
+            
+            // Add the selected_variant_id if it exists
+            if (item.variant_id) {
+              quoteItem.selected_variant_id = item.variant_id;
+              console.log('Added variant_id to quote item:', item.variant_id);
+            }
+            
+            console.log('Final quote item:', quoteItem);
+            quoteItems.push(quoteItem);
           }
-          
-          console.log('Final quote item:', quoteItem);
-          quoteItems.push(quoteItem);
+
+          console.log('Quote items to be inserted:', quoteItems);
+
+          // Only insert quote items if there are any
+          if (quoteItems.length > 0) {
+            const { data: insertedItems, error: itemsError } = await supabase
+              .from('quote_items')
+              .insert(quoteItems)
+              .select();
+
+            if (itemsError) {
+              console.error('Error inserting quote items:', itemsError);
+              throw itemsError;
+            }
+            
+            console.log('Inserted quote items:', insertedItems);
+          }
         }
-
-        console.log('Quote items to be inserted:', quoteItems);
-
-        // Check if the quote_items table has the selected_variant_id column
-        const { data: tableInfo, error: tableError } = await supabase
-          .from('quote_items')
-          .select('*')
-          .limit(1);
-          
-        if (tableError) {
-          console.error('Error checking table structure:', tableError);
-        } else {
-          console.log('Table structure check:', tableInfo);
-        }
-
-        const { data: insertedItems, error: itemsError } = await supabase
-          .from('quote_items')
-          .insert(quoteItems)
-          .select();
-
-        if (itemsError) {
-          console.error('Error inserting quote items:', itemsError);
-          throw itemsError;
-        }
-        
-        console.log('Inserted quote items:', insertedItems);
 
         alert('Quote submitted successfully!');
         

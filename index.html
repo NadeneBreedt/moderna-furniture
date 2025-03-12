@@ -139,17 +139,40 @@
         ">
           Creating Spaces You Love<br>contemporary chairs, tables, and decor pieces.
         </p>
-        <a href="collections.html" style="
-          display: inline-block;
-          padding: 1rem 2rem;
-          background: #292524;
-          color: white;
-          border-radius: 8px;
-          font-weight: 500;
-          transition: background 0.2s;
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="collections.html" style="
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #292524;
+            color: white;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.2s;
+          ">
+            Shop Now
+          </a>
+          <a href="#" id="hero-quote-btn" style="
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #292524;
+            border-radius: 8px;
+            font-weight: 500;
+            border: 2px solid #292524;
+            transition: all 0.2s;
+          ">
+            Get My Quote
+          </a>
+        </div>
+        <p style="
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: #78716c;
         ">
-          Shop Now
-        </a>
+          <span style="display: inline-flex; align-items: center; margin-right: 0.5rem;">✓</span> Premium quality
+          <span style="display: inline-flex; align-items: center; margin: 0 0.5rem 0 1rem;">✓</span> 5-Year warranty
+          <span style="display: inline-flex; align-items: center; margin: 0 0.5rem 0 1rem;">✓</span> Quick delivery
+        </p>
       </div>
 
       <div class="hero-image">
@@ -394,6 +417,24 @@
       .then(data => {
         document.getElementById('quote-modal-container').innerHTML = data;
         window.quoteModal = new QuoteModal();
+        
+        // Wait a short moment for all scripts to load
+        setTimeout(() => {
+          // Connect the hero quote button to the modal
+          const heroQuoteBtn = document.getElementById('hero-quote-btn');
+          if (heroQuoteBtn) {
+            heroQuoteBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const modalOverlay = document.getElementById('quote-modal-overlay');
+              if (modalOverlay) {
+                modalOverlay.style.display = 'flex';
+                if (typeof refreshQuoteTable === 'function') {
+                  refreshQuoteTable();
+                }
+              }
+            });
+          }
+        }, 500);
       })
       .catch(err => console.error('Error loading components:', err));
 

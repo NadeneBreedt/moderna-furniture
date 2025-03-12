@@ -1,0 +1,17 @@
+/* ... existing code ... */
+.add-to-quote-btn {
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+}
+
+.add-to-quote-btn:hover {
+  background-color: #374151;
+}
+/* ... existing code ... */

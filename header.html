@@ -14,24 +14,28 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: relative;
     z-index: 100;
+    padding: 0;
   }
   
   .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 15px 20px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 15px 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     position: relative;
   }
   
   /* Logo styling */
   .logo {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
+    left: 0;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    height: 100%;
   }
   
   .logo img {
@@ -45,10 +49,20 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
+    padding-right: 0;
+    margin-right: 0;
+    position: absolute;
+    right: 20px; /* Fixed position at right edge with padding */
+    justify-content: flex-end;
   }
   
   .menu li {
     margin-left: 30px;
+  }
+  
+  .menu li:last-child {
+    padding-right: 0;
+    margin-right: 0;
   }
   
   .menu a {
@@ -264,6 +278,30 @@
         mobileAdminLink.textContent = 'Dashboard';
       }
     }
+    
+    // Ensure navigation menu hugs the right edge
+    function adjustNavigationPosition() {
+      var menu = document.querySelector('.menu');
+      if (menu) {
+        menu.style.position = 'absolute';
+        menu.style.right = '20px';
+        menu.style.justifyContent = 'flex-end';
+        
+        // Ensure the last item has no right margin
+        var menuItems = menu.querySelectorAll('li');
+        if (menuItems.length > 0) {
+          var lastItem = menuItems[menuItems.length - 1];
+          lastItem.style.marginRight = '0';
+          lastItem.style.paddingRight = '0';
+        }
+      }
+    }
+    
+    // Run the adjustment function
+    adjustNavigationPosition();
+    
+    // Run it again after a small delay to ensure it works after all content is rendered
+    setTimeout(adjustNavigationPosition, 100);
   });
 </script>
 

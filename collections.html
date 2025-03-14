@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Moderna Office Furniture - Collections</title>
   <style>
+    /* Add styles to prevent header glitching during page loads */
+    #my-header {
+      opacity: 1;
+      transition: opacity 0.2s ease;
+      min-height: 70px; /* Reserve space for the header */
+    }
+    
     * {
       margin: 0; 
       padding: 0; 
@@ -324,7 +331,25 @@
 </head>
 <body>
   <!-- Load Header -->
-  <div id="my-header"></div>
+  <div id="my-header">
+    <!-- Inline fallback header that is always visible until the real header loads -->
+    <header class="header" style="width: 100%; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; z-index: 100; padding: 0;">
+      <div class="header-content" style="max-width: 100%; width: 100%; margin: 0; padding: 15px 0; display: flex; align-items: center; justify-content: space-between; position: relative;">
+        <div class="logo" style="position: relative; left: 0; padding-left: 20px; display: flex; align-items: center; height: 100%;">
+          <a href="index.html">
+            <img src="images/moderna.jpg" alt="Moderna Office Furniture" style="height: 40px; display: block;">
+          </a>
+        </div>
+        <ul class="menu" style="display: flex; list-style-type: none; margin: 0; padding: 0; position: absolute; right: 20px; justify-content: flex-end;">
+          <li style="margin-left: 30px;"><a href="index.html" style="color: #333; text-decoration: none; font-weight: 500;">Home</a></li>
+          <li style="margin-left: 30px;"><a href="collections.html" style="color: #333; text-decoration: none; font-weight: 500;">Products</a></li>
+          <li style="margin-left: 30px;"><a href="contact.html" style="color: #333; text-decoration: none; font-weight: 500;">Contact</a></li>
+          <li style="margin-left: 30px;"><a href="admin-login.html" style="background-color: #333; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: 500;">Login</a></li>
+        </ul>
+      </div>
+    </header>
+  </div>
+
   <div id="main-content">
     <div class="collections-container">
       <header class="collections-header">
@@ -339,67 +364,223 @@
 
       <div class="categories-grid">
         <!-- Categories will be loaded here -->
+        <div id="loading-message" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+          Loading collections... Please wait.
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Load Quote Modal -->
   <div id="quote-modal-container"></div>
+
   <script type="module">
     import { QuoteModal } from './js/modal.js';
-    fetch('quote-modal.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('quote-modal-container').innerHTML = data;
-        window.quoteModal = new QuoteModal();
-      })
-      .catch(err => console.error('Error loading quote modal:', err));
-  </script>
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-  <!-- Load Header -->
-  <script>
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('my-header').innerHTML = data;
-      })
-      .catch(err => console.error('Error loading header:', err));
-  </script>
+    const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <!-- Supabase Script to Load Categories Dynamically -->
-  <script type="module">
-    import { supabase } from './supabase.js';
+    // Simplified header loading with no transitions
+    async function loadHeaderWithRetry(retries = 3) {
+      let attempts = 0;
+      
+      // We'll keep trying in the background, but the fallback header is always visible
+      while (attempts < retries) {
+        try {
+          attempts++;
+          console.log(`Loading header attempt ${attempts}...`);
+          
+          // Load header
+          const headerResponse = await fetch('header.html', { 
+            cache: 'no-store', // Bypass cache to avoid stale header
+            method: 'GET',
+            headers: { 'Cache-Control': 'no-cache' }
+          });
+          
+          if (!headerResponse.ok) {
+            throw new Error(`Header fetch failed with status: ${headerResponse.status}`);
+          }
+          
+          const headerData = await headerResponse.text();
+          
+          // Replace the fallback header with the actual header
+          document.getElementById('my-header').innerHTML = headerData;
+          
+          // Make the header visible immediately and apply styling
+          const headerElement = document.querySelector('header');
+          if (headerElement) {
+            headerElement.style.display = 'block';
+            headerElement.style.visibility = 'visible';
+            headerElement.style.opacity = '1';
+          }
+          
+          // Apply header styling once
+          adjustHeaderSpacing();
+          
+          console.log('Header loaded successfully');
+          break; // Success, exit the loop
+          
+        } catch (err) {
+          console.error(`Error loading header (attempt ${attempts}):`, err);
+          // Wait before retry, but no need to do anything else since fallback is visible
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      }
+    }
+    
+    // Update the adjustHeaderSpacing function to be more reliable
+    function adjustHeaderSpacing() {
+      try {
+        // Target header elements
+        const header = document.querySelector('header');
+        const logo = document.querySelector('.logo');
+        const navMenu = document.querySelector('.nav-menu');
+        const nav = document.querySelector('nav');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (header) {
+          header.style.padding = '0';
+          header.style.width = '100%';
+          header.style.opacity = '1'; // Ensure header is visible
+          
+          // Find the container within the header
+          const headerContainer = header.querySelector('.container');
+          if (headerContainer) {
+            headerContainer.style.padding = '0';
+            headerContainer.style.width = '100%';
+            headerContainer.style.maxWidth = '100%';
+            headerContainer.style.display = 'flex';
+            headerContainer.style.justifyContent = 'space-between';
+          }
+        }
+        
+        if (logo) {
+          logo.style.marginLeft = '0';
+          logo.style.paddingLeft = '0';
+        }
+        
+        if (navMenu) {
+          navMenu.style.marginRight = '0';
+          navMenu.style.paddingRight = '0';
+          navMenu.style.position = 'relative';
+          navMenu.style.right = '0';
+        }
+        
+        if (nav) {
+          nav.style.width = '100%';
+          nav.style.display = 'flex';
+          nav.style.justifyContent = 'flex-end';
+        }
+        
+        if (navLinks) {
+          navLinks.style.marginRight = '0';
+          navLinks.style.paddingRight = '0';
+          navLinks.style.display = 'flex';
+          navLinks.style.justifyContent = 'flex-end';
+        }
+        
+        // Target all navigation items to ensure they're properly aligned
+        const navItems = document.querySelectorAll('header nav ul li');
+        navItems.forEach(item => {
+          item.style.marginRight = '0';
+          item.style.paddingRight = '0';
+        });
+      } catch (err) {
+        console.error('Error in adjustHeaderSpacing:', err);
+        // Error in styling, but the header should still be visible
+      }
+    }
+
+    // Initialize the app
+    async function initializeApp() {
+      try {
+        console.log('Initializing collections page...');
+        
+        // Load header with retry mechanism
+        await loadHeaderWithRetry();
+        
+        // Load modal
+        try {
+          const modalResponse = await fetch('quote-modal.html');
+          const modalData = await modalResponse.text();
+          document.getElementById('quote-modal-container').innerHTML = modalData;
+          
+          // Initialize modal
+          window.quoteModal = new QuoteModal();
+        } catch (err) {
+          console.error('Error loading quote modal:', err);
+        }
+        
+        // Load categories
+        await loadCategories();
+        
+      } catch (err) {
+        console.error('Error during initialization:', err);
+        document.querySelector('.categories-grid').innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+            Error loading collections. Please try refreshing the page.
+          </div>
+        `;
+      }
+    }
 
     async function loadCategories() {
-        console.log('Loading categories...');
+      console.log('Loading categories...');
+      try {
         const { data: categories, error: categoriesError } = await supabase
-            .from('categories')
-            .select('*');
+          .from('categories')
+          .select('*')
+          .order('name', { ascending: true });
 
         if (categoriesError) {
-            console.error('Error loading categories:', categoriesError);
-            return;
+          console.error('Error loading categories:', categoriesError);
+          document.querySelector('.categories-grid').innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+              Error loading collections. Please try refreshing the page.
+            </div>
+          `;
+          return;
         }
 
+        if (!categories || categories.length === 0) {
+          document.querySelector('.categories-grid').innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+              No collections available at this time.
+            </div>
+          `;
+          return;
+        }
+
+        console.log('Categories loaded successfully:', categories);
         const categoriesGrid = document.querySelector('.categories-grid');
         
         categoriesGrid.innerHTML = `
-            ${categories.map(category => `
-                <a href="products.html?category=${category.id}" class="category-card">
-                    <div class="category-image">
-                        <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
-                    </div>
-                    <div class="category-info">
-                        <h3>${category.name}</h3>
-                        <span class="view-products">View Products</span>
-                    </div>
-                </a>
-            `).join('')}
+          ${categories.map(category => `
+            <a href="products.html?category=${category.id}" class="category-card">
+              <div class="category-image">
+                <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
+              </div>
+              <div class="category-info">
+                <h3>${category.name}</h3>
+                <span class="view-products">View Products</span>
+              </div>
+            </a>
+          `).join('')}
         `;
+      } catch (err) {
+        console.error('Unexpected error in loadCategories:', err);
+        document.querySelector('.categories-grid').innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+            Error loading collections. Please try refreshing the page.
+          </div>
+        `;
+      }
     }
 
-    // Load categories on page load
-    loadCategories();
+    // Start app initialization when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initializeApp);
   </script>
 
   <!-- WhatsApp Button -->

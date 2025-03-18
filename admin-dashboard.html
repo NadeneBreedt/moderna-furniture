@@ -876,6 +876,14 @@
                             >
                             <div class="image-dropdown"></div>
                         </div>
+                        <div class="image-upload-section" style="margin-top: 1rem; text-align: center;">
+                            <p style="margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Or upload a new image</p>
+                            <input type="file" id="main-image-upload" accept="image/*" class="file-upload-input">
+                            <div class="upload-progress" style="margin-top: 0.5rem; display: none;">
+                                <div class="progress-bar" style="height: 5px; width: 0%; background-color: #57534e;"></div>
+                                <p class="progress-text" style="font-size: 0.8rem; color: #78716c;">Uploading: 0%</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -889,6 +897,13 @@
                                         placeholder="Search existing images or paste URL..."
                                     >
                                     <div class="image-dropdown"></div>
+                                </div>
+                                <div class="image-upload-section" style="margin-top: 0.5rem;">
+                                    <input type="file" class="gallery-image-upload" accept="image/*">
+                                    <div class="upload-progress" style="margin-top: 0.5rem; display: none;">
+                                        <div class="progress-bar" style="height: 5px; width: 0%; background-color: #57534e;"></div>
+                                        <p class="progress-text" style="font-size: 0.8rem; color: #78716c;">Uploading: 0%</p>
+                                    </div>
                                 </div>
                                 <button type="button" onclick="removeGalleryImage(this)" class="remove-btn">Remove</button>
                             </div>
@@ -1148,10 +1163,23 @@
                     >
                     <div class="image-dropdown"></div>
                 </div>
+                <div class="image-upload-section" style="margin-top: 0.5rem;">
+                    <input type="file" class="gallery-image-upload" accept="image/*">
+                    <div class="upload-progress" style="margin-top: 0.5rem; display: none;">
+                        <div class="progress-bar" style="height: 5px; width: 0%; background-color: #57534e;"></div>
+                        <p class="progress-text" style="font-size: 0.8rem; color: #78716c;">Uploading: 0%</p>
+                    </div>
+                </div>
                 <button type="button" onclick="window.removeGalleryImage(this)" class="remove-btn">Remove</button>
             `;
             container.appendChild(div);
             setupImageDropdowns();
+            
+            // Setup file upload for the new gallery image input
+            const newFileInput = div.querySelector('.gallery-image-upload');
+            if (newFileInput) {
+                newFileInput.addEventListener('change', handleFileUpload);
+            }
         };
 
         window.removeGalleryImage = function(button) {
@@ -1175,6 +1203,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             setupImageDropdowns();
             setupProductDropdown();
+            setupFileUploads();
             loadCategories();
             
             // Add logout functionality
@@ -1506,35 +1535,6 @@
 
                         if (deleteOptionError) throw deleteOptionError;
                     }
-
-                    // Add new option and values if there are variants
-                    if (variants.length > 0) {
-                        // Create the option
-                        const { data: newOption, error: optionError } = await supabase
-                            .from('product_options')
-                            .insert({
-                                product_id: productId,
-                                option_name: 'Size',
-                                option_type: 'select'
-                            })
-                            .select()
-                            .single();
-
-                        if (optionError) throw optionError;
-
-                        // Create the values
-                        const valueData = variants.map(variant => ({
-                            option_id: newOption.id,
-                            value: variant,
-                            price_adjustment: 0
-                        }));
-
-                        const { error: valueError } = await supabase
-                            .from('option_values')
-                            .insert(valueData);
-
-                        if (valueError) throw valueError;
-                    }
                 } else {
                     // Create new product
                     const { data: newProduct, error: productError } = await supabase
@@ -1813,6 +1813,92 @@
                 alert('Failed to update quote status. Please try again.');
                 // Reset the select to its previous value
                 select.value = select.querySelector('option[selected]').value;
+            }
+        }
+
+        // New file upload functions
+        function setupFileUploads() {
+            // Setup main image upload
+            const mainImageUpload = document.getElementById('main-image-upload');
+            if (mainImageUpload) {
+                mainImageUpload.addEventListener('change', handleFileUpload);
+            }
+            
+            // Setup gallery image uploads
+            const galleryUploads = document.querySelectorAll('.gallery-image-upload');
+            galleryUploads.forEach(upload => {
+                upload.addEventListener('change', handleFileUpload);
+            });
+        }
+        
+        async function handleFileUpload(e) {
+            const fileInput = e.target;
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+            
+            // Check if it's an image
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                fileInput.value = '';
+                return;
+            }
+            
+            // Show progress elements
+            const uploadSection = fileInput.closest('.image-upload-section');
+            const progressContainer = uploadSection.querySelector('.upload-progress');
+            const progressBar = progressContainer.querySelector('.progress-bar');
+            const progressText = progressContainer.querySelector('.progress-text');
+            
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Uploading: 0%';
+            
+            try {
+                // Generate a unique filename with timestamp and original extension
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.floor(Math.random() * 1000)}.${fileExt}`;
+                
+                // Upload file with progress tracking
+                const { data, error } = await supabase.storage
+                    .from('moderna')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                
+                if (error) throw error;
+                
+                // Get the public URL for the uploaded file
+                const { data: { publicUrl } } = supabase.storage
+                    .from('moderna')
+                    .getPublicUrl(fileName);
+                
+                console.log('Uploaded image URL:', publicUrl);
+                
+                // Set the URL in the corresponding text input
+                if (fileInput.id === 'main-image-upload') {
+                    document.getElementById('image-url').value = publicUrl;
+                } else {
+                    // Find the nearest gallery-image-url input
+                    const galleryInput = fileInput.closest('.gallery-input-group').querySelector('.gallery-image-url');
+                    galleryInput.value = publicUrl;
+                }
+                
+                // Show success
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Upload successful!';
+                progressText.style.color = '#15803d'; // Green color for success
+                
+                // Hide progress after a delay
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                progressText.textContent = 'Upload failed: ' + error.message;
+                progressText.style.color = '#b91c1c'; // Red color for error
             }
         }
     </script>

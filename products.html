@@ -519,19 +519,22 @@
         </div>
       `).join('');
 
-      // Set up add to quote button
-      document.getElementById('add-to-quote').addEventListener('click', () => {
-        const selectedVariant = document.querySelector('input[name="variant"]:checked');
-        let variantName = '';
-        let variantId = null;
-        
-        if (selectedVariant) {
-          variantName = selectedVariant.nextElementSibling.textContent.trim();
-          variantId = selectedVariant.value;
-        }
-        
-        // Add to quote with the selected variant
-        window.addToQuote(product.id, product.name, variantName, variantId);
+      // Add event listeners to all "Add to Quote" buttons
+      document.querySelectorAll('.add-to-quote-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = this.getAttribute('data-product-id');
+          const productName = this.getAttribute('data-product-name');
+          
+          // Create a product object
+          const productData = {
+            id: productId,
+            name: productName,
+            quantity: 1
+          };
+          
+          // Call the global addToQuote function
+          window.addToQuote(productData);
+        });
       });
       
       // Set up direct inquiry button

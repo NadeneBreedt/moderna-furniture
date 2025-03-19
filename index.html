@@ -188,12 +188,12 @@
 
     .category-header {
       margin-bottom: 3rem;
-      padding: 2rem;
-      background: var(--light-gray);
+        padding: 2rem;
       border-radius: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border: 0.5px solid #e7e5e4;
     }
 
     .category-header-content {
@@ -228,24 +228,22 @@
       background: white;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
-      flex-direction: column;
-      height: 100%;
-      border: none;
+        flex-direction: column;
+      padding-bottom: 1.5rem;
+      border: 1px solid #f0f0f0;
     }
 
     .product-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
     }
 
     .product-image {
       position: relative;
-      width: 100%;
-      padding-top: 100%;
-      background: white;
+      padding-top: 100%; /* 1:1 aspect ratio */
       overflow: hidden;
     }
 
@@ -256,28 +254,30 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 2rem;
+      transition: transform 0.3s ease;
+      padding: 0.5rem;
     }
 
     .product-info {
-      padding: 1rem;
-      text-align: center;
-      background: white;
+      padding: 0.5rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
 
     .product-info h3 {
-      font-size: 1.25rem;
-      color: var(--primary-color);
-      margin-bottom: 0.25rem;
-      font-weight: 600;
+      margin: 0 0 1rem 0;
+      font-size: 1.5rem;
+      color: #1f2937;
+        text-align: center;
     }
 
     .product-info p {
       color: var(--dark-gray);
       font-size: 0.9rem;
       line-height: 1.5;
-      margin: 0;
-    }
+        margin: 0;
+      }
 
     .view-products {
       display: inline-block;
@@ -466,6 +466,32 @@
         grid-template-columns: 1fr;
       }
     }
+
+    .product-action-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: auto;
+      padding: 0 0.5rem 0.5rem;
+      width: 100%;
+    }
+
+    .primary-button {
+      background-color: #292524;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      text-align: center;
+    }
+
+    .primary-button:hover {
+      background-color: #44403c;
+    }
   </style>
 </head>
 <body>
@@ -491,7 +517,7 @@
 
   <!-- Hero Banner -->
   <section class="hero-banner">
-    <div class="hero-content">
+      <div class="hero-content">
       <h1 class="hero-title">
         Modern Workspace Design
       </h1>
@@ -501,9 +527,9 @@
       <div style="display: flex; gap: 1.5rem; margin-top: 3rem;">
         <a href="collections.html" class="view-more" target="_blank">
           Explore Collection
-        </a>
-        <a href="#" id="hero-quote-btn" style="
-          display: inline-block;
+          </a>
+          <a href="#" id="hero-quote-btn" style="
+            display: inline-block;
           padding: 1rem 2.5rem;
           background: transparent;
           color: var(--primary-color);
@@ -514,20 +540,20 @@
           font-size: 1.1rem;
         ">
           Get Quote
-        </a>
+          </a>
+        </div>
       </div>
-    </div>
-    <div class="hero-image">
+      <div class="hero-image">
       <img src="images/Cover 2.png" alt="Modern Office Background">
-    </div>
-  </section>
+      </div>
+    </section>
 
   <!-- Collections Section -->
   <section class="category-section">
     <div class="container">
       <!-- Categories will be dynamically loaded here -->
-    </div>
-  </section>
+      </div>
+    </section>
 
   <!-- Featured Products -->
   <section class="featured-products" id="featured-products">
@@ -585,9 +611,9 @@
   </section>
 
   <!-- Newsletter Section -->
-  <section id="contact" style="
-    width: 100%;
-    background-color: #fff;
+    <section id="contact" style="
+      width: 100%;
+      background-color: #fff;
     padding: 5rem 0;
     border-top: 1px solid #eee;
   ">
@@ -749,21 +775,21 @@
             "></div>
           </form>
         </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FOOTER -->
-  <footer style="
-    text-align: center;
-    padding: 2rem 1rem;
-    background-color: #fff;
-    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
-  ">
-    <p style="font-size: 0.9rem; color: #777;">
-      © 2025 FurnitureBrand. All rights reserved.
-    </p>
-  </footer>
+    <!-- FOOTER -->
+    <footer style="
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #fff;
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+    ">
+      <p style="font-size: 0.9rem; color: #777;">
+        © 2025 FurnitureBrand. All rights reserved.
+      </p>
+    </footer>
 
   <!-- Load Quote Modal -->
   <div id="quote-modal-container"></div>
@@ -942,19 +968,19 @@
         await loadCategoriesAndProducts();
         
         // Setup quote button
-        const heroQuoteBtn = document.getElementById('hero-quote-btn');
-        if (heroQuoteBtn) {
-          heroQuoteBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const modalOverlay = document.getElementById('quote-modal-overlay');
-            if (modalOverlay) {
-              modalOverlay.style.display = 'flex';
-              if (typeof refreshQuoteTable === 'function') {
-                refreshQuoteTable();
+          const heroQuoteBtn = document.getElementById('hero-quote-btn');
+          if (heroQuoteBtn) {
+            heroQuoteBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const modalOverlay = document.getElementById('quote-modal-overlay');
+              if (modalOverlay) {
+                modalOverlay.style.display = 'flex';
+                if (typeof refreshQuoteTable === 'function') {
+                  refreshQuoteTable();
+                }
               }
-            }
-          });
-        }
+            });
+          }
       } catch (err) {
         console.error('Error during initialization:', err);
       }
@@ -1015,30 +1041,82 @@
       }
     });
 
-    // Function to fetch all categories from Supabase
-    async function fetchCategories() {
-      console.log('Fetching categories...');
-      try {
-        const { data, error } = await supabase
-          .from('categories')
-          .select(`
-            id,
-            name,
-            description,
-            image_url
-          `)
-          .order('name', { ascending: true }); // Sort alphabetically
-
-        if (error) {
-          console.error('Error fetching categories:', error);
-          throw error;
+    // Function to sort categories in custom order
+    function sortCategories(categories) {
+      const customOrder = [
+        'Office Chairs',
+        'Desking',
+        'Executive Desk',
+        'Couches',
+        'Receptions'
+      ];
+      
+      // Create a map for quick lookup of priority
+      const priorityMap = new Map(
+        customOrder.map((name, index) => [name, index])
+      );
+      
+      return categories.sort((a, b) => {
+        const aIndex = priorityMap.get(a.name);
+        const bIndex = priorityMap.get(b.name);
+        
+        // If both categories are in the priority list, sort by their index
+        if (aIndex !== undefined && bIndex !== undefined) {
+          return aIndex - bIndex;
         }
+        
+        // If only one is in the priority list, it should come first
+        if (aIndex !== undefined) return -1;
+        if (bIndex !== undefined) return 1;
+        
+        // For all other categories, sort alphabetically
+        return a.name.localeCompare(b.name);
+      });
+    }
 
-        console.log('Categories data:', data);
-        return data || [];
-      } catch (error) {
-        console.error('Error in fetchCategories:', error);
-        return [];
+    // Load categories and their products
+    async function loadCategoriesAndProducts() {
+      console.log('Loading categories and products...');
+      const container = document.querySelector('.category-section .container');
+      
+      try {
+        const { data: categories, error: categoriesError } = await supabase
+          .from('categories')
+          .select('*');
+        
+        if (categoriesError) {
+          console.error('Error loading categories:', categoriesError);
+          return;
+        }
+        
+        if (!categories || categories.length === 0) {
+          const noDataMsg = document.createElement('div');
+          noDataMsg.style.textAlign = 'center';
+          noDataMsg.style.marginTop = '2rem';
+          noDataMsg.innerHTML = '<p>No categories available.</p>';
+          container.appendChild(noDataMsg);
+          return;
+        }
+        
+        console.log(`Processing ${categories.length} categories...`);
+        
+        // Sort categories in custom order
+        const sortedCategories = sortCategories(categories);
+        
+        // Process categories in the sorted order
+        for (const category of sortedCategories) {
+          console.log(`Rendering category: ${category.name} (ID: ${category.id})`);
+          const sectionId = renderCategorySection(category);
+          const products = await fetchProductsByCategory(category.id);
+          renderProducts(products, sectionId);
+        }
+      } catch (err) {
+        console.error('Error in loadCategoriesAndProducts:', err);
+        container.innerHTML = `
+          <div style="text-align: center; margin-top: 2rem;">
+            <p>Error loading categories. Please try refreshing the page.</p>
+          </div>
+        `;
       }
     }
 
@@ -1068,57 +1146,6 @@
       return sectionId;
     }
 
-    // Load categories and their products
-    async function loadCategoriesAndProducts() {
-      console.log('Starting to load categories and products');
-      
-      // COMPLETELY clear existing category section container (not just innerHTML)
-      const container = document.querySelector('.category-section .container');
-      
-      // Remove all children from the container
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
-      
-      // Add section title and subtitle
-      const titleElement = document.createElement('h2');
-      titleElement.className = 'section-title';
-      titleElement.textContent = 'Our Collections';
-      container.appendChild(titleElement);
-      
-      const subtitleElement = document.createElement('p');
-      subtitleElement.className = 'section-subtitle';
-      subtitleElement.textContent = 'Explore our comprehensive range of modern office furniture solutions';
-      container.appendChild(subtitleElement);
-      
-      // Add some extra spacing after the subtitle
-      const spacerDiv = document.createElement('div');
-      spacerDiv.style.marginBottom = '0';
-      container.appendChild(spacerDiv);
-      
-      // Fetch and render categories
-      const categories = await fetchCategories();
-      
-      if (!categories || categories.length === 0) {
-        const noDataMsg = document.createElement('div');
-        noDataMsg.style.textAlign = 'center';
-        noDataMsg.style.marginTop = '2rem';
-        noDataMsg.innerHTML = '<p>No categories available.</p>';
-        container.appendChild(noDataMsg);
-        return;
-      }
-      
-      console.log(`Processing ${categories.length} categories...`);
-      
-      // Process categories in alphabetical order
-      for (const category of categories) {
-        console.log(`Rendering category: ${category.name} (ID: ${category.id})`);
-        const sectionId = renderCategorySection(category);
-        const products = await fetchProductsByCategory(category.id);
-        renderProducts(products, sectionId);
-      }
-    }
-
     // Function to render products
     function renderProducts(products, containerId) {
       console.log('Rendering products for container:', containerId, products);
@@ -1142,10 +1169,38 @@
             </div>
             <div class="product-info">
               <h3>${product.product_name}</h3>
+              <div class="product-action-buttons">
+                <button class="primary-button add-to-quote-btn" data-product-id="${product.product_id}" data-product-name="${product.product_name}">
+                  Add to Quote
+                </button>
+              </div>
             </div>
           </a>
         </div>
       `).join('');
+
+      // Add event listeners to all "Add to Quote" buttons
+      document.querySelectorAll('.add-to-quote-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault(); // Prevent the link from being followed
+          const productId = this.getAttribute('data-product-id');
+          const productName = this.getAttribute('data-product-name');
+          
+          // Create a product object
+          const productData = {
+            id: productId,
+            name: productName,
+            quantity: 1
+          };
+          
+          // Call the global addToQuote function
+          if (typeof window.addToQuote === 'function') {
+            window.addToQuote(productData);
+          } else {
+            console.error('addToQuote function not found');
+          }
+        });
+      });
     }
 
     const form = document.querySelector('form');

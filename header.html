@@ -5,6 +5,7 @@
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    scroll-padding-top: 60px; /* Reduced from 73px to match smaller header */
   }
   
   /* Header styling */
@@ -12,16 +13,31 @@
     width: 100%;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    position: relative;
-    z-index: 100;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9999 !important;
     padding: 0;
+    transition: all 0.2s ease;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Contact info bar */
+  .info-bar {
+    width: 100%;
+    background-color: #f5f5f4;
+    padding: 4px 0; /* Reduced from 8px */
+    position: relative;
+    z-index: 1001;
   }
   
   .header-content {
     max-width: 100%;
     width: 100%;
     margin: 0;
-    padding: 15px 0;
+    padding: 10px 0; /* Reduced from 15px */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,7 +55,7 @@
   }
   
   .logo img {
-    height: 40px;
+    height: 32px; /* Reduced from 40px */
     display: block;
   }
   
@@ -52,12 +68,12 @@
     padding-right: 0;
     margin-right: 0;
     position: absolute;
-    right: 20px; /* Fixed position at right edge with padding */
+    right: 20px;
     justify-content: flex-end;
   }
   
   .menu li {
-    margin-left: 30px;
+    margin-left: 20px; /* Reduced from 30px */
   }
   
   .menu li:last-child {
@@ -213,52 +229,99 @@
   }
 </style>
 
-<header class="header">
-  <div class="header-content">
-    <!-- Logo -->
-    <div class="logo">
-      <a href="index.html">
-        <img src="images/moderna.jpg" alt="Moderna Office Furniture">
-      </a>
-    </div>
-    
-    <!-- Mobile menu checkbox toggle (invisible) -->
-    <input type="checkbox" id="menu-toggle">
-    
-    <!-- Hamburger button for mobile -->
-    <label for="menu-toggle" class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </label>
-    
-    <!-- Desktop Navigation -->
-    <ul class="menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="collections.html">Products</a></li>
-      <li><a href="profile.html">Profile</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li>
-        <a href="search-results.html">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+<!-- Link to global CSS file for consistent header behavior -->
+<link rel="stylesheet" href="styles/global.css">
+
+<header class="header" style="position: sticky !important; top: 0 !important; z-index: 9999 !important;">
+  <!-- Contact info bar centered -->
+  <div class="info-bar">
+    <div style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    ">
+        <a href="tel:0645367341" style="
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #57534e;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+        ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            064 536 7341
         </a>
-      </li>
-      <li><a href="admin-login.html" id="desktop-admin-link" class="admin-link">Login</a></li>
-    </ul>
-    
-    <!-- Mobile Navigation Menu -->
-    <div class="mobile-menu">
-      <ul>
+        <a href="mailto:sales@modernaoffice.co.za" style="
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #57534e;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+        ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            sales@modernaoffice.co.za
+        </a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header-content">
+      <!-- Logo -->
+      <div class="logo">
+        <a href="index.html">
+          <img src="images/moderna.jpg" alt="Moderna Office Furniture">
+        </a>
+      </div>
+      
+      <!-- Mobile menu checkbox toggle (invisible) -->
+      <input type="checkbox" id="menu-toggle">
+      
+      <!-- Hamburger button for mobile -->
+      <label for="menu-toggle" class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      
+      <!-- Desktop Navigation -->
+      <ul class="menu">
         <li><a href="index.html">Home</a></li>
         <li><a href="collections.html">Products</a></li>
         <li><a href="profile.html">Profile</a></li>
         <li><a href="contact.html">Contact</a></li>
-        <li><a href="search-results.html">Search</a></li>
-        <li><a href="admin-login.html" id="mobile-admin-link" class="admin-link">Login</a></li>
+        <li>
+          <a href="search-results.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </a>
+        </li>
+        <li><a href="admin-login.html" id="desktop-admin-link" class="admin-link">Login</a></li>
       </ul>
+      
+      <!-- Mobile Navigation Menu -->
+      <div class="mobile-menu">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="collections.html">Products</a></li>
+          <li><a href="profile.html">Profile</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="search-results.html">Search</a></li>
+          <li><a href="admin-login.html" id="mobile-admin-link" class="admin-link">Login</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </header>
@@ -304,6 +367,16 @@
     
     // Run it again after a small delay to ensure it works after all content is rendered
     setTimeout(adjustNavigationPosition, 100);
+  });
+  
+  // Make sure the header is sticky
+  document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('.header');
+    if (header) {
+      header.style.position = 'sticky';
+      header.style.top = '0';
+      header.style.zIndex = '9999';
+    }
   });
 </script>
 

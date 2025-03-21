@@ -134,10 +134,10 @@
 
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
       margin: 0 auto;
-      max-width: 1200px;
+      max-width: 1400px;
     }
 
     .category-card {
@@ -291,8 +291,15 @@
       }
       
       .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .categories-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
+        gap: 2rem;
       }
     }
 
@@ -531,8 +538,7 @@
       try {
         const { data: categories, error: categoriesError } = await supabase
           .from('categories')
-          .select('*')
-          .order('name', { ascending: true });
+          .select('*');
 
         if (categoriesError) {
           console.error('Error loading categories:', categoriesError);
@@ -554,10 +560,14 @@
         }
 
         console.log('Categories loaded successfully:', categories);
+        
+        // Sort categories in custom order
+        const sortedCategories = sortCategories(categories);
+        
         const categoriesGrid = document.querySelector('.categories-grid');
         
         categoriesGrid.innerHTML = `
-          ${categories.map(category => `
+          ${sortedCategories.map(category => `
             <a href="products.html?category=${category.id}" class="category-card">
               <div class="category-image">
                 <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
@@ -577,6 +587,44 @@
           </div>
         `;
       }
+    }
+    
+    // Function to sort categories in custom order
+    function sortCategories(categories) {
+      const customOrder = [
+        'Office Chairs',
+        'Desking',
+        'Executive Desk',
+        'Storage',
+        'Reception Counters',
+        'Couches'
+      ];
+      
+      // Create a map for quick lookup of priority
+      const priorityMap = new Map(
+        customOrder.map((name, index) => [name, index])
+      );
+      
+      return categories.sort((a, b) => {
+        // Special case: Always put Ottoman at the end
+        if (a.name === 'Ottoman') return 1;
+        if (b.name === 'Ottoman') return -1;
+        
+        const aIndex = priorityMap.get(a.name);
+        const bIndex = priorityMap.get(b.name);
+        
+        // If both categories are in the priority list, sort by their index
+        if (aIndex !== undefined && bIndex !== undefined) {
+          return aIndex - bIndex;
+        }
+        
+        // If only one is in the priority list, it should come first
+        if (aIndex !== undefined) return -1;
+        if (bIndex !== undefined) return 1;
+        
+        // For all other categories, sort alphabetically
+        return a.name.localeCompare(b.name);
+      });
     }
 
     // Start app initialization when DOM is loaded

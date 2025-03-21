@@ -1,0 +1,39 @@
+header { position: sticky !important; top: 0 !important; z-index: 9999 !important; }
+
+/* Force the header wrapper to inherit sticky behavior */
+#my-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  width: 100% !important;
+  min-height: 60px !important; /* Reduced from default height */
+}
+
+/* Ensure the header container doesn't interfere with stickiness */
+.header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+}
+
+/* Apply hardware acceleration to prevent jumpiness */
+header, #my-header, .header {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Smaller header styles */
+.header-content {
+  padding: 10px 0 !important;
+}
+
+.logo img {
+  height: 32px !important;
+}
+
+.info-bar a {
+  font-size: 0.9rem !important;
+}

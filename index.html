@@ -5,12 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Moderna Office Furniture</title>
 
+  <!-- Add fix-sticky.js script -->
+  <script src="styles/fix-sticky.js"></script>
+  
+  <!-- Add animations CSS -->
+  <link rel="stylesheet" href="styles/animations.css">
+  
+  <!-- Standardized header loader -->
+  <script src="js/header-loader.js"></script>
+
   <style>
     /* Add styles to prevent header glitching during page loads */
     #my-header {
       opacity: 1;
       transition: opacity 0.2s ease;
-      min-height: 70px; /* Reserve space for the header */
+      min-height: 60px; /* Reserve space for the header */
     }
     
     #my-header.loading {
@@ -72,6 +81,15 @@
     header {
       padding: 0 !important;
       width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background-color: white;
+      transition: all 0.2s ease;
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
     
     header .container {
@@ -188,12 +206,13 @@
 
     .category-header {
       margin-bottom: 3rem;
-        padding: 2rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border: 0.5px solid #e7e5e4;
+      background-color: #f5f5f4;
     }
 
     .category-header-content {
@@ -201,8 +220,8 @@
     }
 
     .category-header h2 {
-      font-size: 2rem;
-      color: var(--primary-color);
+      font-size: 1.8rem;
+      color: #292524;
       margin-bottom: 0.5rem;
       font-weight: 700;
     }
@@ -219,8 +238,8 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.2rem;
       margin-bottom: 2rem;
     }
 
@@ -282,7 +301,7 @@
     .view-products {
       display: inline-block;
       padding: 0.75rem 1.5rem;
-      background: #333;
+      background: #292524;
       color: white;
       border: none;
       border-radius: 4px;
@@ -294,7 +313,7 @@
     }
 
     .view-products:hover {
-      background: #444;
+      background: #44403c;
     }
 
     .category-footer {
@@ -405,7 +424,7 @@
     /* Responsive Design */
     @media (max-width: 1200px) {
       .product-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
     }
 
@@ -433,6 +452,10 @@
       .hero-image > div {
         min-height: 400px;
       }
+      
+      .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
 
     @media (max-width: 768px) {
@@ -448,16 +471,16 @@
         font-size: 1.1rem;
       }
       
-      .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
       .section-title {
         font-size: 2rem;
       }
       
       .section-subtitle {
         font-size: 1.1rem;
+      }
+      
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
@@ -496,24 +519,7 @@
 </head>
 <body>
   <!-- Load Header -->
-  <div id="my-header">
-    <!-- Inline fallback header that is always visible until the real header loads -->
-    <header class="header" style="width: 100%; background-color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; z-index: 100; padding: 0;">
-      <div class="header-content" style="max-width: 100%; width: 100%; margin: 0; padding: 15px 0; display: flex; align-items: center; justify-content: space-between; position: relative;">
-        <div class="logo" style="position: relative; left: 0; padding-left: 20px; display: flex; align-items: center; height: 100%;">
-          <a href="index.html">
-            <img src="images/moderna.jpg" alt="Moderna Office Furniture" style="height: 40px; display: block;">
-          </a>
-        </div>
-        <ul class="menu" style="display: flex; list-style-type: none; margin: 0; padding: 0; position: absolute; right: 20px; justify-content: flex-end;">
-          <li style="margin-left: 30px;"><a href="index.html" style="color: #333; text-decoration: none; font-weight: 500;">Home</a></li>
-          <li style="margin-left: 30px;"><a href="collections.html" style="color: #333; text-decoration: none; font-weight: 500;">Products</a></li>
-          <li style="margin-left: 30px;"><a href="contact.html" style="color: #333; text-decoration: none; font-weight: 500;">Contact</a></li>
-          <li style="margin-left: 30px;"><a href="admin-login.html" style="background-color: #333; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: 500;">Login</a></li>
-        </ul>
-      </div>
-    </header>
-  </div>
+  <div id="my-header"></div>
 
   <!-- Hero Banner -->
   <section class="hero-banner">
@@ -542,6 +548,21 @@
           Get Quote
           </a>
         </div>
+        <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <a href="mailto:sales@modernaoffice.co.za" style="display: flex; align-items: center; gap: 0.5rem; color: #44403c; text-decoration: none; font-size: 1.2rem; font-weight: 500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            sales@modernaoffice.co.za
+          </a>
+          <a href="tel:0645367341" style="display: flex; align-items: center; gap: 0.5rem; color: #44403c; text-decoration: none; font-size: 1.2rem; font-weight: 500;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span style="display: inline-block; color: #292524;">064 536 7341</span>
+          </a>
+        </div>
       </div>
       <div class="hero-image">
       <img src="images/Cover 2.png" alt="Modern Office Background">
@@ -555,22 +576,6 @@
       </div>
     </section>
 
-  <!-- Featured Products -->
-  <section class="featured-products" id="featured-products">
-    <div class="container">
-      <h2 class="section-title">Featured Products</h2>
-      <p class="section-subtitle">Discover our most popular office furniture selections, carefully curated for your workspace</p>
-      
-      <div class="product-grid">
-        <!-- Products will be dynamically loaded here -->
-      </div>
-      
-      <div style="text-align: center; margin-top: 3rem;">
-        <a href="collections.html" class="view-more">View All Products</a>
-      </div>
-    </div>
-  </section>
-
   <!-- Benefits Section -->
   <section class="benefits">
     <div class="container">
@@ -579,7 +584,7 @@
           <div class="benefit-icon">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
+              <polyline points="22 4 12,14.01 2,6"></polyline>
             </svg>
           </div>
           <h3>Premium Quality</h3>
@@ -779,17 +784,62 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer style="
-      text-align: center;
-      padding: 2rem 1rem;
-      background-color: #fff;
-      box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
-    ">
-      <p style="font-size: 0.9rem; color: #777;">
-        © 2025 FurnitureBrand. All rights reserved.
-      </p>
-    </footer>
+    <!-- Footer inline -->
+    <div id="footer-placeholder">
+      <footer style="
+          text-align: center;
+          padding: 2rem 1rem;
+          background-color: #fff;
+          box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+          margin-top: 2rem;
+      ">
+          <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+              <!-- Contact Us section with both email and phone -->
+              <div style="text-align: center; padding: 1rem; border-bottom: 1px solid #f5f5f4;">
+                  <div style="font-size: 0.95rem; font-weight: 600; color: #44403c; margin-bottom: 1rem;">
+                      Contact Us
+                  </div>
+                  <div style="display: flex; flex-direction: row; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                      <a href="mailto:sales@modernaoffice.co.za" style="
+                          display: inline-flex;
+                          align-items: center;
+                          gap: 0.5rem;
+                          color: #292524;
+                          text-decoration: none;
+                          font-size: 1.1rem;
+                          font-weight: 600;
+                          white-space: nowrap;
+                      ">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                              <polyline points="22,6 12,13 2,6"></polyline>
+                          </svg>
+                          sales@modernaoffice.co.za
+                      </a>
+                      <a href="tel:0645367341" style="
+                          display: inline-flex;
+                          align-items: center;
+                          gap: 0.5rem;
+                          color: #292524;
+                          text-decoration: none;
+                          font-size: 1.1rem;
+                          font-weight: 600;
+                          white-space: nowrap;
+                      ">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                          </svg>
+                          <span style="display: inline-block; color: #292524;">064 536 7341</span>
+                      </a>
+                  </div>
+              </div>
+              
+              <p style="font-size: 0.85rem; color: #78716c; margin: 0;">
+                  © 2025 Moderna Office Furniture. All rights reserved.
+              </p>
+          </div>
+      </footer>
+    </div>
 
   <!-- Load Quote Modal -->
   <div id="quote-modal-container"></div>
@@ -800,124 +850,6 @@
     const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Check if we're returning from another page
-    const isReturningFromAnotherPage = performance && performance.navigation && 
-          (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD ||
-           document.referrer.includes('contact.html') ||
-           document.referrer.includes('collections.html') ||
-           document.referrer.includes('product-detail.html'));
-    
-    // Simplified header loading with no transitions
-    async function loadHeaderWithRetry(retries = 3) {
-      let attempts = 0;
-      
-      // We'll keep trying in the background, but the fallback header is always visible
-      while (attempts < retries) {
-        try {
-          attempts++;
-          console.log(`Loading header attempt ${attempts}...`);
-          
-          // Load header
-          const headerResponse = await fetch('header.html', { 
-            cache: 'no-store', // Bypass cache to avoid stale header
-            method: 'GET',
-            headers: { 'Cache-Control': 'no-cache' }
-          });
-          
-          if (!headerResponse.ok) {
-            throw new Error(`Header fetch failed with status: ${headerResponse.status}`);
-          }
-          
-          const headerData = await headerResponse.text();
-          
-          // Replace the fallback header with the actual header
-          document.getElementById('my-header').innerHTML = headerData;
-          
-          // Make the header visible immediately and apply styling
-          const headerElement = document.querySelector('header');
-          if (headerElement) {
-            headerElement.style.display = 'block';
-            headerElement.style.visibility = 'visible';
-            headerElement.style.opacity = '1';
-          }
-          
-          // Apply header styling once
-          adjustHeaderSpacing();
-          
-          console.log('Header loaded successfully');
-          break; // Success, exit the loop
-          
-        } catch (err) {
-          console.error(`Error loading header (attempt ${attempts}):`, err);
-          // Wait before retry, but no need to do anything else since fallback is visible
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      }
-    }
-    
-    // Update the adjustHeaderSpacing function to be more reliable
-    function adjustHeaderSpacing() {
-      try {
-        // Target header elements
-        const header = document.querySelector('header');
-        const logo = document.querySelector('.logo');
-        const navMenu = document.querySelector('.nav-menu');
-        const nav = document.querySelector('nav');
-        const navLinks = document.querySelector('.nav-links');
-        
-        if (header) {
-          header.style.padding = '0';
-          header.style.width = '100%';
-          header.style.opacity = '1'; // Ensure header is visible
-          
-          // Find the container within the header
-          const headerContainer = header.querySelector('.container');
-          if (headerContainer) {
-            headerContainer.style.padding = '0';
-            headerContainer.style.width = '100%';
-            headerContainer.style.maxWidth = '100%';
-            headerContainer.style.display = 'flex';
-            headerContainer.style.justifyContent = 'space-between';
-          }
-        }
-        
-        if (logo) {
-          logo.style.marginLeft = '0';
-          logo.style.paddingLeft = '0';
-        }
-        
-        if (navMenu) {
-          navMenu.style.marginRight = '0';
-          navMenu.style.paddingRight = '0';
-          navMenu.style.position = 'relative';
-          navMenu.style.right = '0';
-        }
-        
-        if (nav) {
-          nav.style.width = '100%';
-          nav.style.display = 'flex';
-          nav.style.justifyContent = 'flex-end';
-        }
-        
-        if (navLinks) {
-          navLinks.style.marginRight = '0';
-          navLinks.style.paddingRight = '0';
-          navLinks.style.display = 'flex';
-          navLinks.style.justifyContent = 'flex-end';
-        }
-        
-        // Target all navigation items to ensure they're properly aligned
-        const navItems = document.querySelectorAll('header nav ul li');
-        navItems.forEach(item => {
-          item.style.marginRight = '0';
-          item.style.paddingRight = '0';
-        });
-      } catch (err) {
-        console.error('Error in adjustHeaderSpacing:', err);
-        // Error in styling, but the header should still be visible
-      }
-    }
 
     // Function to fetch products by category
     async function fetchProductsByCategory(categoryId) {
@@ -933,7 +865,8 @@
             category_name
           `)
           .eq('category_id', categoryId)
-          .limit(4);
+          .order('product_name', { ascending: true })
+          .limit(5);
 
         if (error) {
           console.error('Error fetching products:', error);
@@ -952,9 +885,6 @@
     async function initializeApp() {
       try {
         console.log('Initializing app...');
-        
-        // Load header with retry mechanism
-        await loadHeaderWithRetry();
         
         // Load modal
         const modalResponse = await fetch('quote-modal.html');
@@ -1047,8 +977,9 @@
         'Office Chairs',
         'Desking',
         'Executive Desk',
-        'Couches',
-        'Receptions'
+        'Storage',
+        'Reception Counters',
+        'Couches'
       ];
       
       // Create a map for quick lookup of priority
@@ -1057,6 +988,10 @@
       );
       
       return categories.sort((a, b) => {
+        // Special case: Always put Ottoman at the end
+        if (a.name === 'Ottoman') return 1;
+        if (b.name === 'Ottoman') return -1;
+        
         const aIndex = priorityMap.get(a.name);
         const bIndex = priorityMap.get(b.name);
         
@@ -1253,6 +1188,22 @@
         submitButton.textContent = 'Subscribe';
       }
     });
+
+    // Load footer
+    fetch('footer.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load footer');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('footer-placeholder').innerHTML = data;
+        })
+        .catch(err => {
+            console.error('Error loading footer:', err);
+            // We already have a fallback footer in the HTML
+        });
   </script>
   <!-- WhatsApp Button -->
   <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
@@ -1310,4 +1261,49 @@
     }
   </style>
 </body>
+
+<!-- Scroll animation script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add scroll-fade-in class to elements we want to animate on scroll
+    const elementsToAnimate = [
+      '.category-container',
+      '.benefit-card',
+      '#contact .container > div',
+      '.section-title',
+      '.section-subtitle'
+    ];
+    
+    // Apply the scroll-fade-in class to all matching elements
+    elementsToAnimate.forEach(selector => {
+      document.querySelectorAll(selector).forEach(element => {
+        element.classList.add('scroll-fade-in');
+      });
+    });
+    
+    // Function to check if an element is in viewport
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
+        rect.bottom >= 0
+      );
+    }
+    
+    // Function to handle scroll events and trigger animations
+    function handleScroll() {
+      document.querySelectorAll('.scroll-fade-in').forEach(element => {
+        if (isInViewport(element) && !element.classList.contains('visible')) {
+          element.classList.add('visible');
+        }
+      });
+    }
+    
+    // Initial check on page load
+    handleScroll();
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', handleScroll);
+  });
+</script>
 </html>

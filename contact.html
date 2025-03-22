@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Request a Quote - Moderna Office Furniture</title>
-    <!-- Load EmailJS directly from CDN with the latest version -->
+    
+    <!-- Standardized header loader -->
+    <script src="js/header-loader.js"></script>
+    
+    <!-- Add animations CSS -->
+    <link rel="stylesheet" href="styles/animations.css">
+    
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
@@ -42,13 +52,15 @@
             color: inherit; /* This ensures links inherit their parent's color */
         }
         .main-content {
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             min-height: calc(100vh - 80px); /* Adjusted for header height */
             padding: 2rem 1rem;
             position: relative;
             z-index: 1;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         .contact-container {
             width: 100%;
@@ -57,6 +69,9 @@
             padding: 2.5rem;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
         }
         .contact-header {
             text-align: center;
@@ -93,12 +108,13 @@
             border-radius: 8px;
             font-size: 1rem;
             color: #44403c;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
             outline: none;
             border-color: #57534e;
             box-shadow: 0 0 0 3px rgba(87, 83, 78, 0.1);
+            transform: translateY(-2px);
         }
         .submit-btn-container {
             display: flex;
@@ -167,41 +183,153 @@
                 padding: 1.5rem;
             }
         }
+        
+        .scroll-fade-in {
+            opacity: 1 !important; /* Force visibility */
+            transform: translateY(0) !important; /* Reset any transform */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        /* Only apply animations when JS is running properly */
+        .js-enabled .scroll-fade-in:not(.visible) {
+            opacity: 0 !important;
+            transform: translateY(20px) !important;
+        }
+        
+        /* Enhanced animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes sending {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes highlight {
+            0% { background-color: transparent; }
+            30% { background-color: rgba(220, 252, 231, 0.5); }
+            100% { background-color: transparent; }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        
+        .animate-pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        /* Staggered animations */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+        
+        /* Button animations */
+        .submit-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        .submit-btn:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .sending {
+            background: linear-gradient(270deg, #57534e, #44403c, #292524);
+            background-size: 600% 600%;
+            animation: sending 2s ease infinite;
+            transform: translateY(0) !important;
+        }
+        
+        .success-highlight {
+            animation: highlight 1.5s ease-out forwards;
+        }
     </style>
 </head>
 <body>
     <!-- Load Header -->
     <div id="my-header"></div>
     
-    <div id="main-content" class="main-content">
-        <div class="contact-container">
-            <div class="contact-header">
-                <h1>Request a Quote</h1>
+    <!-- Main content that will be revealed after header loads -->
+    <div id="main-content" class="main-content animate-fade-in" style="display: flex !important; opacity: 1 !important; visibility: visible !important; flex-direction: column; align-items: center; width: 100%; padding-top: 30px;">
+        
+        <!-- Contact Container -->
+        <div class="contact-container scroll-fade-in animate-fade-in stagger-1" style="display: block !important; opacity: 1 !important; visibility: visible !important; width: 100%; max-width: 800px; margin: 0 auto; padding: 2.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+            <div class="contact-header" style="display: block !important; opacity: 1 !important;">
+                <h1 style="display: block !important; opacity: 1 !important; color: #292524; font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem;" class="animate-fade-in">Request a Quote</h1>
             </div>
             
-            <div id="quote-items" style="margin-bottom: 1.5rem;">
+            <!-- Quote Items Section -->
+            <div id="quote-items" style="display: block !important; opacity: 1 !important; margin-bottom: 2rem !important;" class="animate-fade-in stagger-1">
                 <h3 style="
                     font-size: 1.1rem;
                     margin-bottom: 1rem;
                     color: #44403c;
                     font-weight: 500;
-                ">
+                    display: block !important;
+                    opacity: 1 !important;
+                " class="animate-slide-in stagger-1">
                     Selected Items
                 </h3>
                 
-                <table id="quote-items-table" class="quote-items-table">
-                    <thead>
-                        <tr>
-                            <th>Product (Optional)</th>
-                            <th>Variant</th>
-                            <th style="text-align: center;">Qty</th>
-                            <th style="text-align: right;"></th>
+                <table id="quote-items-table" class="quote-items-table scroll-fade-in" style="display: table !important; width: 100% !important; opacity: 1 !important;">
+                    <thead style="display: table-header-group !important; opacity: 1 !important;">
+                        <tr style="display: table-row !important; opacity: 1 !important;">
+                            <th style="display: table-cell !important; opacity: 1 !important;">Product (Optional)</th>
+                            <th style="display: table-cell !important; opacity: 1 !important;">Variant</th>
+                            <th style="display: table-cell !important; text-align: center; opacity: 1 !important;">Qty</th>
+                            <th style="display: table-cell !important; text-align: right; opacity: 1 !important;"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="display: table-row-group !important; opacity: 1 !important;">
                         <!-- Items will be dynamically inserted here -->
-                        <tr id="no-items-row">
-                            <td colspan="4" style="text-align: center; color: #78716c;">
+                        <tr id="no-items-row" style="display: table-row !important; opacity: 1 !important;">
+                            <td colspan="4" style="display: table-cell !important; text-align: center; color: #78716c; opacity: 1 !important;">
                                 No items added yet. Browse our <a href="collections.html" style="color: #292524; text-decoration: underline;">products</a> to add items to your quote.
                             </td>
                         </tr>
@@ -209,36 +337,36 @@
                 </table>
             </div>
             
-            <form id="quote-form">
+            <form id="quote-form" class="scroll-fade-in" style="display: block !important; opacity: 1 !important; visibility: visible !important;">
                 <!-- First row: Name and Email -->
-                <div class="form-row">
-                    <div class="form-group">
+                <div class="form-row animate-fade-in stagger-2" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important; margin-right: 1rem !important;">
                         <label for="quote-name">Your Name</label>
-                        <input type="text" id="quote-name" name="name" placeholder="Enter your name" required>
+                        <input type="text" id="quote-name" name="name" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important;">
                         <label for="quote-email">Email Address</label>
-                        <input type="email" id="quote-email" name="email" placeholder="Enter your email" required>
+                        <input type="email" id="quote-email" name="email" required>
                     </div>
                 </div>
                 
                 <!-- Second row: Phone and Company -->
-                <div class="form-row">
-                    <div class="form-group">
+                <div class="form-row animate-fade-in stagger-3" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important; margin-right: 1rem !important;">
                         <label for="quote-phone">Phone Number (optional)</label>
-                        <input type="tel" id="quote-phone" name="phone" placeholder="Enter your phone number">
+                        <input type="tel" id="quote-phone" name="phone">
                     </div>
-                    <div class="form-group">
-                        <label for="quote-company">Company Name (optional)</label>
-                        <input type="text" id="quote-company" name="company" placeholder="Enter your company name">
+                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important;">
+                        <label for="quote-company">Company (optional)</label>
+                        <input type="text" id="quote-company" name="company">
                     </div>
                 </div>
                 
                 <!-- Third row: Project Timeline -->
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="quote-timeline">Project Timeline (optional)</label>
-                        <select id="quote-timeline" name="timeline">
+                <div class="form-row animate-fade-in stagger-4" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <div class="form-group full-width scroll-fade-in" style="display: block !important; opacity: 1 !important; width: 100% !important;">
+                        <label for="quote-timeline" style="display: block !important; opacity: 1 !important;">Project Timeline (optional)</label>
+                        <select id="quote-timeline" name="timeline" style="display: block !important; width: 100% !important; opacity: 1 !important;">
                             <option value="">Select a timeline</option>
                             <option value="urgent">Urgent (within 1 week)</option>
                             <option value="soon">Soon (1-2 weeks)</option>
@@ -249,18 +377,18 @@
                 </div>
                 
                 <!-- Fourth row: Comments -->
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="quote-comments">Additional Information</label>
-                        <textarea id="quote-comments" name="comments" placeholder="Any specific requirements or questions?"></textarea>
+                <div class="form-row animate-fade-in stagger-5" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <div class="form-group full-width scroll-fade-in" style="display: block !important; opacity: 1 !important; width: 100% !important;">
+                        <label for="quote-comments" style="display: block !important; opacity: 1 !important;">Additional Information</label>
+                        <textarea id="quote-comments" name="comments" placeholder="Any specific requirements or questions?" style="display: block !important; width: 100% !important; opacity: 1 !important;"></textarea>
                     </div>
                 </div>
                 
                 <!-- Attachment field -->
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="quote-attachment">Attachment (optional)</label>
-                        <input type="file" id="quote-attachment" name="attachment">
+                <div class="form-row animate-fade-in stagger-6" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <div class="form-group full-width scroll-fade-in" style="display: block !important; opacity: 1 !important; width: 100% !important;">
+                        <label for="quote-attachment" style="display: block !important; opacity: 1 !important;">Attachment (optional)</label>
+                        <input type="file" id="quote-attachment" name="attachment" style="display: block !important; opacity: 1 !important;">
                     </div>
                 </div>
                 
@@ -269,14 +397,20 @@
                     We'll only use your information to respond to your quote request. Your privacy is important to us.
                 </div>
                 
+                <!-- Message -->
+                <div class="form-group scroll-fade-in animate-fade-in stagger-6" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <label for="quote-message">Your Message</label>
+                    <textarea id="quote-message" name="message" rows="5" required style="display: block !important; width: 100% !important; opacity: 1 !important;"></textarea>
+                </div>
+                
                 <!-- Submit button centered -->
-                <div class="submit-btn-container">
-                    <button type="submit" class="submit-btn">Request Quote</button>
+                <div class="form-group animate-fade-in stagger-6" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important; text-align: center;">
+                    <button type="submit" class="submit-btn animate-pulse">Request Quote</button>
                 </div>
                 
                 <!-- Messages -->
-                <div id="success-message" class="success-message">Thank you for your quote request! We'll get back to you shortly.</div>
-                <div id="error-message" class="error-message">There was an error. Please try again.</div>
+                <div id="success-message" class="success-message animate-fade-in">Thank you for your quote request! We'll get back to you shortly.</div>
+                <div id="error-message" class="error-message animate-fade-in">There was an error. Please try again.</div>
             </form>
         </div>
     </div>
@@ -287,6 +421,9 @@
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
         </svg>
     </a>
+
+    <!-- Footer placeholder -->
+    <div id="footer-placeholder"></div>
 
     <style>
         .whatsapp-button {
@@ -323,21 +460,98 @@
         }
     </style>
     
-    <!-- Load Supabase JS library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script>
         // Initialize Supabase client
         const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Load header
-        fetch('header.html')
-            .then(response => response.text())
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("tweJU50C9CxCHnUN3");
+        })();
+        
+        // Load footer
+        fetch('footer.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load footer');
+                }
+                return response.text();
+            })
             .then(data => {
-                document.getElementById('my-header').innerHTML = data;
+                document.getElementById('footer-placeholder').innerHTML = data;
+            })
+            .catch(err => {
+                console.error('Error loading footer:', err);
+                // We already have a fallback footer in the HTML
             });
+        
+        // Animation handler for scroll effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add class to body when JS is running
+            document.body.classList.add('js-enabled');
+            
+            const scrollElements = document.querySelectorAll('.scroll-fade-in');
+            
+            // Force all elements to be visible initially
+            scrollElements.forEach(el => {
+                el.style.opacity = 1;
+                el.style.transform = 'translateY(0)';
+            });
+            
+            // Then set up animations only if supported
+            if (window.IntersectionObserver) {
+                // Set initial state for animations
+                scrollElements.forEach(el => {
+                    // Add invisible class to all scroll elements
+                    if (!el.classList.contains('visible')) {
+                        el.style.opacity = 0;
+                        el.style.transform = 'translateY(20px)';
+                    }
+                });
+                
+                // Function to check if element is in viewport
+                const isElementInViewport = (el) => {
+                    const rect = el.getBoundingClientRect();
+                    return (
+                        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+                        rect.bottom >= 0
+                    );
+                };
+                
+                // Function to handle scroll animation
+                const displayScrollElement = (element) => {
+                    element.classList.add('visible');
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                };
+                
+                // Function to hide scroll element
+                const hideScrollElement = (element) => {
+                    element.classList.remove('visible');
+                    element.style.opacity = 0;
+                    element.style.transform = 'translateY(20px)';
+                };
+                
+                // Function to handle scroll events
+                const handleScrollAnimation = () => {
+                    scrollElements.forEach((el) => {
+                        if (isElementInViewport(el)) {
+                            displayScrollElement(el);
+                        } else {
+                            hideScrollElement(el);
+                        }
+                    });
+                };
+                
+                // Trigger once on load
+                setTimeout(handleScrollAnimation, 100);
+                
+                // Add scroll event listener
+                window.addEventListener('scroll', handleScrollAnimation);
+            }
+        });
         
         // Handle form submission
         document.getElementById('quote-form').addEventListener('submit', async (e) => {
@@ -350,6 +564,10 @@
             // Disable button during submission
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
+            
+            // Add sending animation
+            submitButton.classList.add('sending');
+            submitButton.classList.remove('animate-pulse');
             
             try {
                 // Get form data
@@ -364,6 +582,28 @@
                     created_at: new Date().toISOString()
                 };
                 
+                // Prepare items for email
+                const items = getQuoteItems();
+                let itemsList = 'No items selected';
+                
+                if (items.length > 0) {
+                    itemsList = items.map(item => 
+                        `${item.name} (${item.variant || 'Standard'}) - Qty: ${item.quantity}`
+                    ).join('\n');
+                }
+                
+                // Prepare email parameters
+                const emailParams = {
+                    to_name: 'Admin',
+                    from_name: formData.name,
+                    from_email: formData.email,
+                    phone: formData.phone || 'Not provided',
+                    company: formData.company || 'Not provided',
+                    timeline: formData.timeline || 'Not specified',
+                    message: formData.comments || 'No additional information provided',
+                    items_list: itemsList
+                };
+                
                 // Submit to Supabase
                 const { data, error } = await supabase
                     .from('quote_requests')
@@ -371,12 +611,32 @@
                 
                 if (error) throw error;
                 
-                // Show success message
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
+                // Send email notification
+                await emailjs.send('service_gc3chia', 'template_rtt96d9', emailParams);
                 
-                // Reset form
-                document.getElementById('quote-form').reset();
+                // Show success message with animation
+                errorMessage.style.display = 'none';
+                successMessage.style.opacity = '0';
+                successMessage.style.display = 'block';
+                
+                // Trigger reflow for animation
+                void successMessage.offsetWidth;
+                
+                // Fade in success message
+                successMessage.style.opacity = '1';
+                successMessage.style.transform = 'translateY(0)';
+                
+                // Reset form with animation
+                const formInputs = document.querySelectorAll('input, textarea, select');
+                formInputs.forEach((input, index) => {
+                    setTimeout(() => {
+                        input.classList.add('success-highlight');
+                        setTimeout(() => {
+                            input.classList.remove('success-highlight');
+                            input.value = '';
+                        }, 500);
+                    }, index * 100);
+                });
                 
                 // Clear quote items
                 localStorage.removeItem('quoteItems');
@@ -385,14 +645,26 @@
             } catch (error) {
                 console.error('Error submitting quote:', error);
                 
-                // Show error message
-                errorMessage.style.display = 'block';
+                // Show error message with animation
                 successMessage.style.display = 'none';
+                errorMessage.style.opacity = '0';
+                errorMessage.style.display = 'block';
+                
+                // Trigger reflow for animation
+                void errorMessage.offsetWidth;
+                
+                // Fade in error message
+                errorMessage.style.opacity = '1';
+                errorMessage.style.transform = 'translateY(0)';
                 
             } finally {
-                // Re-enable submit button
-                submitButton.disabled = false;
-                submitButton.textContent = 'Request Quote';
+                // Re-enable submit button with animation
+                setTimeout(() => {
+                    submitButton.classList.remove('sending');
+                    submitButton.classList.add('animate-pulse');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Request Quote';
+                }, 500);
             }
         });
         
@@ -469,7 +741,60 @@
         // Initialize the quote items table when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             updateQuoteItemsTable();
+            
+            // Initialize animations
+            initializeAnimations();
         });
+        
+        // Function to manage animations
+        function initializeAnimations() {
+            // Add animation classes with proper timing
+            const animateElements = document.querySelectorAll('.animate-fade-in, .animate-slide-in');
+            
+            // Force all elements to be visible by default (for accessibility/no-js)
+            animateElements.forEach(el => {
+                el.style.opacity = 1;
+            });
+            
+            // Only apply animations if the browser supports them
+            if (window.requestAnimationFrame) {
+                // Set initial state
+                animateElements.forEach(el => {
+                    el.style.opacity = 0;
+                });
+                
+                // Trigger animations after a short delay
+                setTimeout(() => {
+                    animateElements.forEach(el => {
+                        // Reset opacity to let CSS animations take over
+                        el.style.opacity = '';
+                    });
+                }, 100);
+                
+                // Add animation to input fields on focus
+                const formInputs = document.querySelectorAll('input, textarea, select');
+                formInputs.forEach(input => {
+                    input.addEventListener('focus', function() {
+                        this.classList.add('animate-pulse');
+                        this.style.transition = 'all 0.3s ease';
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        this.classList.remove('animate-pulse');
+                    });
+                });
+            }
+            
+            // Add enter animation for success message
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (successMessage && errorMessage) {
+                // Hide messages by default
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html> 

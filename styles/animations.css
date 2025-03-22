@@ -1,0 +1,343 @@
+/* animations.css - Animation styles for Moderna Furniture */
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Slide Up Animation */
+@keyframes slideUp {
+  from { 
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide In From Left */
+@keyframes slideInLeft {
+  from { 
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide In From Right */
+@keyframes slideInRight {
+  from { 
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Scale Up Animation */
+@keyframes scaleUp {
+  from { 
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Page transition animation */
+@keyframes pageTransition {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Apply page transition to body */
+body {
+  animation: pageTransition 0.4s ease-out;
+}
+
+/* Animations for specific elements */
+
+/* Page load animations */
+.hero-content {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.hero-image {
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+.hero-title {
+  animation: slideUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.hero-subtitle {
+  animation: slideUp 0.8s ease-out 0.4s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Product grid animations */
+.product-card {
+  animation: scaleUp 0.5s ease-out backwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Create a staggered effect for product cards */
+.product-grid .product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-grid .product-card:nth-child(2) { animation-delay: 0.2s; }
+.product-grid .product-card:nth-child(3) { animation-delay: 0.3s; }
+.product-grid .product-card:nth-child(4) { animation-delay: 0.4s; }
+.product-grid .product-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Category section animations */
+.category-header {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Benefits section animations */
+.benefit-card {
+  animation: slideUp 0.6s ease-out backwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Staggered effect for benefit cards */
+.benefits-grid .benefit-card:nth-child(1) { animation-delay: 0.1s; }
+.benefits-grid .benefit-card:nth-child(2) { animation-delay: 0.3s; }
+.benefits-grid .benefit-card:nth-child(3) { animation-delay: 0.5s; }
+
+/* Enhanced hover effects */
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+  transition: transform 0.4s ease;
+}
+
+.view-products, .view-more, .primary-button {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.view-products:hover, .view-more:hover, .primary-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.view-products:active, .view-more:active, .primary-button:active {
+  transform: translateY(-1px);
+}
+
+/* Navigation animations */
+.menu a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.menu a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #292524;
+  transition: width 0.3s ease;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* WhatsApp button animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.whatsapp-button {
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-button:hover {
+  animation: none;
+}
+
+/* Scroll-triggered animations */
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Logo animation */
+.logo img {
+  transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+/* Form input animations */
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus {
+  border-color: #292524;
+  box-shadow: 0 0 0 2px rgba(41, 37, 36, 0.1);
+  outline: none;
+}
+
+/* Collections Page Animations */
+.categories-grid .category-card {
+  animation: scaleUp 0.5s ease-out backwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Staggered delay for category cards */
+.categories-grid .category-card:nth-child(1) { animation-delay: 0.1s; }
+.categories-grid .category-card:nth-child(2) { animation-delay: 0.15s; }
+.categories-grid .category-card:nth-child(3) { animation-delay: 0.2s; }
+.categories-grid .category-card:nth-child(4) { animation-delay: 0.25s; }
+.categories-grid .category-card:nth-child(5) { animation-delay: 0.3s; }
+.categories-grid .category-card:nth-child(6) { animation-delay: 0.35s; }
+.categories-grid .category-card:nth-child(7) { animation-delay: 0.4s; }
+.categories-grid .category-card:nth-child(8) { animation-delay: 0.45s; }
+
+/* Category card hover effect */
+.category-card {
+  transition: all 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Detail Page Animations */
+.product-detail-image {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.product-info-container {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.product-description {
+  animation: fadeIn 1s ease-out 0.2s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.product-price {
+  animation: fadeIn 1s ease-out 0.4s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.product-actions {
+  animation: fadeIn 1s ease-out 0.6s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Gallery image hover effect */
+.gallery-thumbnail {
+  transition: all 0.2s ease;
+}
+
+.gallery-thumbnail:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Page Animations */
+.contact-form {
+  animation: slideUp 0.8s ease-out;
+}
+
+.contact-info {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.contact-form input,
+.contact-form textarea {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.contact-form input:nth-child(1) { animation-delay: 0.2s; }
+.contact-form input:nth-child(2) { animation-delay: 0.3s; }
+.contact-form textarea { animation-delay: 0.4s; }
+.contact-form button { animation-delay: 0.5s; }
+
+/* Map container animation */
+.map-container {
+  animation: scaleUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* Profile Page Animations */
+.profile-container {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.profile-section {
+  animation: slideUp 0.6s ease-out;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.profile-section:nth-child(1) { animation-delay: 0.1s; }
+.profile-section:nth-child(2) { animation-delay: 0.2s; }
+.profile-section:nth-child(3) { animation-delay: 0.3s; }
+
+/* Footer animations */
+footer {
+  animation: fadeIn 1s ease-out;
+}
+
+/* Modal animations */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+} 

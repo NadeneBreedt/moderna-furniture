@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Search Results - Moderna Office Furniture</title>
 
+  <!-- Standardized header loader -->
+  <script src="js/header-loader.js"></script>
+  
+  <!-- Add animations CSS -->
+  <link rel="stylesheet" href="styles/animations.css">
+
   <!-- Base Reset & Simple Font Setup -->
   <style>
     * {
@@ -364,14 +370,6 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-
-    // Load the header
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('my-header').innerHTML = data;
-      })
-      .catch(err => console.error('Error loading header:', err));
 
     // Initialize Supabase client
     const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';

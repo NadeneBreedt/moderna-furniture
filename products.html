@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Products - Moderna Office Furniture</title>
+  
+  <!-- Standardized header loader -->
+  <script src="js/header-loader.js"></script>
+  
+  <!-- Add animations CSS -->
+  <link rel="stylesheet" href="styles/animations.css">
 
   <!-- Basic CSS for a two-column layout -->
   <style>
@@ -449,16 +455,6 @@
       .catch(err => console.error('Error loading quote modal:', err));
   </script>
 
-  <!-- Load header snippet -->
-  <script>
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('my-header').innerHTML = data;
-      })
-      .catch(err => console.error('Error loading header:', err));
-  </script>
-
   <!-- Main Script: fetch product details & handle "Add to Quote" -->
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
@@ -499,7 +495,8 @@
             category_id
           )
         `)
-        .eq('product_categories.category_id', categoryId);
+        .eq('product_categories.category_id', categoryId)
+        .order('name', { ascending: true });
 
       if (error) {
         console.error('Error loading products:', error);

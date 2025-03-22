@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details - Moderna Office Furniture</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="js/header-loader.js"></script>
+  <link rel="stylesheet" href="styles/animations.css">
   <style>
     * {
       margin: 0;
@@ -92,11 +94,21 @@
       overflow: hidden;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+      animation-fill-mode: both;
     }
+
+    .thumbnail:nth-child(1) { animation-delay: 0.2s; }
+    .thumbnail:nth-child(2) { animation-delay: 0.3s; }
+    .thumbnail:nth-child(3) { animation-delay: 0.4s; }
+    .thumbnail:nth-child(4) { animation-delay: 0.5s; }
 
     .thumbnail:hover {
       border-color: #57534e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .thumbnail.active {
@@ -457,7 +469,7 @@
     </div>
 
     <div class="product-container">
-      <div class="product-gallery">
+      <div class="product-gallery product-detail-image scroll-fade-in">
         <div class="main-image">
           <img id="main-product-image" src="" alt="">
         </div>
@@ -466,7 +478,7 @@
         </div>
       </div>
 
-      <div class="product-info">
+      <div class="product-info product-info-container scroll-fade-in">
         <div class="product-category" id="product-category"></div>
         <p class="product-description" id="product-description"></p>
 
@@ -476,7 +488,7 @@
           </ul>
         </div>
 
-        <div class="quote-section">
+        <div class="quote-section scroll-fade-in">
           <div class="quantity-selector">
             <div class="input-group">
               <label for="quantity">Quantity:</label>
@@ -649,13 +661,6 @@
         window.quoteModal = new QuoteModal();
       });
 
-    // Load header
-    fetch('header.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('my-header').innerHTML = data;
-      });
-
     // Global functions
     window.switchMainImage = function(imageUrl, thumbnailElement) {
       document.getElementById('main-product-image').src = imageUrl;
@@ -732,6 +737,60 @@
 
     // Shake every 3 minutes thereafter
     setInterval(shakeWhatsAppButton, 180000);
+    
+    // Animation handler for scroll effects
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollElements = document.querySelectorAll('.scroll-fade-in');
+      
+      // Set initial state for animations
+      scrollElements.forEach(el => {
+        // Add invisible class to all scroll elements
+        if (!el.classList.contains('visible')) {
+          el.style.opacity = 0;
+          el.style.transform = 'translateY(20px)';
+        }
+      });
+      
+      // Function to check if element is in viewport
+      const isElementInViewport = (el) => {
+        const rect = el.getBoundingClientRect();
+        return (
+          rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+          rect.bottom >= 0
+        );
+      };
+      
+      // Function to handle scroll animation
+      const displayScrollElement = (element) => {
+        element.classList.add('visible');
+        element.style.opacity = 1;
+        element.style.transform = 'translateY(0)';
+      };
+      
+      // Function to hide scroll element
+      const hideScrollElement = (element) => {
+        element.classList.remove('visible');
+        element.style.opacity = 0;
+        element.style.transform = 'translateY(20px)';
+      };
+      
+      // Function to handle scroll events
+      const handleScrollAnimation = () => {
+        scrollElements.forEach((el) => {
+          if (isElementInViewport(el)) {
+            displayScrollElement(el);
+          } else {
+            hideScrollElement(el);
+          }
+        });
+      };
+      
+      // Trigger once on load
+      setTimeout(handleScrollAnimation, 100);
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', handleScrollAnimation);
+    });
   </script>
 </body>
 </html>

@@ -301,6 +301,13 @@
                     <input type="tel" id="quote-phone" name="phone" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem;">
                 </div>
                 
+                <!-- Delivery Address -->
+                <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
+                    <label for="quote-address" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Delivery Address (Optional)</label>
+                    <textarea id="quote-address" name="delivery_address" placeholder="Enter your complete delivery address" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem; min-height: 80px; resize: vertical; display: block !important;"></textarea>
+                    <small style="display: block; margin-top: 0.25rem; font-size: 0.8rem; color: #78716c;">Please provide your complete delivery address including street, city, and postal code.</small>
+                </div>
+                
                 <!-- Attachment field -->
                 <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
                     <label for="quote-attachment" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Attachment (optional)</label>
@@ -506,6 +513,7 @@
                         name: document.getElementById('quote-name').value,
                         email: document.getElementById('quote-email').value,
                         phone: document.getElementById('quote-phone').value || null,
+                        address: document.getElementById('quote-address').value || null,
                         comments: document.getElementById('quote-comments').value || null,
                         items: JSON.stringify(getQuoteItems()), // Get items from local storage
                         created_at: new Date().toISOString()
@@ -571,6 +579,7 @@
                         from_name: formData.name,
                         from_email: formData.email,
                         phone: formData.phone || 'Not provided',
+                        address: formData.address || 'Not provided',
                         message: formData.comments || 'No additional information provided',
                         items_list: itemsList,
                         attachment: attachmentUrl || 'No attachment'
@@ -586,6 +595,7 @@
                             customer_name: formData.name,
                             customer_email: formData.email,
                             customer_phone: formData.phone || '',
+                            delivery_address: formData.address || '',
                             attachment_url: formData.attachment_url || null,
                             status: 'new'
                         }])
@@ -631,6 +641,9 @@
                     successMessage.style.display = 'block';
                     errorMessage.style.display = 'none';
                     
+                    // Scroll to the success message
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
                     // Reset form
                     document.getElementById('quote-form').reset();
                     
@@ -647,6 +660,9 @@
                     errorMessage.textContent = `There was an error: ${error.message || 'Unknown error'}. Please try again.`;
                     errorMessage.style.display = 'block';
                     successMessage.style.display = 'none';
+                    
+                    // Scroll to the error message
+                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
                 } finally {
                     // Re-enable submit button and remove loading state

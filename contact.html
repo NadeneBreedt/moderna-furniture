@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Get Your Custom Quote - Moderna Office Furniture</title>
+    <title>Contact Us - Moderna Office Furniture</title>
     
     <!-- Standardized header loader -->
     <script src="js/header-loader.js"></script>
@@ -37,203 +37,147 @@
     
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #fafaf9;
             color: #44403c;
             line-height: 1.6;
-            background-color: #f5f5f4;
             min-height: 100vh;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
-        /* Background image with opacity */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('images/background.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.15; /* Adjust this value between 0 and 1 to change opacity */
-            z-index: -1;
-        }
-        
-        a {
-            text-decoration: none;
-            color: inherit; /* This ensures links inherit their parent's color */
-        }
         .main-content {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 80px); /* Adjusted for header height */
+            flex: 1;
             padding: 2rem 1rem;
             position: relative;
-            z-index: 1;
-            opacity: 1 !important;
-            visibility: visible !important;
         }
+        
         .contact-container {
-            width: 100%;
-            max-width: 800px; /* Increased width for landscape layout */
+            max-width: 800px;
+            margin: 0 auto;
             background: white;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
         }
+        
         .contact-header {
             text-align: center;
-            margin-bottom: 2rem;
-        }
-        .contact-header h1 {
-            color: #292524;
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .form-row {
-            display: flex;
-            gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
+        
+        .contact-header h1 {
+            color: #292524;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
         .form-group {
             flex: 1;
+            margin-bottom: 1rem;
         }
-        .form-group.full-width {
-            width: 100%;
-        }
+        
         .form-group label {
             display: block;
             color: #57534e;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
-        .form-group input, .form-group textarea, .form-group select {
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.625rem 0.875rem;
             border: 1px solid #d6d3d1;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
             color: #44403c;
             transition: all 0.2s;
         }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #57534e;
             box-shadow: 0 0 0 3px rgba(87, 83, 78, 0.1);
         }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
         .submit-btn-container {
             display: flex;
             justify-content: center;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
+        
         .submit-btn {
-            padding: 0.875rem 2rem;
+            padding: 0.75rem 2rem;
             background: #57534e;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s;
             position: relative;
         }
+        
         .submit-btn:hover {
             background: #44403c;
         }
-        .submit-btn.loading {
-            padding-left: 3rem;
-        }
-        .submit-btn.loading::before {
-            content: "";
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            margin-top: -8px;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spinner 0.6s linear infinite;
-        }
-        @keyframes spinner {
-            to {transform: rotate(360deg);}
-        }
-        .success-message, .error-message {
+        
+        .success-message,
+        .error-message {
             display: none;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            margin-top: 1rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8125rem;
+            margin-top: 0.75rem;
             text-align: center;
         }
+        
         .success-message {
             background: #f0fdf4;
             color: #166534;
         }
+        
         .error-message {
             background: #fef2f2;
             color: #ef4444;
         }
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
         
-        /* Quote Items Table */
-        .quote-items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1.5rem;
-        }
-        .quote-items-table th,
-        .quote-items-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e7e5e4;
-        }
-        .quote-items-table th {
-            font-weight: 600;
-            color: #44403c;
-        }
-        
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
                 gap: 1rem;
             }
+            
             .contact-container {
                 padding: 1.5rem;
             }
-        }
-        
-        .scroll-fade-in {
-            opacity: 1 !important; /* Force visibility */
-            transform: translateY(0) !important; /* Reset any transform */
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        /* Only apply animations when JS is running properly */
-        .js-enabled .scroll-fade-in:not(.visible) {
-            opacity: 0 !important;
-            transform: translateY(20px) !important;
         }
     </style>
 </head>
@@ -241,116 +185,71 @@
     <!-- Load Header -->
     <div id="my-header"></div>
     
-    <!-- Main content that will be revealed after header loads -->
-    <div id="main-content" class="main-content" style="display: flex !important; opacity: 1 !important; visibility: visible !important; flex-direction: column; align-items: center; width: 100%; padding-top: 30px;">
-        
-        <!-- Contact Container -->
-        <div class="contact-container scroll-fade-in" style="display: block !important; opacity: 1 !important; visibility: visible !important; width: 100%; max-width: 800px; margin: 0 auto; padding: 2.5rem; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
-            <div class="contact-header" style="display: block !important; opacity: 1 !important;">
-                <h1 style="display: block !important; opacity: 1 !important; color: #292524; font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem;">Get Your Custom Quote</h1>
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h1>Contact Us</h1>
             </div>
             
-            <!-- Quote Items Section -->
-            <div id="quote-items" style="display: block !important; opacity: 1 !important; margin-bottom: 1.5rem !important;">
-                <h3 style="
-                    font-size: 1.2rem;
-                    margin-bottom: 1rem;
-                    color: #44403c;
-                    display: block !important;
-                    opacity: 1 !important;
-                ">
-                    Selected Items
-                </h3>
-                
-                <table id="quote-items-table" class="quote-items-table scroll-fade-in" style="display: table !important; width: 100% !important; opacity: 1 !important; border-collapse: collapse; margin-bottom: 1rem;">
-                    <thead style="display: table-header-group !important; opacity: 1 !important;">
-                        <tr style="display: table-row !important; opacity: 1 !important;">
-                            <th style="display: table-cell !important; opacity: 1 !important; text-align: left; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">Product</th>
-                            <th style="display: table-cell !important; opacity: 1 !important; text-align: left; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">Variant</th>
-                            <th style="display: table-cell !important; text-align: center; opacity: 1 !important; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">Qty</th>
-                            <th style="display: table-cell !important; text-align: right; opacity: 1 !important; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;"></th>
-                        </tr>
-                    </thead>
-                    <tbody style="display: table-row-group !important; opacity: 1 !important;">
-                        <!-- Items will be dynamically inserted here -->
-                        <tr id="no-items-row" style="display: table-row !important; opacity: 1 !important;">
-                            <td colspan="4" style="display: table-cell !important; text-align: center; color: #78716c; opacity: 1 !important; padding: 0.75rem;">
-                                No items added yet. Browse our <a href="collections.html" style="color: #292524; text-decoration: underline;">products</a> to add items to your quote.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <form id="quote-form" class="scroll-fade-in" style="display: block !important; opacity: 1 !important; visibility: visible !important; flex-direction: column; gap: 1rem;">
+            <!-- Contact Form -->
+            <form id="contact-form">
                 <!-- First row: Name and Email -->
-                <div class="form-row" style="display: flex !important; opacity: 1 !important; margin-bottom: 1rem !important; flex-wrap: wrap; gap: 1rem;">
-                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important; min-width: 200px;">
-                        <label for="quote-name" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Your Name</label>
-                        <input type="text" id="quote-name" name="name" required style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
                     </div>
-                    <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; flex: 1 !important; min-width: 200px;">
-                        <label for="quote-email" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Email Address</label>
-                        <input type="email" id="quote-email" name="email" required style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem;">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
                     </div>
                 </div>
                 
                 <!-- Phone Number -->
-                <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
-                    <label for="quote-phone" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Phone Number (optional)</label>
-                    <input type="tel" id="quote-phone" name="phone" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem;">
-                </div>
-                
-                <!-- Delivery Address -->
-                <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
-                    <label for="quote-address" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Delivery Address (Optional)</label>
-                    <textarea id="quote-address" name="delivery_address" placeholder="Enter your complete delivery address" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem; min-height: 80px; resize: vertical; display: block !important;"></textarea>
-                    <small style="display: block; margin-top: 0.25rem; font-size: 0.8rem; color: #78716c;">Please provide your complete delivery address including street, city, and postal code.</small>
-                </div>
-                
-                <!-- Attachment field -->
-                <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
-                    <label for="quote-attachment" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Attachment (optional)</label>
-                    <input type="file" id="quote-attachment" name="attachment" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem; background-color: #f5f5f4;">
+                <div class="form-group">
+                    <label for="phone">Phone Number (optional)</label>
+                    <input type="tel" id="phone" name="phone">
                 </div>
                 
                 <!-- Comments -->
-                <div class="form-group scroll-fade-in" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important;">
-                    <label for="quote-comments" style="display: block !important; margin-bottom: 0.5rem; font-size: 0.9rem; color: #44403c;">Comments (optional)</label>
-                    <textarea id="quote-comments" name="comments" placeholder="Any specific requirements or questions?" style="width: 100%; padding: 0.75rem; border: 1px solid #e7e5e4; border-radius: 4px; font-size: 1rem; min-height: 100px; resize: vertical; display: block !important;"></textarea>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Any specific requirements or questions?" required></textarea>
                 </div>
                 
-                <!-- Privacy note -->
-                <div style="font-size: 0.85rem; color: #78716c; margin-top: 0.5rem; margin-bottom: 1rem;">
-                    We'll only use your information to respond to your quote request. Your privacy is important to us.
+                <!-- Delivery Address -->
+                <div class="form-group">
+                    <label for="address">Delivery Address (Optional)</label>
+                    <textarea id="address" name="delivery_address" placeholder="Enter your complete delivery address"></textarea>
                 </div>
                 
                 <!-- Submit button centered -->
-                <div class="form-group" style="display: block !important; opacity: 1 !important; margin-bottom: 1rem !important; text-align: center;">
-                    <button type="submit" class="submit-btn" style="width: 100%; background-color: #292524; color: white; border: none; border-radius: 4px; padding: 0.875rem; font-size: 1rem; cursor: pointer; transition: background-color 0.2s;">Get My Quote</button>
+                <div class="submit-btn-container">
+                    <button type="submit" class="submit-btn">Contact Us</button>
                 </div>
                 
                 <!-- Messages -->
-                <div id="success-message" class="success-message" style="display: none; padding: 1rem; background-color: #ecfdf5; color: #047857; border-radius: 4px; text-align: center; margin-top: 1rem; font-weight: 500;">
+                <div id="success-message" class="success-message">
                     Thank you for your quote request! We'll get back to you shortly.
                 </div>
-                <div id="error-message" class="error-message" style="display: none; padding: 1rem; background-color: #fef2f2; color: #b91c1c; border-radius: 4px; text-align: center; margin-top: 1rem; font-weight: 500;">
+                <div id="error-message" class="error-message">
                     There was an error submitting your quote. Please try again.
                 </div>
             </form>
         </div>
     </div>
-
+    
+    <!-- Footer placeholder -->
+    <div id="footer-placeholder"></div>
+    
     <!-- WhatsApp Button -->
     <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
         </svg>
     </a>
-
-    <!-- Footer placeholder -->
-    <div id="footer-placeholder"></div>
-
+    
     <style>
         .whatsapp-button {
             position: fixed;
@@ -368,24 +267,34 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
             z-index: 1000;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
         }
-
+        
         .whatsapp-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            animation: none;
         }
-
+        
         .whatsapp-button svg {
             width: 38px;
             height: 38px;
             color: #25D366;
         }
+        
+        @media (max-width: 768px) {
+            .whatsapp-button {
+                width: 45px;
+                height: 45px;
+                bottom: 16px;
+                left: 16px;
+            }
+            
+            .whatsapp-button svg {
+                width: 30px;
+                height: 30px;
+            }
+        }
     </style>
-
+    
     <script>
         // Initialize EmailJS
         (function() {
@@ -397,352 +306,68 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         
-        // Load footer
-        fetch('footer.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load footer');
-                }
-                return response.text();
-            })
-            .then(data => {
-                document.getElementById('footer-placeholder').innerHTML = data;
-            })
-            .catch(err => {
-                console.error('Error loading footer:', err);
-                // We already have a fallback footer in the HTML
-            });
-        
-        // Animation handler for scroll effects
         document.addEventListener('DOMContentLoaded', function() {
-            // Add class to body when JS is running
-            document.body.classList.add('js-enabled');
+            const form = document.getElementById('contact-form');
+            const submitButton = form.querySelector('.submit-btn');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
             
-            const scrollElements = document.querySelectorAll('.scroll-fade-in');
-            
-            // Force all elements to be visible initially
-            scrollElements.forEach(el => {
-                el.style.opacity = 1;
-                el.style.transform = 'translateY(0)';
-            });
-            
-            // Then set up animations only if supported
-            if (window.IntersectionObserver) {
-                // Set initial state for animations
-                scrollElements.forEach(el => {
-                    // Add invisible class to all scroll elements
-                    if (!el.classList.contains('visible')) {
-                        el.style.opacity = 0;
-                        el.style.transform = 'translateY(20px)';
-                    }
-                });
-                
-                // Function to check if element is in viewport
-                const isElementInViewport = (el) => {
-                    const rect = el.getBoundingClientRect();
-                    return (
-                        rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
-                        rect.bottom >= 0
-                    );
-                };
-                
-                // Function to handle scroll animation
-                const displayScrollElement = (element) => {
-                    element.classList.add('visible');
-                    element.style.opacity = 1;
-                    element.style.transform = 'translateY(0)';
-                };
-                
-                // Function to hide scroll element
-                const hideScrollElement = (element) => {
-                    element.classList.remove('visible');
-                    element.style.opacity = 0;
-                    element.style.transform = 'translateY(20px)';
-                };
-                
-                // Function to handle scroll events
-                const handleScrollAnimation = () => {
-                    scrollElements.forEach((el) => {
-                        if (isElementInViewport(el)) {
-                            displayScrollElement(el);
-                        } else {
-                            hideScrollElement(el);
-                        }
-                    });
-                };
-                
-                // Trigger once on load
-                setTimeout(handleScrollAnimation, 100);
-                
-                // Add scroll event listener
-                window.addEventListener('scroll', handleScrollAnimation);
-            }
-            
-            // Initialize the form submission handlers and quote items table
-            initContactForm();
-            updateQuoteItemsTable();
-        });
-        
-        // Function to initialize the form submission handlers
-        function initContactForm() {
-            console.log('Initializing contact form handlers');
-            const quoteForm = document.getElementById('quote-form');
-            
-            if (!quoteForm) {
-                console.error('Quote form not found in the DOM!');
-                return;
-            }
-            
-            // Handle form submission
-            quoteForm.addEventListener('submit', async (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                console.log('Form submission started');
-                
-                const submitButton = document.querySelector('.submit-btn');
-                const successMessage = document.getElementById('success-message');
-                const errorMessage = document.getElementById('error-message');
                 
                 // Disable button and show loading state
                 submitButton.disabled = true;
                 submitButton.textContent = 'Sending...';
-                submitButton.classList.add('loading');
                 
                 try {
-                    // Get form data
                     const formData = {
-                        name: document.getElementById('quote-name').value,
-                        email: document.getElementById('quote-email').value,
-                        phone: document.getElementById('quote-phone').value || null,
-                        address: document.getElementById('quote-address').value || null,
-                        comments: document.getElementById('quote-comments').value || null,
-                        items: JSON.stringify(getQuoteItems()), // Get items from local storage
+                        customer_name: document.getElementById('name').value,
+                        customer_email: document.getElementById('email').value,
+                        customer_phone: document.getElementById('phone').value || '',
+                        status: 'new',
                         created_at: new Date().toISOString()
                     };
                     
-                    console.log('Form data collected:', formData);
-                    
-                    // Handle file attachment if present
-                    const attachmentInput = document.getElementById('quote-attachment');
-                    let attachmentUrl = null;
-                    
-                    if (attachmentInput.files.length > 0) {
-                        console.log('Attachment found, processing upload...');
-                        const file = attachmentInput.files[0];
-                        
-                        // Create a unique filename
-                        const fileExt = file.name.split('.').pop();
-                        const fileName = `quote-attachment-${Date.now()}.${fileExt}`;
-                        
-                        try {
-                            // Upload file to Supabase Storage
-                            const { data: uploadData, error: uploadError } = await supabase.storage
-                                .from('quote_attachments')
-                                .upload(fileName, file);
-                            
-                            if (uploadError) {
-                                console.error('Storage upload error:', uploadError);
-                                throw uploadError;
-                            }
-                            
-                            console.log('File uploaded successfully:', uploadData);
-                            
-                            // Get public URL for the uploaded file
-                            const { data: urlData } = supabase.storage
-                                .from('quote_attachments')
-                                .getPublicUrl(fileName);
-                            
-                            attachmentUrl = urlData.publicUrl;
-                            console.log('Attachment URL:', attachmentUrl);
-                        } catch (uploadErr) {
-                            console.error('Error in file upload process:', uploadErr);
-                            // Continue with form submission even if file upload fails
-                        }
-                    }
-                    
-                    // Add attachment URL to form data
-                    formData.attachment_url = attachmentUrl;
-                    
-                    // Prepare items for email
-                    const items = getQuoteItems();
-                    console.log('Quote items:', items);
-                    let itemsList = 'No items selected';
-                    
-                    if (items.length > 0) {
-                        itemsList = items.map(item => 
-                            `${item.name} (${item.variant || 'Standard'}) - Qty: ${item.quantity}`
-                        ).join('\n');
-                    }
-                    
-                    // Prepare email parameters
-                    const emailParams = {
-                        to_name: 'Admin',
-                        from_name: formData.name,
-                        from_email: formData.email,
-                        phone: formData.phone || 'Not provided',
-                        address: formData.address || 'Not provided',
-                        message: formData.comments || 'No additional information provided',
-                        items_list: itemsList,
-                        attachment: attachmentUrl || 'No attachment'
-                    };
-                    
-                    console.log('Email parameters:', emailParams);
-                    
                     // Submit to Supabase
-                    console.log('Submitting to Supabase...');
-                    const { data: quoteData, error: quoteError } = await supabase
+                    const { data, error } = await supabase
                         .from('quote_requests')
-                        .insert([{
-                            customer_name: formData.name,
-                            customer_email: formData.email,
-                            customer_phone: formData.phone || '',
-                            delivery_address: formData.address || '',
-                            customer_comments: formData.comments || '',
-                            attachment_url: formData.attachment_url || null,
-                            status: 'new'
-                        }])
-                        .select()
-                        .single();
+                        .insert([formData])
+                        .select();
                     
-                    if (quoteError) {
-                        console.error('Supabase insert error:', quoteError);
-                        throw quoteError;
-                    }
-                    
-                    console.log('Quote request inserted successfully:', quoteData);
-                    
-                    // If there are any items, add them to quote_items table
-                    if (items.length > 0) {
-                        console.log('Adding quote items to database...');
-                        const quoteItems = items.map(item => ({
-                            quote_request_id: quoteData.id,
-                            product_id: item.id || null,
-                            product_name: item.name,
-                            quantity: item.quantity || 1,
-                            specifications: item.variant || null
-                        }));
-                        
-                        const { error: itemsError } = await supabase
-                            .from('quote_items')
-                            .insert(quoteItems);
-                        
-                        if (itemsError) {
-                            console.error('Error adding quote items:', itemsError);
-                            // Continue even if items insertion fails
-                        } else {
-                            console.log('Quote items added successfully');
-                        }
-                    }
+                    if (error) throw error;
                     
                     // Send email notification
-                    console.log('Sending email notification...');
-                    const emailResult = await emailjs.send('service_gc3chia', 'template_rtt96d9', emailParams);
-                    console.log('Email sent successfully:', emailResult);
+                    await emailjs.send('service_gc3chia', 'template_rtt96d9', {
+                        to_name: 'Admin',
+                        from_name: formData.customer_name,
+                        from_email: formData.customer_email,
+                        phone: formData.customer_phone || 'Not provided',
+                        address: document.getElementById('address').value || 'Not provided',
+                        message: document.getElementById('message').value
+                    });
                     
                     // Show success message
                     successMessage.style.display = 'block';
                     errorMessage.style.display = 'none';
                     
-                    // Scroll to the success message
-                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
                     // Reset form
-                    document.getElementById('quote-form').reset();
-                    
-                    // Clear quote items
-                    localStorage.removeItem('quoteItems');
-                    updateQuoteItemsTable();
-                    
-                    console.log('Form submission completed successfully');
+                    form.reset();
                     
                 } catch (error) {
-                    console.error('Error submitting quote:', error);
+                    console.error('Error:', error);
                     
-                    // Show more detailed error message
-                    errorMessage.textContent = `There was an error: ${error.message || 'Unknown error'}. Please try again.`;
+                    // Show error message
                     errorMessage.style.display = 'block';
                     successMessage.style.display = 'none';
-                    
-                    // Scroll to the error message
-                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    errorMessage.textContent = 'There was an error submitting your message. Please try again.';
                     
                 } finally {
-                    // Re-enable submit button and remove loading state
+                    // Reset button state
                     submitButton.disabled = false;
-                    submitButton.textContent = 'Get My Quote';
-                    submitButton.classList.remove('loading');
+                    submitButton.textContent = 'Contact Us';
                 }
             });
-        }
-        
-        // Function to get quote items from localStorage
-        function getQuoteItems() {
-            try {
-                const items = JSON.parse(localStorage.getItem('quoteItems')) || [];
-                return items;
-            } catch (error) {
-                console.error('Error parsing quote items:', error);
-                return [];
-            }
-        }
-        
-        // Function to update the quote items table
-        function updateQuoteItemsTable() {
-            const items = getQuoteItems();
-            const tableBody = document.querySelector('#quote-items-table tbody');
-            const noItemsRow = document.getElementById('no-items-row');
-            
-            // Clear existing items
-            tableBody.innerHTML = '';
-            
-            if (items.length === 0) {
-                // Show no items message
-                tableBody.appendChild(noItemsRow);
-                return;
-            }
-            
-            // Add each item to the table
-            items.forEach((item, index) => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">${item.name}</td>
-                    <td style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">${item.variant || 'Standard'}</td>
-                    <td style="text-align: center; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">${item.quantity}</td>
-                    <td style="text-align: right; padding: 0.5rem; border-bottom: 1px solid #e7e5e4;">
-                        <button type="button" class="remove-item-btn" data-index="${index}" style="
-                            background: none;
-                            border: none;
-                            color: #ef4444;
-                            cursor: pointer;
-                            font-size: 0.875rem;
-                        ">
-                            Remove
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Add event listeners to remove buttons
-            document.querySelectorAll('.remove-item-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeQuoteItem(index);
-                });
-            });
-        }
-        
-        // Function to remove an item from the quote
-        function removeQuoteItem(index) {
-            const items = getQuoteItems();
-            
-            if (index >= 0 && index < items.length) {
-                items.splice(index, 1);
-                localStorage.setItem('quoteItems', JSON.stringify(items));
-                updateQuoteItemsTable();
-            }
-        }
+        });
     </script>
 </body>
 </html> 

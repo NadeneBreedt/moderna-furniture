@@ -250,9 +250,10 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
-        flex-direction: column;
+      flex-direction: column;
       padding-bottom: 1.5rem;
       border: 1px solid #f0f0f0;
+      height: 100%;
     }
 
     .product-card:hover {
@@ -282,21 +283,22 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
+      justify-content: space-between;
     }
 
     .product-info h3 {
       margin: 0 0 1rem 0;
       font-size: 1.5rem;
       color: #1f2937;
-        text-align: center;
+      text-align: center;
     }
 
     .product-info p {
       color: var(--dark-gray);
       font-size: 0.9rem;
       line-height: 1.5;
-        margin: 0;
-      }
+      margin: 0;
+    }
 
     .view-products {
       display: inline-block;
@@ -491,24 +493,25 @@
     }
 
     .product-action-buttons {
+      margin-top: auto;
       display: flex;
       justify-content: center;
-      margin-top: auto;
-      padding: 0 0.5rem 0.5rem;
-      width: 100%;
+      padding: 0 1rem;
     }
 
     .primary-button {
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
       background-color: #292524;
       color: white;
       border: none;
       border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.2s;
-      width: 100%;
       text-align: center;
     }
 
@@ -1098,19 +1101,19 @@
 
       container.innerHTML = products.map(product => `
         <div class="product-card">
-          <a href="product-detail.html?id=${product.product_id}" target="_blank" style="text-decoration: none; color: inherit; display: block;">
-            <div class="product-image">
+          <div class="product-image">
+            <a href="product-detail.html?id=${product.product_id}">
               <img src="${product.product_image || 'placeholder.jpg'}" alt="${product.product_name}">
+            </a>
+          </div>
+          <div class="product-info">
+            <h3>${product.product_name}</h3>
+            <div class="product-action-buttons">
+              <button class="primary-button add-to-quote-btn" data-product-id="${product.product_id}" data-product-name="${product.product_name}">
+                Add to Quote
+              </button>
             </div>
-            <div class="product-info">
-              <h3>${product.product_name}</h3>
-              <div class="product-action-buttons">
-                <button class="primary-button add-to-quote-btn" data-product-id="${product.product_id}" data-product-name="${product.product_name}">
-                  Add to Quote
-                </button>
-              </div>
-            </div>
-          </a>
+          </div>
         </div>
       `).join('');
 

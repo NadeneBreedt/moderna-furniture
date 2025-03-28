@@ -503,6 +503,69 @@
     .view-products:hover:after {
       transform: translateX(3px);
     }
+
+    /* Add to Quote button styling */
+    .product-action-buttons {
+      margin-top: 1rem;
+    }
+
+    .add-to-quote-btn {
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .add-to-quote-btn:hover {
+      background-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    .add-to-quote-btn:active {
+      transform: translateY(0);
+    }
+
+    .add-to-quote-btn.added {
+      background-color: #16a34a;
+    }
+
+    .add-to-quote-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Toast notification styling */
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #16a34a;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    .toast-notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -517,7 +580,7 @@
         <h1 class="hero-title">Modern Workspace Design</h1>
         <p class="hero-subtitle">Create inspiring workspaces with our curated collection of contemporary office furniture.</p>
         <div class="hero-cta">
-          <a href="#products" class="btn btn-primary">Explore Collection</a>
+          <a href="/products.html" class="btn btn-primary">Explore Collection</a>
           <a href="/contact" class="btn btn-outline">Get Quote</a>
         </div>
       </div>
@@ -1061,29 +1124,56 @@
               <div class="product-info">
                 <h3>${product.product_name}</h3>
                 <div class="product-action-buttons">
-                  <button class="primary-button add-to-quote-btn" 
+                  <button class="add-to-quote-btn" 
                           data-product-id="${product.product_id}" 
                           data-product-name="${product.product_name}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
                     Add to Quote
                   </button>
                 </div>
               </div>
             `;
 
-            // Add event listener before adding to fragment
+            // Add event listener for quote button
             const quoteButton = productCard.querySelector('.add-to-quote-btn');
             quoteButton.addEventListener('click', function(e) {
-              e.preventDefault();
-              const productId = this.getAttribute('data-product-id');
-              const productName = this.getAttribute('data-product-name');
-              
-              if (typeof window.addToQuote === 'function') {
-                window.addToQuote({
-                  id: productId,
-                  name: productName,
-                  quantity: 1
-                });
-              }
+                e.preventDefault();
+                const productId = this.getAttribute('data-product-id');
+                const productName = this.getAttribute('data-product-name');
+                
+                // Add to quote
+                if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
+                    window.quoteModal.addToQuote({
+                        id: productId,
+                        name: productName,
+                        quantity: 1
+                    });
+                    
+                    // Update button state
+                    this.classList.add('added');
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Added to Quote
+                    `;
+                    
+                    // Show toast notification
+                    showToast(`${productName} added to quote`);
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        this.classList.remove('added');
+                        this.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                            Add to Quote
+                        `;
+                    }, 2000);
+                }
             });
 
             fragment.appendChild(productCard);
@@ -1301,29 +1391,56 @@
           <div class="product-info">
             <h3>${product.product_name}</h3>
             <div class="product-action-buttons">
-              <button class="primary-button add-to-quote-btn" 
+              <button class="add-to-quote-btn" 
                       data-product-id="${product.product_id}" 
                       data-product-name="${product.product_name}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
                 Add to Quote
               </button>
             </div>
           </div>
         `;
 
-        // Add event listener before adding to fragment
+        // Add event listener for quote button
         const quoteButton = productCard.querySelector('.add-to-quote-btn');
         quoteButton.addEventListener('click', function(e) {
-          e.preventDefault();
-          const productId = this.getAttribute('data-product-id');
-          const productName = this.getAttribute('data-product-name');
-          
-          if (typeof window.addToQuote === 'function') {
-            window.addToQuote({
-              id: productId,
-              name: productName,
-              quantity: 1
-            });
-          }
+            e.preventDefault();
+            const productId = this.getAttribute('data-product-id');
+            const productName = this.getAttribute('data-product-name');
+            
+            // Add to quote
+            if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
+                window.quoteModal.addToQuote({
+                    id: productId,
+                    name: productName,
+                    quantity: 1
+                });
+                
+                // Update button state
+                this.classList.add('added');
+                this.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Added to Quote
+                `;
+                
+                // Show toast notification
+                showToast(`${productName} added to quote`);
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    this.classList.remove('added');
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Add to Quote
+                    `;
+                }, 2000);
+            }
         });
 
         fragment.appendChild(productCard);
@@ -1526,6 +1643,17 @@
         e.preventDefault();
         window.location.href = 'contact.html';
     });
+
+    // Function to show toast notification
+    function showToast(message, duration = 3000) {
+        const toast = document.getElementById('toast-notification');
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, duration);
+    }
   </script>
   <!-- WhatsApp Button -->
   <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
@@ -1916,6 +2044,9 @@
           }
       });
   </script>
+
+  <!-- Add toast notification container -->
+  <div id="toast-notification" class="toast-notification"></div>
 </body>
 
 <!-- Scroll animation script -->

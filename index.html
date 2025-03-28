@@ -138,7 +138,7 @@
       overflow: hidden;
       display: flex;
       justify-content: space-between;
-      min-height: 550px;
+      min-height: 650px; /* Increased from 550px */
     }
 
     .hero-content {
@@ -148,28 +148,30 @@
       padding: 6rem 2rem 6rem 2rem;
       position: relative;
       z-index: 2;
-      flex: 0 0 40%;
+      flex: 0 0 45%; /* Adjusted from 40% */
+      background-color: white;
     }
 
     .hero-image {
-      flex: 0 0 60%;
-      max-width: 60%;
+      flex: 0 0 55%; /* Adjusted from 60% */
+      max-width: 55%; /* Adjusted from 60% */
       position: relative;
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
+      align-items: stretch; /* Changed from center */
+      justify-content: stretch; /* Changed from center */
       padding: 0;
       margin: 0;
       height: 100%;
+      overflow: hidden;
     }
 
     .hero-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      max-height: none;
-      margin-top: -1px; /* To eliminate any potential gap at the top */
-      margin-bottom: -1px; /* To eliminate any potential gap at the bottom */
+      object-position: center;
+      margin: 0;
+      display: block;
     }
 
     .hero-title {
@@ -452,7 +454,6 @@
       .hero-banner {
         flex-direction: column;
         min-height: auto;
-        padding: 0;
       }
 
       .hero-content, .hero-image {
@@ -465,16 +466,7 @@
       }
 
       .hero-image {
-        margin: 0;
-        height: 400px;
-      }
-      
-      .hero-image > div {
-        min-height: 400px;
-      }
-      
-      .product-grid {
-        grid-template-columns: repeat(3, 1fr);
+        height: 600px; /* Increased height for mobile */
       }
     }
 
@@ -583,6 +575,80 @@
       width: 24px;
       height: 24px;
     }
+
+    .file-upload-container {
+        position: relative;
+        margin-bottom: 1rem;
+        cursor: pointer;
+    }
+
+    .file-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .file-upload-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background-color: #f5f5f4;
+        border: 1px dashed #d6d3d1;
+        border-radius: 8px;
+        color: #57534e;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 1;
+        min-height: 48px;
+    }
+
+    .file-upload-button:hover {
+        background-color: #e7e5e4;
+        border-color: #a8a29e;
+    }
+
+    .selected-files {
+        margin-top: 0.5rem;
+    }
+
+    .selected-file {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem;
+        background-color: #f5f5f4;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .selected-file .remove-file {
+        cursor: pointer;
+        color: #ef4444;
+        padding: 0.25rem;
+    }
+
+    .upload-progress {
+        height: 2px;
+        background-color: #e7e5e4;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 0.25rem;
+    }
+
+    .upload-progress-bar {
+        height: 100%;
+        background-color: #22c55e;
+        transition: width 0.3s ease;
+    }
   </style>
 </head>
 <body>
@@ -633,7 +699,7 @@
       </div>
       </div>
       <div class="hero-image">
-      <img src="images/Cover 2.png" alt="Modern Office Background">
+        <img src="images/newfront.jpg" alt="Modern Office Interior">
       </div>
     </section>
 
@@ -816,36 +882,26 @@
                 "
               />
             </div>
-            <button type="submit" style="
-              background-color: #292524;
-              color: #fff;
-              font-weight: 600;
-              padding: 0.6rem 1.2rem;
-              border-radius: 8px;
-              font-size: 1rem;
-              border: none;
-              cursor: pointer;
-              width: 100%;
-              margin-top: 1rem;
-            ">
-              Subscribe
-            </button>
-            <p style="
-              font-size: 0.875rem;
-              color: #78716c;
-              margin-top: 1.5rem;
-            ">
-              By subscribing you agree to our Privacy Policy.
-            </p>
-            <div id="subscription-message" style="
-              margin-top: 1rem;
-              padding: 0.8rem;
-              border-radius: 4px;
-              display: none;
-              text-align: center;
-              width: 100%;
-              max-width: 400px;
-            "></div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Your message"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="attachments">Attachments</label>
+                <div class="file-upload-container" onclick="document.getElementById('attachments').click()">
+                    <input type="file" id="attachments" name="attachments" multiple class="file-input" accept="image/*,.pdf,.doc,.docx">
+                    <div class="file-upload-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Choose Files
+                    </div>
+                </div>
+                <div id="selected-files" class="selected-files"></div>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
           </form>
         </div>
         </div>
@@ -1555,7 +1611,7 @@
         // Show error message
         messageDiv.style.display = 'block';
         messageDiv.style.backgroundColor = '#fef2f2';
-        messageDiv.style.color = '#991b1b';
+        messageDiv.style.color = '#b91c1c';
         messageDiv.style.border = '1px solid #fecaca';
         messageDiv.textContent = 'Sorry, there was an error. Please try again later.';
       } finally {
@@ -1579,6 +1635,12 @@
         .catch(err => {
             console.error('Error loading footer:', err);
             // We already have a fallback footer in the HTML
+    });
+
+    // Add event listener for the hero quote button
+    document.getElementById('hero-quote-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'contact.html';
     });
   </script>
   <!-- WhatsApp Button -->
@@ -1636,6 +1698,345 @@
       }
     }
   </style>
+
+  <!-- Contact Pop-up Modal -->
+  <div id="contact-modal" class="modal">
+      <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h2>Looking for something specific? Email us</h2>
+          <form id="contact-form">
+              <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" placeholder="Your name">
+              </div>
+              <div class="form-group">
+                  <label for="email">Email <span class="required">*</span></label>
+                  <input type="email" id="email" placeholder="Your email" required>
+              </div>
+              <div class="form-group">
+                  <label for="cell_number">Contact Number</label>
+                  <input type="tel" id="cell_number" placeholder="Your contact number">
+              </div>
+              <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea id="message" placeholder="Your message"></textarea>
+              </div>
+              <div class="form-group">
+                  <label for="attachments">Attachments</label>
+                  <div class="file-upload-container" onclick="document.getElementById('attachments').click()">
+                      <input type="file" id="attachments" name="attachments" multiple class="file-input" accept="image/*,.pdf,.doc,.docx">
+                      <div class="file-upload-button">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                              <polyline points="17 8 12 3 7 8"/>
+                              <line x1="12" y1="3" x2="12" y2="15"/>
+                          </svg>
+                          Choose Files
+                      </div>
+                  </div>
+                  <div id="selected-files" class="selected-files"></div>
+              </div>
+              <button type="submit" class="submit-btn">Submit</button>
+          </form>
+      </div>
+  </div>
+
+  <style>
+      .modal {
+          display: none;
+          position: fixed;
+          z-index: 10000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          overflow-y: auto; /* Enable vertical scrolling */
+          padding: 20px; /* Add padding for mobile */
+      }
+
+      .modal.show {
+          display: block;
+          opacity: 1;
+      }
+
+      .modal-content {
+          background-color: #fff;
+          margin: 5vh auto; /* Changed from 15% to 5vh for better positioning */
+          padding: 2rem;
+          border-radius: 12px;
+          width: 90%;
+          max-width: 500px;
+          position: relative;
+          transform: translateY(-20px);
+          transition: transform 0.3s ease;
+      }
+
+      @media (max-height: 800px) {
+          .modal-content {
+              margin: 2vh auto; /* Even less margin for shorter screens */
+          }
+      }
+
+      @media (max-width: 480px) {
+          .modal {
+              padding: 10px; /* Less padding on mobile */
+          }
+          
+          .modal-content {
+              padding: 1.5rem; /* Less padding in modal on mobile */
+              margin: 2vh auto; /* Less margin on mobile */
+          }
+
+          .form-group {
+              margin-bottom: 0.75rem; /* Slightly less spacing between form groups on mobile */
+          }
+      }
+
+      .close-button {
+          position: absolute;
+          right: 1.5rem;
+          top: 1.5rem;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: #78716c;
+      }
+
+      .close-button:hover {
+          color: #292524;
+      }
+
+      .modal h2 {
+          color: #292524;
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+          margin-bottom: 1rem;
+      }
+
+      .form-group label {
+          display: block;
+          color: #57534e;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #e7e5e4;
+          border-radius: 8px;
+          font-size: 1rem;
+          transition: border-color 0.2s;
+      }
+
+      .form-group textarea {
+          height: 100px;
+          resize: vertical;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+          outline: none;
+          border-color: #78716c;
+      }
+
+      .required {
+          color: #ef4444;
+      }
+
+      .submit-btn {
+          width: 100%;
+          padding: 0.875rem;
+          background: #292524;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+      }
+
+      .submit-btn:hover {
+          background: #44403c;
+      }
+
+      .error-message {
+          color: #ef4444;
+          font-size: 0.875rem;
+          margin-top: 0.25rem;
+          display: none;
+      }
+
+      .error-message.show {
+          display: block;
+      }
+  </style>
+
+  <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+      const CONTACT_FORM_SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+      const CONTACT_FORM_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+      const contactFormSupabase = createClient(CONTACT_FORM_SUPABASE_URL, CONTACT_FORM_SUPABASE_KEY);
+
+      // Get modal elements
+      const contactModal = document.getElementById('contact-modal');
+      const modalCloseButton = document.querySelector('.close-button');
+      const contactForm = document.getElementById('contact-form');
+      const fileInput = document.getElementById('attachments');
+      const selectedFilesContainer = document.getElementById('selected-files');
+
+      // Show modal after a short delay when page loads
+      setTimeout(() => {
+          contactModal.classList.add('show');
+      }, 2000);
+
+      // Handle file selection
+      fileInput.addEventListener('change', () => {
+          selectedFilesContainer.innerHTML = '';
+          Array.from(fileInput.files).forEach(file => {
+              const fileElement = document.createElement('div');
+              fileElement.className = 'selected-file';
+              fileElement.innerHTML = `
+                  <span>${file.name}</span>
+                  <div class="upload-progress">
+                      <div class="upload-progress-bar" style="width: 0%"></div>
+                  </div>
+              `;
+              selectedFilesContainer.appendChild(fileElement);
+          });
+      });
+
+      // Close modal when clicking close button or outside
+      modalCloseButton.addEventListener('click', () => {
+          contactModal.classList.remove('show');
+          setTimeout(() => {
+              contactModal.style.display = 'none';
+          }, 300);
+      });
+
+      window.addEventListener('click', (e) => {
+          if (e.target === contactModal) {
+              contactModal.classList.remove('show');
+              setTimeout(() => {
+                  contactModal.style.display = 'none';
+              }, 300);
+          }
+      });
+
+      // Handle form submission
+      contactForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const submitButton = contactForm.querySelector('.submit-btn');
+          submitButton.disabled = true;
+          submitButton.textContent = 'Submitting...';
+
+          try {
+              const files = fileInput.files;
+              const uploadedUrls = [];
+
+              // Upload files if any are selected
+              if (files.length > 0) {
+                  for (let i = 0; i < files.length; i++) {
+                      const file = files[i];
+                      const fileExt = file.name.split('.').pop();
+                      const timestamp = new Date().getTime();
+                      const fileName = `${timestamp}_${file.name}`;
+                      const filePath = `attachments/${fileName}`;
+
+                      // Get the progress bar for this file
+                      const progressBar = selectedFilesContainer.children[i].querySelector('.upload-progress-bar');
+
+                      try {
+                          // Upload file to Supabase Storage
+                          const { data: uploadData, error: uploadError } = await contactFormSupabase.storage
+                              .from('quote-attachments')
+                              .upload(filePath, file, {
+                                  cacheControl: '3600',
+                                  upsert: false
+                              });
+
+                          if (uploadError) {
+                              console.error('Upload error:', uploadError);
+                              throw uploadError;
+                          }
+
+                          // Update progress bar to show completion
+                          progressBar.style.width = '100%';
+
+                          // Get public URL for the uploaded file
+                          const { data: { publicUrl } } = contactFormSupabase.storage
+                              .from('quote-attachments')
+                              .getPublicUrl(filePath);
+
+                          uploadedUrls.push(publicUrl);
+                      } catch (uploadError) {
+                          console.error('Error uploading file:', uploadError);
+                          alert(`Error uploading file ${file.name}. Please try again.`);
+                          return;
+                      }
+                  }
+              }
+
+              // Prepare form data with attachments
+              const formData = {
+                  name: document.getElementById('name').value,
+                  email: document.getElementById('email').value,
+                  cell_number: document.getElementById('cell_number').value,
+                  message: document.getElementById('message').value,
+                  created_at: new Date().toISOString(),
+                  attachment_url: uploadedUrls[0] || null,
+                  attachment_urls: uploadedUrls
+              };
+
+              console.log('Submitting form data:', formData);
+
+              try {
+                  // Insert data into customers table
+                  const { data, error } = await contactFormSupabase
+                      .from('customers')
+                      .insert([formData]);
+
+                  if (error) {
+                      console.error('Database error:', error);
+                      throw error;
+                  }
+
+                  // Show success message and close modal
+                  alert('Thank you for your message! We will get back to you soon.');
+                  contactModal.classList.remove('show');
+                  setTimeout(() => {
+                      contactModal.style.display = 'none';
+                  }, 300);
+                  
+                  // Reset form and clear file list
+                  contactForm.reset();
+                  selectedFilesContainer.innerHTML = '';
+              } catch (error) {
+                  console.error('Error submitting form:', error);
+                  alert('There was an error submitting your message. Please try again.');
+              } finally {
+                  submitButton.disabled = false;
+                  submitButton.textContent = 'Submit';
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert('There was an error submitting your message. Please try again.');
+          } finally {
+              submitButton.disabled = false;
+              submitButton.textContent = 'Submit';
+          }
+      });
+  </script>
 </body>
 
 <!-- Scroll animation script -->

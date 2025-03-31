@@ -509,39 +509,42 @@
       margin-top: 1rem;
     }
 
+    /* Update Add to Quote button styling to match design */
     .add-to-quote-btn {
-      width: 100%;
-      padding: 0.75rem 1.5rem;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background-color: #4a4a4a;  /* Charcoal gray color */
+        color: white;
+        border: none;
+        border-radius: 50px;  /* Fully rounded corners */
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-transform: none;  /* Remove text transform */
+        letter-spacing: normal;  /* Reset letter spacing */
     }
 
     .add-to-quote-btn:hover {
-      background-color: var(--accent-color);
-      transform: translateY(-2px);
+        background-color: #5c5c5c;  /* Slightly lighter on hover */
+        transform: translateY(-2px);
     }
 
     .add-to-quote-btn:active {
-      transform: translateY(0);
+        transform: translateY(0);
     }
 
     .add-to-quote-btn.added {
-      background-color: #16a34a;
+        background-color: #4a4a4a;  /* Keep consistent with the design */
     }
 
     .add-to-quote-btn svg {
-      width: 18px;
-      height: 18px;
+        width: 18px;
+        height: 18px;
     }
 
     /* Toast notification styling */

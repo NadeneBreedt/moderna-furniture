@@ -1976,15 +1976,21 @@
 
       // Show modal after a short delay when page loads
       setTimeout(() => {
-          contactModal.style.display = 'block';
-          // Trigger reflow
-          contactModal.offsetHeight;
-          contactModal.classList.add('show');
-          // Add show class to modal content after modal is visible
-          setTimeout(() => {
-              document.querySelector('.modal-content').style.opacity = '1';
-              document.querySelector('.modal-content').style.transform = 'translateY(0)';
-          }, 50);
+          // Check if user has already seen the popup
+          if (!localStorage.getItem('popupShown')) {
+              contactModal.style.display = 'block';
+              // Trigger reflow
+              contactModal.offsetHeight;
+              contactModal.classList.add('show');
+              // Add show class to modal content after modal is visible
+              setTimeout(() => {
+                  document.querySelector('.modal-content').style.opacity = '1';
+                  document.querySelector('.modal-content').style.transform = 'translateY(0)';
+              }, 50);
+              
+              // Set flag in localStorage to indicate popup has been shown
+              localStorage.setItem('popupShown', 'true');
+          }
       }, 2000);
 
       // Close modal when clicking close button or outside

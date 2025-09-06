@@ -1,4 +1,4 @@
-const CACHE_NAME = 'curv-static-v1';
+const CACHE_NAME = 'curv-static-v2';
 const ASSETS = [
   '/',
   '/index.html',

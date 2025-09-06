@@ -21,6 +21,7 @@
   <link rel="preload" href="images/newfront.jpg" as="image">
   <link rel="preload" href="styles/animations.css" as="style">
   <link rel="preload" href="js/header-loader.js" as="script">
+  <link rel="preload" href="js/footer-loader.js" as="script">
 
   <!-- Preconnect to external domains -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -918,6 +919,8 @@
     </footer>
   </div>
 
+  <script src="js/footer-loader.js" defer></script>
+  
   <!-- Load Quote Modal -->
   <div id="quote-modal-container"></div>
   <script type="module">
@@ -1628,21 +1631,7 @@
       }
     });
 
-    // Load footer
-    fetch('footer.html')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load footer');
-            }
-            return response.text();
-        })
-        .then(data => {
-            document.getElementById('footer-placeholder').innerHTML = data;
-        })
-        .catch(err => {
-            console.error('Error loading footer:', err);
-            // We already have a fallback footer in the HTML
-    });
+    // Load footer handled by footer-loader.js
 
     // Add event listener for the hero quote button
     document.getElementById('hero-quote-btn').addEventListener('click', function(e) {

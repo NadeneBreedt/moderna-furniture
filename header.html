@@ -211,6 +211,47 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
+  /* Trusted by section */
+  .trusted-by {
+    border-top: 1px solid #f2f2f2;
+    background: #fff;
+  }
+  .trusted-by .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px 14px 20px;
+  }
+  .trusted-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #78716c;
+    margin: 4px 0 10px 0;
+  }
+  .trusted-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    align-items: center;
+    justify-content: center;
+  }
+  .trusted-grid img {
+    height: 30px;
+    max-width: 140px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.8;
+    transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  }
+  .trusted-grid img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+  @media (min-width: 768px) {
+    .trusted-grid img { height: 36px; }
+  }
 </style>
 
 <header class="header">
@@ -306,6 +347,25 @@
           <li><a href="search-results.html">Search</a></li>
           <li><a href="admin-login.html" id="mobile-admin-link" class="admin-link">Login</a></li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trusted by section -->
+  <div class="trusted-by">
+    <div class="inner">
+      <div class="trusted-title">Companies who trust us</div>
+      <div class="trusted-grid">
+        <img loading="lazy" src="https://logo.clearbit.com/ozow.com?size=180" alt="Ozow logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/ikhokha.com?size=180" alt="iKhokha logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/snapscan.co.za?size=180" alt="SnapScan logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/aerobotics.com?size=180" alt="Aerobotics logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/skynamo.com?size=180" alt="Skynamo logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/sendmarc.com?size=180" alt="Sendmarc logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/nomanini.com?size=180" alt="Nomanini logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/yuppiechef.com?size=180" alt="Yuppiechef logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/faithful-to-nature.co.za?size=180" alt="Faithful to Nature logo" referrerpolicy="no-referrer">
+        <img loading="lazy" src="https://logo.clearbit.com/netflorist.co.za?size=180" alt="NetFlorist logo" referrerpolicy="no-referrer">
       </div>
     </div>
   </div>

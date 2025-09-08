@@ -211,6 +211,47 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
+  /* Trusted by section */
+  .trusted-by {
+    border-top: 1px solid #f2f2f2;
+    background: #fff;
+  }
+  .trusted-by .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px 14px 20px;
+  }
+  .trusted-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #78716c;
+    margin: 4px 0 10px 0;
+  }
+  .trusted-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    align-items: center;
+    justify-content: center;
+  }
+  .trusted-grid img {
+    height: 30px;
+    max-width: 140px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.8;
+    transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  }
+  .trusted-grid img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+  @media (min-width: 768px) {
+    .trusted-grid img { height: 36px; }
+  }
 </style>
 
 <header class="header">
@@ -224,9 +265,10 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 0 20px;
-          max-width: 1200px;
-          margin: 0 auto;
+          padding: 0 12px;
+          width: 100%;
+          margin: 0;
+          box-sizing: border-box;
       ">
           <a href="tel:0645367341" style="
               display: flex;
@@ -309,6 +351,7 @@
       </div>
     </div>
   </div>
+
 </header>
 
 <script>

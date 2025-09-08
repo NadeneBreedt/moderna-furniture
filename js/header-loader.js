@@ -17,17 +17,20 @@ async function loadHeader(retries = 3) {
     headerContainer.style.width = '100%';
   }
   
+  // Header asset version for cache-busting when we change header.html
+  const HEADER_VERSION = '1';
+  const headerUrl = `header.html?v=${HEADER_VERSION}`;
+  
   // Try to load the header multiple times in case of network issues
   while (attempts < retries) {
     try {
       attempts++;
       console.log(`Loading header attempt ${attempts}...`);
       
-      // Load header with cache-busting parameters
-      const headerResponse = await fetch('header.html', { 
-        cache: 'no-store',
-        method: 'GET',
-        headers: { 'Cache-Control': 'no-cache' }
+      // Load header with browser caching enabled (versioned URL controls invalidation)
+      const headerResponse = await fetch(headerUrl, { 
+        cache: 'force-cache',
+        method: 'GET'
       });
       
       if (!headerResponse.ok) {
@@ -178,6 +181,33 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Ensure main content is visible after a short delay
   setTimeout(ensureMainContentVisible, 300);
+  
+  // Register a lightweight service worker to cache common assets
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(err => {
+      console.warn('Service worker registration failed:', err);
+    });
+  }
+  
+  // Load Quicklink for link prefetching to speed up page-to-page navigation
+  (function loadQuicklink() {
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/quicklink@2.3.0/dist/quicklink.umd.js';
+    script.async = true;
+    script.onload = function() {
+      try {
+        // Prefetch visible and near-viewport same-origin links
+        window.quicklink && window.quicklink.listen({
+          origins: true,
+          ignores: [/^mailto:/, /^tel:/, /\.pdf$/i],
+          timeout: 2000
+        });
+      } catch (e) {
+        console.warn('Quicklink init failed:', e);
+      }
+    };
+    document.head.appendChild(script);
+  })();
 });
 
 // Export functions for use in other scripts

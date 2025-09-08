@@ -343,6 +343,96 @@
     }
   </style>
 
+  <body>
+    <!-- Load Header -->
+    <div id="my-header"></div>
+
+    <div id="main-content">
+      <div class="collections-container">
+        <header class="collections-header">
+          <h1>Browse Our Collections</h1>
+          <p>Explore our range of modern office furniture categories</p>
+        </header>
+
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span>Collections</span>
+        </div>
+
+        <div class="categories-grid" id="categories-grid">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+            Loading collections... Please wait.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+      const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const grid = document.getElementById('categories-grid');
+
+      function renderCategories(categories) {
+        if (!categories || categories.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+              No collections available at this time.
+            </div>
+          `;
+          return;
+        }
+
+        // Simple sort by name
+        categories.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        grid.innerHTML = categories.map(category => `
+          <a href="products.html?category=${category.id}" class="category-card">
+            <div class="category-image">
+              <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name || 'Category'}">
+            </div>
+            <div class="category-info" style="padding: 0.75rem 1rem;">
+              <h3 style="margin: 0; font-size: 1rem; font-weight: 600; color: #292524;">${category.name || 'Untitled'}</h3>
+              <span class="view-products" style="font-size: 0.85rem; color: #78716c;">View Products</span>
+            </div>
+          </a>
+        `).join('');
+      }
+
+      async function loadCategories() {
+        try {
+          const { data, error } = await supabase
+            .from('categories')
+            .select('*');
+
+          if (error) {
+            console.error('Error loading categories:', error);
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+                Error loading collections. Please try refreshing the page.
+              </div>
+            `;
+            return;
+          }
+
+          renderCategories(data);
+        } catch (err) {
+          console.error('Unexpected error:', err);
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+              Error loading collections. Please try refreshing the page.
+            </div>
+          `;
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+
   <div id="footer-placeholder"></div>
   <script src="js/footer-loader.js" defer></script>
 </body>

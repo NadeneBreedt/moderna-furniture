@@ -14,6 +14,9 @@
       wrapper.innerHTML = html;
       document.body.appendChild(wrapper.firstElementChild);
     }
+
+    // Defensive: remove any click-to-call links that might exist in a stale cached footer
+    document.querySelectorAll('a[href^="tel:"], a[href*="tel:"]').forEach((a) => a.remove());
   }
 
   document.addEventListener('DOMContentLoaded', function() {

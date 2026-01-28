@@ -18,8 +18,29 @@ async function loadHeader(retries = 3) {
   }
   
   // Header asset version for cache-busting when we change header.html
-  const HEADER_VERSION = '1';
+  const HEADER_VERSION = '3';
   const headerUrl = `header.html?v=${HEADER_VERSION}`;
+
+  function removePhoneFromHeader(root) {
+    if (!root) return;
+    // Remove any click-to-call links
+    root.querySelectorAll('a[href^="tel:"], a[href*="tel:"]').forEach((a) => a.remove());
+    // Remove any remaining anchors that still contain the phone number text
+    root.querySelectorAll('a').forEach((a) => {
+      const t = (a.textContent || '').replace(/\s+/g, ' ').trim();
+      if (t.includes('064') && t.includes('7341')) a.remove();
+    });
+
+    // If the contact bar was built as "space-between", re-center remaining item(s)
+    const headerEl = root.querySelector('header') || document.querySelector('header');
+    if (headerEl) {
+      const maybeBar = headerEl.querySelector('.info-bar') || headerEl.firstElementChild;
+      const inner = maybeBar && maybeBar.querySelector && maybeBar.querySelector('div');
+      if (inner && inner.style) {
+        inner.style.justifyContent = 'center';
+      }
+    }
+  }
   
   // Try to load the header multiple times in case of network issues
   while (attempts < retries) {
@@ -27,9 +48,9 @@ async function loadHeader(retries = 3) {
       attempts++;
       console.log(`Loading header attempt ${attempts}...`);
       
-      // Load header with browser caching enabled (versioned URL controls invalidation)
+      // Always fetch fresh header (avoid stale cached headers)
       const headerResponse = await fetch(headerUrl, { 
-        cache: 'force-cache',
+        cache: 'no-store',
         method: 'GET'
       });
       
@@ -42,6 +63,8 @@ async function loadHeader(retries = 3) {
       // Replace the fallback header with the actual header
       if (headerContainer) {
         headerContainer.innerHTML = headerData;
+        // Defensive: if a stale cached header included a phone link, remove it
+        removePhoneFromHeader(headerContainer);
       }
       
       // Make the header visible and apply consistent styling
@@ -57,6 +80,9 @@ async function loadHeader(retries = 3) {
       
       // Apply additional styling for consistent appearance
       adjustHeaderStyling();
+
+      // Defensive: run again after styling
+      removePhoneFromHeader(document);
       
       // Ensure main content is visible
       ensureMainContentVisible();

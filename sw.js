@@ -1,9 +1,5 @@
-const CACHE_NAME = 'curv-static-v2';
+const CACHE_NAME = 'curv-static-v5';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/header.html',
-  '/footer.html',
   '/styles/animations.css',
   '/styles/modal.css',
   '/js/header-loader.js',
@@ -32,6 +28,26 @@ self.addEventListener('fetch', (event) => {
   // Only same-origin
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  const isHtmlRequest =
+    request.mode === 'navigate' ||
+    (request.headers.get('accept') || '').includes('text/html') ||
+    url.pathname.endsWith('.html') ||
+    url.pathname === '/';
+
+  // Network-first for HTML so header/footer updates show up immediately
+  if (isHtmlRequest) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   // Cache-first for static assets
   event.respondWith(

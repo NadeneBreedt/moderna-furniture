@@ -342,92 +342,44 @@
       color: #292524;
     }
   </style>
-</head>
-<body>
-  <!-- Load Header -->
-  <div id="my-header"></div>
-  
-  <div id="main-content">
-    <div class="collections-container">
-      <header class="collections-header">
-        <h1>Browse Our Collections</h1>
-        <p>Explore our range of modern office furniture categories</p>
-      </header>
-      <div class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span>/</span>
-        <span>Collections</span>
-      </div>
 
-      <div class="categories-grid">
-        <!-- Categories will be loaded here -->
-        <div id="loading-message" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-          Loading collections... Please wait.
+  <body>
+    <!-- Load Header -->
+    <div id="my-header"></div>
+
+    <div id="main-content">
+      <div class="collections-container">
+        <header class="collections-header">
+          <h1>Browse Our Collections</h1>
+          <p>Explore our range of modern office furniture categories</p>
+        </header>
+
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>/</span>
+          <span>Collections</span>
+        </div>
+
+        <div class="categories-grid" id="categories-grid">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+            Loading collections... Please wait.
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Load Quote Modal -->
-  <div id="quote-modal-container"></div>
+    <script type="module">
+      import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
-  <script type="module">
-    import { QuoteModal } from './js/modal.js';
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+      const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const grid = document.getElementById('categories-grid');
 
-    // Initialize the app
-    async function initializeApp() {
-      try {
-        console.log('Initializing collections page...');
-        
-        // Load modal
-        try {
-          const modalResponse = await fetch('quote-modal.html');
-          const modalData = await modalResponse.text();
-          document.getElementById('quote-modal-container').innerHTML = modalData;
-          
-          // Initialize modal
-          window.quoteModal = new QuoteModal();
-        } catch (err) {
-          console.error('Error loading quote modal:', err);
-        }
-        
-        // Load categories
-        await loadCategories();
-        
-      } catch (err) {
-        console.error('Error during initialization:', err);
-        document.querySelector('.categories-grid').innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
-            Error loading collections. Please try refreshing the page.
-          </div>
-        `;
-      }
-    }
-
-    async function loadCategories() {
-      console.log('Loading categories...');
-      try {
-        const { data: categories, error: categoriesError } = await supabase
-          .from('categories')
-          .select('*');
-
-        if (categoriesError) {
-          console.error('Error loading categories:', categoriesError);
-          document.querySelector('.categories-grid').innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
-              Error loading collections. Please try refreshing the page.
-            </div>
-          `;
-          return;
-        }
-
+      function renderCategories(categories) {
         if (!categories || categories.length === 0) {
-          document.querySelector('.categories-grid').innerHTML = `
+          grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
               No collections available at this time.
             </div>
@@ -435,132 +387,53 @@
           return;
         }
 
-        console.log('Categories loaded successfully:', categories);
-        
-        // Sort categories in custom order
-        const sortedCategories = sortCategories(categories);
-        
-        const categoriesGrid = document.querySelector('.categories-grid');
-        
-        categoriesGrid.innerHTML = `
-          ${sortedCategories.map(category => `
-            <a href="products.html?category=${category.id}" class="category-card">
-              <div class="category-image">
-                <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name}">
-              </div>
-              <div class="category-info">
-                <h3>${category.name}</h3>
-                <span class="view-products">View Products</span>
-              </div>
-            </a>
-          `).join('')}
-        `;
-      } catch (err) {
-        console.error('Unexpected error in loadCategories:', err);
-        document.querySelector('.categories-grid').innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
-            Error loading collections. Please try refreshing the page.
-          </div>
-        `;
+        // Simple sort by name
+        categories.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        grid.innerHTML = categories.map(category => `
+          <a href="products.html?category=${category.id}" class="category-card">
+            <div class="category-image">
+              <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name || 'Category'}">
+            </div>
+            <div class="category-info" style="padding: 0.75rem 1rem;">
+              <h3 style="margin: 0; font-size: 1rem; font-weight: 600; color: #292524;">${category.name || 'Untitled'}</h3>
+              <span class="view-products" style="font-size: 0.85rem; color: #78716c;">View Products</span>
+            </div>
+          </a>
+        `).join('');
       }
-    }
-    
-    // Function to sort categories in custom order
-    function sortCategories(categories) {
-      const customOrder = [
-        'Office Chairs',
-        'Desking',
-        'Executive Desk',
-        'Storage',
-        'Reception Counters',
-        'Couches'
-      ];
-      
-      // Create a map for quick lookup of priority
-      const priorityMap = new Map(
-        customOrder.map((name, index) => [name, index])
-      );
-      
-      return categories.sort((a, b) => {
-        // Special case: Always put Ottoman at the end
-        if (a.name === 'Ottoman') return 1;
-        if (b.name === 'Ottoman') return -1;
-        
-        const aIndex = priorityMap.get(a.name);
-        const bIndex = priorityMap.get(b.name);
-        
-        // If both categories are in the priority list, sort by their index
-        if (aIndex !== undefined && bIndex !== undefined) {
-          return aIndex - bIndex;
+
+      async function loadCategories() {
+        try {
+          const { data, error } = await supabase
+            .from('categories')
+            .select('*');
+
+          if (error) {
+            console.error('Error loading categories:', error);
+            grid.innerHTML = `
+              <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+                Error loading collections. Please try refreshing the page.
+              </div>
+            `;
+            return;
+          }
+
+          renderCategories(data);
+        } catch (err) {
+          console.error('Unexpected error:', err);
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; color: red; padding: 2rem;">
+              Error loading collections. Please try refreshing the page.
+            </div>
+          `;
         }
-        
-        // If only one is in the priority list, it should come first
-        if (aIndex !== undefined) return -1;
-        if (bIndex !== undefined) return 1;
-        
-        // For all other categories, sort alphabetically
-        return a.name.localeCompare(b.name);
-      });
-    }
-
-    // Start app initialization when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initializeApp);
-  </script>
-
-  <!-- WhatsApp Button -->
-  <a href="https://wa.me/27645367341" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm.029 18.88c-1.161 0-2.305-.292-3.318-.844l-3.677.964.984-3.595c-.607-1.052-.927-2.246-.926-3.468.001-3.825 3.113-6.937 6.937-6.937 1.856.001 3.598.723 4.907 2.034 1.31 1.311 2.031 3.054 2.03 4.908-.001 3.825-3.113 6.938-6.937 6.938z"/>
-    </svg>
-  </a>
-
-  <style>
-    .whatsapp-button {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      background-color: #ffffff;
-      color: white;
-      border-radius: 50%;
-      width: 55px;
-      height: 55px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
-      z-index: 1000;
-      transform: translate3d(0, 0, 0);
-      backface-visibility: hidden;
-      perspective: 1000px;
-    }
-
-    .whatsapp-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      animation: none;
-    }
-
-    .whatsapp-button svg {
-      width: 38px;
-      height: 38px;
-      color: #25D366;
-    }
-
-    @media (max-width: 768px) {
-      .whatsapp-button {
-        width: 45px;
-        height: 45px;
-        bottom: 16px;
-        left: 16px;
       }
-      
-      .whatsapp-button svg {
-        width: 30px;
-        height: 30px;
-      }
-    }
-  </style>
+
+      document.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+
+  <div id="footer-placeholder"></div>
+  <script src="js/footer-loader.js" defer></script>
 </body>
 </html>

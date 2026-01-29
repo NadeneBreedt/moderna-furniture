@@ -129,6 +129,11 @@ body {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* Ensure "View Products" text stays readable even with inline styles */
+.view-products {
+  color: #ffffff !important;
+}
+
 .view-products:hover, .view-more:hover, .primary-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);

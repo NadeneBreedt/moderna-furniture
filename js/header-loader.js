@@ -18,7 +18,7 @@ async function loadHeader(retries = 3) {
   }
   
   // Header asset version for cache-busting when we change header.html
-  const HEADER_VERSION = '4';
+  const HEADER_VERSION = '5';
   const headerUrl = `header.html?v=${HEADER_VERSION}`;
 
   function removePhoneFromHeader(root) {
@@ -239,4 +239,4 @@ document.addEventListener('DOMContentLoaded', function() {
 // Export functions for use in other scripts
 window.loadHeader = loadHeader;
 window.adjustHeaderStyling = adjustHeaderStyling;
-window.ensureMainContentVisible = ensureMainContentVisible; 
+window.ensureMainContentVisible = ensureMainContentVisible;

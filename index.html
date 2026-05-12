@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Curv Office Furniture - Modern Workspace Design Solutions</title>
-  <meta name="description" content="Create inspiring workspaces with our curated collection of contemporary office furniture. Premium quality, modern design, and professional installation services.">
+  <meta name="description" content="Create inspiring workspaces with contemporary office furniture, project quotes, space planning, rendering, and professional installation services.">
   
   <!-- Disable Shopify theme -->
   <meta name="shopify-checkout-api-token" content="null">
@@ -179,6 +179,76 @@
       opacity: 0;
       transform: translateY(20px);
       animation: slideUp 0.8s ease-out 0.4s forwards;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-search {
+      display: flex;
+      width: min(100%, 620px);
+      margin: 0 0 1.25rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.8s ease-out 0.5s forwards;
+    }
+
+    .hero-search input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      padding: 1rem 1.25rem;
+      font: inherit;
+      color: var(--primary-color);
+      background: transparent;
+      outline: none;
+    }
+
+    .hero-search button {
+      border: 0;
+      padding: 0 1.5rem;
+      background: var(--primary-color);
+      color: white;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      width: min(100%, 640px);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.8s ease-out 0.62s forwards;
+    }
+
+    .hero-proof-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-light);
+    }
+
+    .hero-proof-item strong {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1.1;
+    }
+
+    .hero-proof-item span {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--text-lighter);
+      font-size: 0.85rem;
     }
 
     .btn {
@@ -299,6 +369,19 @@
 
       .hero-cta {
         flex-direction: column;
+      }
+
+      .hero-search {
+        border-radius: 12px;
+        flex-direction: column;
+      }
+
+      .hero-search button {
+        min-height: 48px;
+      }
+
+      .hero-proof {
+        grid-template-columns: 1fr;
       }
 
       .btn {
@@ -584,11 +667,20 @@
         <img src="images/newfront.jpg" alt="Modern Office Interior" loading="eager">
       </div>
       <div class="hero-content">
-        <h1 class="hero-title">Modern Workspace Design</h1>
-        <p class="hero-subtitle">Create inspiring workspaces with our curated collection of contemporary office furniture.</p>
+        <h1 class="hero-title">Furniture your team can work around.</h1>
+        <p class="hero-subtitle">Browse Curv's office furniture catalogue, add products to a quote, and get help with space planning, rendering, boardrooms, workstations, seating, and storage for your next workspace project.</p>
+        <form class="hero-search" action="search-results.html" method="get" aria-label="Search Curv products">
+          <input type="search" name="q" placeholder="Search desks, chairs, boardroom tables..." autocomplete="off">
+          <button type="submit">Search</button>
+        </form>
         <div class="hero-cta">
           <a href="/products.html" class="btn btn-primary">Explore Collection</a>
-          <a href="/contact" class="btn btn-outline">Get Quote</a>
+          <a href="/contact.html" class="btn btn-outline" id="hero-quote-btn">Start a Project Quote</a>
+        </div>
+        <div class="hero-proof" aria-label="Curv Office proof points">
+          <div class="hero-proof-item"><strong>486+</strong><span>products to quote</span></div>
+          <div class="hero-proof-item"><strong>Nationwide</strong><span>delivery support</span></div>
+          <div class="hero-proof-item"><strong>5-year</strong><span>warranty confidence</span></div>
         </div>
       </div>
     </section>
@@ -632,6 +724,7 @@
       // Add scroll effects
       window.addEventListener('scroll', () => {
         const header = document.querySelector('header');
+        if (!header) return;
         if (window.scrollY > 0) {
           header.classList.add('scrolled');
         } else {
@@ -731,8 +824,8 @@
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
               </svg>
             </div>
-            <h3>Design Consultation</h3>
-            <p>Free consultation with our design experts to create your perfect workspace</p>
+            <h3>Space Planning & Rendering</h3>
+            <p>Plan layouts, visualise finishes, and create a polished workspace before you commit to the final furniture quote</p>
           </div>
         </div>
       </div>
@@ -790,7 +883,7 @@
           margin: 0 auto;
           padding: 0 1rem;
         ">
-          <form action="#" method="POST" style="
+          <form id="newsletter-form" action="#" method="POST" style="
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
@@ -890,6 +983,7 @@
                 </div>
                 <div id="selected-files" class="selected-files"></div>
             </div>
+            <div id="subscription-message" style="display: none; width: 100%; padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.95rem;"></div>
             <button type="submit" class="submit-btn">Submit</button>
           </form>
         </div>
@@ -913,7 +1007,7 @@
                       Contact Us
                   </div>
                   <div style="display: flex; flex-direction: row; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-                      <a href="mailto:sales@curvoffice.co.za" style="
+                      <a href="mailto:hello@curvoffice.co.za" style="
                           display: inline-flex;
                           align-items: center;
                           gap: 0.5rem;
@@ -927,7 +1021,7 @@
                               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                               <polyline points="22,6 12,13 2,6"></polyline>
                           </svg>
-                          sales@curvoffice.co.za
+                          hello@curvoffice.co.za
                       </a>
                   </div>
               </div>
@@ -1600,15 +1694,16 @@
       });
     }
 
-    const form = document.querySelector('form');
+    const form = document.getElementById('newsletter-form');
     const messageDiv = document.getElementById('subscription-message');
 
+    if (form && messageDiv) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const submitButton = form.querySelector('button[type="submit"]');
       submitButton.disabled = true;
-      submitButton.textContent = 'Subscribing...';
+      submitButton.textContent = 'Sending...';
 
       try {
         const formData = {
@@ -1631,7 +1726,7 @@
         messageDiv.style.backgroundColor = '#f0fdf4';
         messageDiv.style.color = '#166534';
         messageDiv.style.border = '1px solid #bbf7d0';
-        messageDiv.textContent = 'Thank you for subscribing to our newsletter!';
+        messageDiv.textContent = 'Thank you. We have received your details and will be in touch.';
         
         // Reset form
         form.reset();
@@ -1647,14 +1742,15 @@
       } finally {
         // Re-enable submit button
         submitButton.disabled = false;
-        submitButton.textContent = 'Subscribe';
+        submitButton.textContent = 'Submit';
       }
     });
+    }
 
     // Load footer handled by footer-loader.js
 
     // Add event listener for the hero quote button
-    document.getElementById('hero-quote-btn').addEventListener('click', function(e) {
+    document.getElementById('hero-quote-btn')?.addEventListener('click', function(e) {
         e.preventDefault();
         window.location.href = 'contact.html';
     });

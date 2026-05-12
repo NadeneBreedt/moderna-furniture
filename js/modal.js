@@ -2,7 +2,34 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
 const SUPABASE_URL = 'https://rpncvcioutyrxntqvlnd.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
+const COMPANY_EMAIL = 'hello@curvoffice.co.za';
+const EMAILJS_PUBLIC_KEY = 'tweJU50C9CxCHnUN3';
+const EMAILJS_SERVICE_ID = 'service_baixukr';
+const EMAILJS_TEMPLATE_ID = 'template_rtt96d9';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function loadEmailJs() {
+  if (window.emailjs) {
+    return Promise.resolve(window.emailjs);
+  }
+
+  return new Promise((resolve, reject) => {
+    const existingScript = document.querySelector('script[data-emailjs-sdk]');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(window.emailjs));
+      existingScript.addEventListener('error', reject);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
+    script.async = true;
+    script.dataset.emailjsSdk = 'true';
+    script.onload = () => resolve(window.emailjs);
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
 
 export class QuoteModal {
   constructor() {
@@ -10,6 +37,14 @@ export class QuoteModal {
     this.initElements();
     this.initEventListeners();
     this.blurObserver = null;
+    window.addToQuote = (product, productName, selectedVariant, variantId) => {
+      if (typeof product === 'object' && product !== null) {
+        this.addToQuote(product, product.variant || selectedVariant, product.variant_id || variantId);
+      } else {
+        this.addToQuote({ id: product, name: productName }, selectedVariant, variantId);
+      }
+      this.refreshQuoteTable();
+    };
   }
 
   initElements() {
@@ -260,6 +295,8 @@ export class QuoteModal {
 
       if (quoteError) throw quoteError;
 
+      await this.sendQuoteNotification(formData, items);
+
       // Only insert quote items if there are any
       if (items.length > 0) {
         // Insert quote items with variant_id
@@ -303,6 +340,38 @@ export class QuoteModal {
     }
   }
 
+  async sendQuoteNotification(formData, items) {
+    try {
+      const emailjs = await loadEmailJs();
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      const quoteItemsText = items.length
+        ? items.map(item => `${item.quantity || 1} x ${item.name}${item.variant ? ` (${item.variant})` : ''}`).join('\n')
+        : 'No products selected';
+      const emailMessage = [
+        formData.customer_comments || 'Quote request submitted from the website.',
+        '',
+        `Phone: ${formData.customer_phone || 'Not provided'}`,
+        'Quote items:',
+        quoteItemsText,
+        formData.attachment_url ? `Attachment: ${formData.attachment_url}` : ''
+      ].filter(Boolean).join('\n');
+
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: COMPANY_EMAIL,
+        to_name: 'Curv Office',
+        from_name: formData.customer_name,
+        from_email: formData.customer_email,
+        reply_to: formData.customer_email,
+        phone: formData.customer_phone || 'Not provided',
+        message: emailMessage,
+        quote_items: quoteItemsText,
+        attachment_url: formData.attachment_url || ''
+      });
+    } catch (error) {
+      console.warn('Quote notification email could not be sent:', error);
+    }
+  }
+
   addToQuote(product, selectedVariant, variantId) {
     const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
     
@@ -318,5 +387,6 @@ export class QuoteModal {
     
     items.push(quoteItem);
     localStorage.setItem('quoteItems', JSON.stringify(items));
+    this.refreshQuoteTable();
   }
-} 
+}

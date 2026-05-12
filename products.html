@@ -529,15 +529,26 @@
 
       if (error) {
         console.error('Error loading products:', error);
+        const productsGrid = document.querySelector('.products-grid');
+        if (productsGrid) {
+          productsGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #78716c;">We could not load these products. Please refresh the page or contact us for this collection.</p>';
+        }
         return;
       }
 
       const productsGrid = document.querySelector('.products-grid');
+      if (!productsGrid) return;
+
+      if (!products || products.length === 0) {
+        productsGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #78716c;">No products are available in this collection yet. Please contact us and we will help you source what you need.</p>';
+        return;
+      }
+
       productsGrid.innerHTML = products.map(product => `
         <div class="product-card">
           <div class="product-image">
             <a href="product-detail.html?id=${product.id}">
-              <img src="${product.image_url}" alt="${product.name}">
+              <img src="${product.image_url || product.product_image || 'placeholder.jpg'}" alt="${product.name}">
             </a>
           </div>
           <div class="product-info">
@@ -567,30 +578,6 @@
           // Call the global addToQuote function
           window.addToQuote(productData);
         });
-      });
-      
-      // Set up direct inquiry button
-      document.getElementById('enquire-single').addEventListener('click', () => {
-        const selectedVariant = document.querySelector('input[name="variant"]:checked');
-        let variantName = '';
-        let variantId = null;
-        
-        if (selectedVariant) {
-          variantName = selectedVariant.nextElementSibling.textContent.trim();
-          variantId = selectedVariant.value;
-        }
-        
-        // First, add to quote
-        window.addToQuote(product.id, product.name, variantName, variantId);
-        
-        // Then open the quote modal directly
-        const modalOverlay = document.getElementById('quote-modal-overlay');
-        if (modalOverlay) {
-          modalOverlay.style.display = 'flex';
-          if (typeof refreshQuoteTable === 'function') {
-            refreshQuoteTable();
-          }
-        }
       });
     }
 

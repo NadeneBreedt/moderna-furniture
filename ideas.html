@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Curv Office Upgrade Ideas</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17201d;
+      --muted: #65706b;
+      --line: #d8ddd8;
+      --paper: #fbfbf7;
+      --panel: #ffffff;
+      --moss: #395146;
+      --sage: #8fa99a;
+      --clay: #b25f45;
+      --sun: #e5be61;
+      --steel: #edf1f0;
+      --shadow: 0 18px 50px rgba(23, 32, 29, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(18px, 4vw, 56px);
+      border-bottom: 1px solid rgba(57, 81, 70, 0.14);
+      background: rgba(251, 251, 247, 0.92);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background: var(--moss);
+      color: #fff;
+      font-size: 18px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    nav a,
+    .ghost,
+    .primary {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 7px;
+      padding: 0 14px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    nav a:hover,
+    .ghost:hover {
+      background: var(--steel);
+      color: var(--ink);
+    }
+
+    .primary {
+      border: 0;
+      background: var(--clay);
+      color: #fff;
+      font-weight: 720;
+      box-shadow: 0 10px 24px rgba(178, 95, 69, 0.22);
+    }
+
+    .ghost {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-weight: 680;
+    }
+
+    .hero {
+      min-height: 84vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 72px);
+      padding: clamp(34px, 6vw, 86px) clamp(18px, 4vw, 56px) 36px;
+      background:
+        linear-gradient(90deg, rgba(251, 251, 247, 0.96) 0%, rgba(251, 251, 247, 0.82) 44%, rgba(251, 251, 247, 0.36) 100%),
+        url("https://www.curvoffice.co.za/images/newfront.jpg") center / cover;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--moss);
+      font-size: 13px;
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 2px;
+      background: var(--clay);
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(42px, 7vw, 86px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 660px;
+      margin: 22px 0 0;
+      color: #44514b;
+      font-size: clamp(17px, 2vw, 22px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      max-width: 720px;
+      margin-top: 46px;
+      overflow: hidden;
+      border: 1px solid rgba(57, 81, 70, 0.18);
+      border-radius: 8px;
+      background: rgba(57, 81, 70, 0.18);
+    }
+
+    .proof {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .proof strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .proof span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .quote-panel {
+      align-self: end;
+      width: min(100%, 440px);
+      margin-left: auto;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+    }
+
+    .quote-panel h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .quote-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .quote-row:first-of-type {
+      border-top: 0;
+    }
+
+    .quote-row small {
+      color: var(--muted);
+    }
+
+    main {
+      padding: 0 clamp(18px, 4vw, 56px) 72px;
+    }
+
+    section {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 64px 0 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .idea-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .idea-card,
+    .finding,
+    .wireframe,
+    .flow-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 10px 28px rgba(23, 32, 29, 0.06);
+    }
+
+    .idea-card {
+      overflow: hidden;
+    }
+
+    .idea-card svg {
+      display: block;
+      width: 100%;
+      height: 190px;
+      background: var(--steel);
+    }
+
+    .idea-card div {
+      padding: 18px;
+    }
+
+    .idea-card h3,
+    .finding h3,
+    .flow-step h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .idea-card p,
+    .finding p,
+    .flow-step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: #f2f0ea;
+      color: #4d5a54;
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .findings {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .finding {
+      padding: 18px;
+    }
+
+    .severity {
+      display: inline-flex;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #fff1e8;
+      color: #9f462d;
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow-step {
+      min-height: 170px;
+      padding: 18px;
+    }
+
+    .number {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 18px;
+      border-radius: 7px;
+      background: var(--moss);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .wireframe {
+      padding: clamp(18px, 3vw, 30px);
+      overflow: hidden;
+    }
+
+    .wireframe svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .decision-panel {
+      padding: 24px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--moss);
+    }
+
+    .decision-panel:last-child {
+      background: #222c29;
+    }
+
+    .decision-panel h3 {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    .decision-panel ul {
+      margin: 18px 0 0;
+      padding-left: 20px;
+    }
+
+    .decision-panel li {
+      margin: 8px 0;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .quote-panel {
+        margin-left: 0;
+      }
+
+      .idea-grid,
+      .findings,
+      .flow,
+      .decision {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 36px;
+      }
+
+      .proof-strip,
+      .idea-grid,
+      .findings,
+      .flow,
+      .decision {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">C</span> Curv Office</div>
+    <nav aria-label="Mock navigation">
+      <a href="#directions">Directions</a>
+      <a href="#fixes">Fixes</a>
+      <a href="#quote">Quote Flow</a>
+      <a href="#wireframe">SVG Wireframe</a>
+      <a class="primary" href="#choose">Choose Ideas</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <span class="eyebrow">B2B furniture website concept</span>
+      <h1>Make Curv feel like the easiest way to furnish an office.</h1>
+      <p>Lead with project confidence, searchable product depth, and a quote journey that feels built for buyers, designers, and operations teams.</p>
+      <div class="hero-actions">
+        <a class="primary" href="#directions">View design directions</a>
+        <a class="ghost" href="#fixes">See priority fixes</a>
+      </div>
+      <div class="proof-strip" aria-label="Suggested proof points">
+        <div class="proof"><strong>486</strong><span>products searchable from day one</span></div>
+        <div class="proof"><strong>10+</strong><span>recognizable customer logos</span></div>
+        <div class="proof"><strong>1</strong><span>quote basket to streamline enquiries</span></div>
+      </div>
+    </div>
+    <aside class="quote-panel" aria-label="Quote flow preview">
+      <h2>Quote basket preview</h2>
+      <div class="quote-row"><span>Boardroom setup<br><small>Table, 10 chairs, power module</small></span><strong>12 items</strong></div>
+      <div class="quote-row"><span>Delivery zone<br><small>Cape Town, installation needed</small></span><strong>Ready</strong></div>
+      <div class="quote-row"><span>Response target<br><small>B2B buyer expectation</small></span><strong>24h</strong></div>
+      <a class="primary" href="#quote" style="width: 100%; margin-top: 12px;">Improve quote flow</a>
+    </aside>
+  </div>
+
+  <main>
+    <section id="directions">
+      <div class="section-head">
+        <h2>Three Directions To Choose From</h2>
+        <p>Each direction keeps the business-to-business tone, but shifts the emphasis so you can decide what Curv should be known for first.</p>
+      </div>
+      <div class="idea-grid">
+        <article class="idea-card">
+          <svg viewBox="0 0 420 190" role="img" aria-label="Workspace planner concept">
+            <rect width="420" height="190" fill="#edf1f0"/>
+            <rect x="28" y="26" width="160" height="118" rx="6" fill="#395146"/>
+            <rect x="205" y="34" width="84" height="40" rx="4" fill="#fff"/>
+            <rect x="302" y="34" width="84" height="40" rx="4" fill="#fff"/>
+            <rect x="205" y="88" width="181" height="22" rx="4" fill="#b25f45"/>
+            <rect x="205" y="124" width="132" height="14" rx="3" fill="#8fa99a"/>
+            <path d="M52 124 C72 64 126 48 160 88" fill="none" stroke="#e5be61" stroke-width="10" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h3>Project-Led</h3>
+            <p>Position Curv as a workspace partner for office moves, expansions, and refits.</p>
+            <div class="tag-row"><span class="tag">Best for B2B trust</span><span class="tag">Consultation CTA</span></div>
+          </div>
+        </article>
+        <article class="idea-card">
+          <svg viewBox="0 0 420 190" role="img" aria-label="Product catalogue concept">
+            <rect width="420" height="190" fill="#f6f3ec"/>
+            <rect x="24" y="24" width="372" height="32" rx="6" fill="#fff"/>
+            <circle cx="48" cy="40" r="8" fill="#b25f45"/>
+            <rect x="24" y="78" width="104" height="84" rx="6" fill="#395146"/>
+            <rect x="158" y="78" width="104" height="84" rx="6" fill="#8fa99a"/>
+            <rect x="292" y="78" width="104" height="84" rx="6" fill="#e5be61"/>
+            <rect x="38" y="146" width="76" height="8" rx="3" fill="#fff"/>
+            <rect x="172" y="146" width="76" height="8" rx="3" fill="#fff"/>
+            <rect x="306" y="146" width="76" height="8" rx="3" fill="#fff"/>
+          </svg>
+          <div>
+            <h3>Catalogue-Led</h3>
+            <p>Make search, categories, specs, and quote actions the heart of the experience.</p>
+            <div class="tag-row"><span class="tag">Best for product depth</span><span class="tag">Fast browsing</span></div>
+          </div>
+        </article>
+        <article class="idea-card">
+          <svg viewBox="0 0 420 190" role="img" aria-label="Proof and case study concept">
+            <rect width="420" height="190" fill="#eef2ef"/>
+            <rect x="26" y="26" width="210" height="138" rx="6" fill="#fff"/>
+            <rect x="254" y="26" width="140" height="60" rx="6" fill="#395146"/>
+            <rect x="254" y="104" width="140" height="60" rx="6" fill="#b25f45"/>
+            <rect x="48" y="46" width="122" height="12" rx="3" fill="#17201d"/>
+            <rect x="48" y="72" width="152" height="8" rx="3" fill="#8fa99a"/>
+            <rect x="48" y="92" width="132" height="8" rx="3" fill="#8fa99a"/>
+            <circle cx="88" cy="132" r="18" fill="#e5be61"/>
+          </svg>
+          <div>
+            <h3>Proof-Led</h3>
+            <p>Use client logos, delivery promises, warranties, and project examples to reduce risk.</p>
+            <div class="tag-row"><span class="tag">Best for credibility</span><span class="tag">Case studies</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="fixes">
+      <div class="section-head">
+        <h2>Priority Fixes From The Live Site Test</h2>
+        <p>These are the first things I would clean up before a visual redesign, because they directly affect enquiries and trust.</p>
+      </div>
+      <div class="findings">
+        <article class="finding"><span class="severity">High</span><h3>Category pages break</h3><p>Direct category URLs can show the heading but no products because `loadProducts` hits a missing element listener.</p></article>
+        <article class="finding"><span class="severity">High</span><h3>JS errors on every route</h3><p>The homepage script calls `addEventListener` on an element that is not present, which can stop later behavior.</p></article>
+        <article class="finding"><span class="severity">Medium</span><h3>WhatsApp placeholder</h3><p>Product detail pages link to `wa.me/your_number`, which should be replaced or removed.</p></article>
+        <article class="finding"><span class="severity">Medium</span><h3>Hidden search label</h3><p>The header search link has no accessible label, so it appears as an unnamed link in testing.</p></article>
+      </div>
+    </section>
+
+    <section id="quote">
+      <div class="section-head">
+        <h2>Quote Journey Upgrade</h2>
+        <p>The biggest B2B win is making the path from browsing to enquiry feel deliberate and dependable.</p>
+      </div>
+      <div class="flow">
+        <article class="flow-step"><span class="number">1</span><h3>Search</h3><p>Prominent product search with category chips and buyer-friendly filters.</p></article>
+        <article class="flow-step"><span class="number">2</span><h3>Compare</h3><p>Spec tables for dimensions, finishes, lead times, and warranty notes.</p></article>
+        <article class="flow-step"><span class="number">3</span><h3>Add</h3><p>Persistent quote basket with quantities and room/project grouping.</p></article>
+        <article class="flow-step"><span class="number">4</span><h3>Brief</h3><p>Contact form asks for delivery area, install needs, and ideal timing.</p></article>
+        <article class="flow-step"><span class="number">5</span><h3>Respond</h3><p>Confirmation message sets expectation: “We’ll reply within one business day.”</p></article>
+      </div>
+    </section>
+
+    <section id="wireframe">
+      <div class="section-head">
+        <h2>SVG Homepage Wireframe</h2>
+        <p>A compact visual plan for a stronger first page: product search up front, project proof, category shortcuts, and a quote basket.</p>
+      </div>
+      <div class="wireframe">
+        <svg viewBox="0 0 1120 680" role="img" aria-label="Curv Office homepage upgrade wireframe">
+          <rect width="1120" height="680" rx="8" fill="#fbfbf7"/>
+          <rect x="32" y="24" width="1056" height="56" rx="7" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="58" y="42" width="130" height="20" rx="4" fill="#395146"/>
+          <rect x="700" y="42" width="64" height="16" rx="3" fill="#8fa99a"/>
+          <rect x="786" y="42" width="64" height="16" rx="3" fill="#8fa99a"/>
+          <rect x="872" y="42" width="64" height="16" rx="3" fill="#8fa99a"/>
+          <rect x="958" y="36" width="104" height="28" rx="6" fill="#b25f45"/>
+
+          <rect x="32" y="104" width="1056" height="250" rx="8" fill="#edf1f0"/>
+          <rect x="64" y="138" width="438" height="38" rx="5" fill="#17201d"/>
+          <rect x="64" y="190" width="520" height="14" rx="4" fill="#65706b"/>
+          <rect x="64" y="216" width="430" height="14" rx="4" fill="#65706b"/>
+          <rect x="64" y="252" width="360" height="44" rx="7" fill="#fff" stroke="#d8ddd8"/>
+          <circle cx="92" cy="274" r="10" fill="#b25f45"/>
+          <rect x="118" y="266" width="194" height="16" rx="3" fill="#8fa99a"/>
+          <rect x="436" y="252" width="126" height="44" rx="7" fill="#b25f45"/>
+          <rect x="650" y="132" width="378" height="180" rx="8" fill="#395146"/>
+          <path d="M700 286 C746 190 840 168 976 214" fill="none" stroke="#e5be61" stroke-width="18" stroke-linecap="round"/>
+
+          <rect x="32" y="386" width="240" height="124" rx="8" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="296" y="386" width="240" height="124" rx="8" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="560" y="386" width="240" height="124" rx="8" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="824" y="386" width="264" height="124" rx="8" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="64" y="418" width="80" height="16" rx="3" fill="#17201d"/>
+          <rect x="64" y="448" width="150" height="10" rx="3" fill="#8fa99a"/>
+          <rect x="328" y="418" width="90" height="16" rx="3" fill="#17201d"/>
+          <rect x="328" y="448" width="150" height="10" rx="3" fill="#8fa99a"/>
+          <rect x="592" y="418" width="90" height="16" rx="3" fill="#17201d"/>
+          <rect x="592" y="448" width="150" height="10" rx="3" fill="#8fa99a"/>
+          <rect x="856" y="418" width="110" height="16" rx="3" fill="#17201d"/>
+          <rect x="856" y="448" width="172" height="10" rx="3" fill="#8fa99a"/>
+
+          <rect x="32" y="542" width="680" height="96" rx="8" fill="#fff" stroke="#d8ddd8"/>
+          <rect x="64" y="570" width="160" height="18" rx="3" fill="#17201d"/>
+          <rect x="64" y="602" width="530" height="10" rx="3" fill="#8fa99a"/>
+          <rect x="742" y="542" width="346" height="96" rx="8" fill="#395146"/>
+          <rect x="772" y="570" width="140" height="18" rx="3" fill="#fff"/>
+          <rect x="772" y="602" width="230" height="10" rx="3" fill="#e5be61"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="choose">
+      <div class="section-head">
+        <h2>What I’d Pick First</h2>
+        <p>My recommendation is a practical hybrid: fix the technical issues, then move toward the Catalogue-Led direction with stronger project proof.</p>
+      </div>
+      <div class="decision">
+        <div class="decision-panel">
+          <h3>Phase 1: make it work</h3>
+          <ul>
+            <li>Fix category product loading.</li>
+            <li>Remove duplicate Supabase imports/declarations.</li>
+            <li>Give search and quote controls proper labels.</li>
+            <li>Replace the WhatsApp placeholder.</li>
+          </ul>
+        </div>
+        <div class="decision-panel">
+          <h3>Phase 2: make it sell</h3>
+          <ul>
+            <li>Homepage search bar and quote CTA above the fold.</li>
+            <li>Category cards for the most profitable B2B ranges.</li>
+            <li>Product spec layout with quote basket always visible.</li>
+            <li>Customer proof and installation/warranty blocks near CTAs.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

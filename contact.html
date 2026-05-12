@@ -287,13 +287,22 @@
                     if (error) throw error;
                     
                     // Send email notification
-                    await emailjs.send('service_gc3chia', 'template_rtt96d9', {
+                    const emailMessage = [
+                        document.getElementById('message').value,
+                        '',
+                        `Phone: ${formData.customer_phone || 'Not provided'}`,
+                        `Delivery address: ${document.getElementById('address').value || 'Not provided'}`
+                    ].join('\n');
+
+                    await emailjs.send('service_baixukr', 'template_rtt96d9', {
+                        to_email: 'hello@curvoffice.co.za',
                         to_name: 'Admin',
                         from_name: formData.customer_name,
                         from_email: formData.customer_email,
+                        reply_to: formData.customer_email,
                         phone: formData.customer_phone || 'Not provided',
                         address: document.getElementById('address').value || 'Not provided',
-                        message: document.getElementById('message').value
+                        message: emailMessage
                     });
                     
                     // Show success message
@@ -320,4 +329,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

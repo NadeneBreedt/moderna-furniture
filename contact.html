@@ -254,7 +254,7 @@
         // Initialize Supabase client
         const supabaseUrl = 'https://rpncvcioutyrxntqvlnd.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwbmN2Y2lvdXR5cnhudHF2bG5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkyOTgxNzIsImV4cCI6MjA1NDg3NDE3Mn0.Rm4cDLV4cNubgwDV3SgLt2cC5E3fO4JOuXoK0DrKrzQ';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const contactSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('contact-form');
@@ -279,7 +279,7 @@
                     };
                     
                     // Submit to Supabase
-                    const { data, error } = await supabase
+                    const { data, error } = await contactSupabase
                         .from('quote_requests')
                         .insert([formData])
                         .select();

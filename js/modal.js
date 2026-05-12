@@ -54,10 +54,16 @@ export class QuoteModal {
     this.quoteForm = document.getElementById('quote-form');
     this.mainContent = document.getElementById('main-content');
     this.tableBody = document.querySelector('#quote-items-table tbody');
+    this.viewQuoteBtn = document.getElementById('view-quote-btn');
   }
 
   initEventListeners() {
     this.floatingBtn?.addEventListener('click', () => this.openModal());
+    this.viewQuoteBtn?.addEventListener('click', () => {
+      const notification = document.getElementById('quote-notification');
+      if (notification) notification.style.display = 'none';
+      this.openModal();
+    });
     this.modalClose?.addEventListener('click', () => this.closeModal());
     this.modalOverlay?.addEventListener('click', (e) => {
       if (e.target === this.modalOverlay) this.closeModal();
@@ -81,7 +87,13 @@ export class QuoteModal {
   }
 
   getQuoteItems() {
-    return JSON.parse(localStorage.getItem('quoteItems') || '[]');
+    try {
+      const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+      return Array.isArray(items) ? items.filter(item => item && item.id) : [];
+    } catch (error) {
+      console.warn('Could not read quote items:', error);
+      return [];
+    }
   }
 
   updateQuantity(index, newQty) {
@@ -111,8 +123,8 @@ export class QuoteModal {
     if (items.length === 0) {
       this.tableBody.innerHTML = `
         <tr>
-          <td colspan="3" style="text-align: center; padding: 1rem;">
-            Your quote is empty
+          <td colspan="4" style="text-align: center; padding: 1rem; color: #78716c;">
+            Add products to build a quote request.
           </td>
         </tr>
       `;
@@ -128,26 +140,42 @@ export class QuoteModal {
 
   createRowHTML(item, index) {
     console.log('Creating row for item:', item);
+    const variant = item.variant || item.variant_name || item.specifications || '-';
+    const quantity = item.quantity || item.qty || 1;
     return `
-        <td>
-            <div class="product-name">${item.name || `Product #${item.id}`}</div>
-            ${item.variant ? `<div class="product-variant">Variant: ${item.variant}</div>` : ''}
+        <td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid #e7e5e4;">
+            <div class="product-name">${this.escapeHtml(item.name || `Product #${item.id}`)}</div>
         </td>
-        <td style="text-align: center;">
+        <td style="padding: 0.75rem 0.5rem; border-bottom: 1px solid #e7e5e4;">
+            <div class="product-variant">${this.escapeHtml(variant)}</div>
+        </td>
+        <td style="text-align: center; padding: 0.75rem 0.5rem; border-bottom: 1px solid #e7e5e4;">
             <div style="display: flex; align-items: center; justify-content: center;">
-                <button class="quantity-btn" onclick="window.quoteModal.updateQuantity(${index}, ${(item.quantity || 1) - 1})">-</button>
-                <span style="margin: 0 10px;">${item.quantity || 1}</span>
-                <button class="quantity-btn" onclick="window.quoteModal.updateQuantity(${index}, ${(item.quantity || 1) + 1})">+</button>
+                <button class="quantity-btn" type="button" onclick="window.quoteModal.updateQuantity(${index}, ${quantity - 1})" aria-label="Decrease quantity">-</button>
+                <span style="margin: 0 10px; min-width: 1.5rem;">${quantity}</span>
+                <button class="quantity-btn" type="button" onclick="window.quoteModal.updateQuantity(${index}, ${quantity + 1})" aria-label="Increase quantity">+</button>
             </div>
         </td>
-        <td style="text-align: right;">
-            <button class="remove-btn" onclick="window.quoteModal.updateQuantity(${index}, 0)">Remove</button>
+        <td style="text-align: right; padding: 0.75rem 0.5rem; border-bottom: 1px solid #e7e5e4;">
+            <button class="remove-btn" type="button" onclick="window.quoteModal.updateQuantity(${index}, 0)">Remove</button>
         </td>
     `;
   }
 
+  escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
   openModal() {
     this.refreshQuoteTable();
+    if (!this.modalOverlay) return;
+    const notification = document.getElementById('quote-notification');
+    if (notification) notification.style.display = 'none';
     this.modalOverlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     
@@ -195,7 +223,9 @@ export class QuoteModal {
   }
 
   closeModal() {
-    this.modalOverlay.style.display = 'none';
+    if (this.modalOverlay) {
+      this.modalOverlay.style.display = 'none';
+    }
     document.body.style.overflow = '';
     
     const mainContent = document.getElementById('main-content');
@@ -373,20 +403,48 @@ export class QuoteModal {
   }
 
   addToQuote(product, selectedVariant, variantId) {
-    const items = JSON.parse(localStorage.getItem('quoteItems') || '[]');
+    const items = this.getQuoteItems();
+    const productId = product.id || product.product_id;
+    const productName = product.name || product.product_name || `Product #${productId}`;
+    const quantityToAdd = Math.max(parseInt(product.quantity || product.qty || 1, 10), 1);
+    const variantName = selectedVariant || product.variant || product.variant_name || product.specifications || '';
+    const selectedVariantId = variantId || product.variant_id || product.selected_variant_id || '';
     
-    // Create the quote item with variant information
-    const quoteItem = {
-        id: product.id,
-        name: product.name,
-        quantity: 1,
-        variant: selectedVariant,  // The variant value/name
-        variant_id: variantId,    // Store the variant ID
-        option_id: product.option_id // Store the option ID if available
-    };
-    
-    items.push(quoteItem);
+    const existingItem = items.find(item => {
+      const sameProduct = String(item.id) === String(productId);
+      const itemVariantId = item.variant_id || item.selected_variant_id || '';
+      const itemVariantName = item.variant || item.variant_name || item.specifications || '';
+      return sameProduct &&
+        String(itemVariantId) === String(selectedVariantId) &&
+        String(itemVariantName) === String(variantName);
+    });
+
+    if (existingItem) {
+      existingItem.quantity = (parseInt(existingItem.quantity || existingItem.qty || 1, 10) || 1) + quantityToAdd;
+    } else {
+      items.push({
+        id: productId,
+        name: productName,
+        quantity: quantityToAdd,
+        variant: variantName,
+        variant_id: selectedVariantId,
+        option_id: product.option_id || ''
+      });
+    }
+
     localStorage.setItem('quoteItems', JSON.stringify(items));
     this.refreshQuoteTable();
+    this.showQuoteNotification();
+  }
+
+  showQuoteNotification() {
+    const notification = document.getElementById('quote-notification');
+    if (!notification) return;
+
+    notification.style.display = 'flex';
+    window.clearTimeout(this.notificationTimeout);
+    this.notificationTimeout = window.setTimeout(() => {
+      notification.style.display = 'none';
+    }, 4000);
   }
 }

@@ -8,11 +8,11 @@
 
 /* Slide Up Animation */
 @keyframes slideUp {
-  from { 
+  from {
     transform: translateY(30px);
     opacity: 0;
   }
-  to { 
+  to {
     transform: translateY(0);
     opacity: 1;
   }
@@ -20,11 +20,11 @@
 
 /* Slide In From Left */
 @keyframes slideInLeft {
-  from { 
+  from {
     transform: translateX(-30px);
     opacity: 0;
   }
-  to { 
+  to {
     transform: translateX(0);
     opacity: 1;
   }
@@ -32,11 +32,11 @@
 
 /* Slide In From Right */
 @keyframes slideInRight {
-  from { 
+  from {
     transform: translateX(30px);
     opacity: 0;
   }
-  to { 
+  to {
     transform: translateX(0);
     opacity: 1;
   }
@@ -44,11 +44,11 @@
 
 /* Scale Up Animation */
 @keyframes scaleUp {
-  from { 
+  from {
     transform: scale(0.95);
     opacity: 0;
   }
-  to { 
+  to {
     transform: scale(1);
     opacity: 1;
   }
@@ -129,9 +129,20 @@ body {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Ensure "View Products" text stays readable even with inline styles */
+/* Ensure collection links stay readable on light section backgrounds */
 .view-products {
+  background: #ffffff !important;
+  border-color: #78716c !important;
+  color: #292524 !important;
+  box-shadow: 0 2px 8px rgba(41, 37, 36, 0.08);
+}
+
+.view-products:hover,
+.view-products:focus-visible {
+  background: #292524 !important;
+  border-color: #292524 !important;
   color: #ffffff !important;
+  outline: none;
 }
 
 .view-products:hover, .view-more:hover, .primary-button:hover {
@@ -345,4 +356,4 @@ footer {
 
 .loading-spinner {
   animation: spin 1s linear infinite;
-} 
+}

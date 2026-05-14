@@ -325,7 +325,8 @@ export class QuoteModal {
 
       if (quoteError) throw quoteError;
 
-      await this.sendQuoteNotification(formData, items);
+      const emailResult = await this.sendQuoteNotification(formData, items);
+      console.log('Quote notification email sent:', emailResult);
 
       // Only insert quote items if there are any
       if (items.length > 0) {
@@ -386,19 +387,27 @@ export class QuoteModal {
         formData.attachment_url ? `Attachment: ${formData.attachment_url}` : ''
       ].filter(Boolean).join('\n');
 
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email: COMPANY_EMAIL,
-        to_name: 'Curv Office',
+        to_name: 'Admin',
         from_name: formData.customer_name,
         from_email: formData.customer_email,
         reply_to: formData.customer_email,
+        name: formData.customer_name,
+        email: formData.customer_email,
+        customer_name: formData.customer_name,
+        customer_email: formData.customer_email,
+        subject: 'New quote request from Curv Office website',
         phone: formData.customer_phone || 'Not provided',
+        customer_phone: formData.customer_phone || 'Not provided',
         message: emailMessage,
         quote_items: quoteItemsText,
         attachment_url: formData.attachment_url || ''
       });
+      return result;
     } catch (error) {
-      console.warn('Quote notification email could not be sent:', error);
+      console.error('Quote notification email could not be sent:', error);
+      throw error;
     }
   }
 
@@ -435,6 +444,42 @@ export class QuoteModal {
     localStorage.setItem('quoteItems', JSON.stringify(items));
     this.refreshQuoteTable();
     this.showQuoteNotification();
+  }
+
+  animateAddToQuote(sourceElement) {
+    const quoteTag = this.floatingBtn || document.getElementById('quote-floating-btn');
+    const card = sourceElement?.closest?.('.product-card');
+    if (!quoteTag || !card) return;
+
+    const cardRect = card.getBoundingClientRect();
+    const tagRect = quoteTag.getBoundingClientRect();
+    const flyingCard = card.cloneNode(true);
+
+    flyingCard.classList.add('quote-fly-card');
+    flyingCard.style.left = `${cardRect.left}px`;
+    flyingCard.style.top = `${cardRect.top}px`;
+    flyingCard.style.width = `${cardRect.width}px`;
+    flyingCard.style.height = `${cardRect.height}px`;
+    document.body.appendChild(flyingCard);
+
+    const targetX = tagRect.left + tagRect.width / 2 - (cardRect.left + cardRect.width / 2);
+    const targetY = tagRect.top + tagRect.height / 2 - (cardRect.top + cardRect.height / 2);
+
+    const animation = flyingCard.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 0.95 },
+      { transform: `translate(${targetX * 0.62}px, ${targetY * 0.25}px) scale(0.62)`, opacity: 0.72 },
+      { transform: `translate(${targetX}px, ${targetY}px) scale(0.08)`, opacity: 0 }
+    ], {
+      duration: 620,
+      easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+    });
+
+    animation.onfinish = () => {
+      flyingCard.remove();
+      quoteTag.classList.remove('quote-bounce');
+      void quoteTag.offsetWidth;
+      quoteTag.classList.add('quote-bounce');
+    };
   }
 
   showQuoteNotification() {

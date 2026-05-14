@@ -603,6 +603,28 @@
       margin-top: 1rem;
     }
 
+    .product-quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        color: #292524;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .product-quantity-input {
+        width: 4.5rem;
+        padding: 0.55rem 0.65rem;
+        border: 1px solid #d6d3d1;
+        border-radius: 8px;
+        color: #111111;
+        font: inherit;
+        text-align: center;
+        background: #ffffff;
+    }
+
     /* Update Add to Quote button styling to match design */
     .add-to-quote-btn {
         width: 100%;
@@ -1254,6 +1276,10 @@
               <div class="product-info">
                 <h3>${product.product_name}</h3>
                 <div class="product-action-buttons">
+                  <label class="product-quantity-control">
+                    <span>Qty</span>
+                    <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.product_name}">
+                  </label>
                   <button class="add-to-quote-btn" 
                           data-product-id="${product.product_id}" 
                           data-product-name="${product.product_name}">
@@ -1272,13 +1298,16 @@
                 e.preventDefault();
                 const productId = this.getAttribute('data-product-id');
                 const productName = this.getAttribute('data-product-name');
+                const quantityInput = this.closest('.product-info').querySelector('.product-quantity-input');
+                const quantity = Math.max(parseInt(quantityInput?.value || '1', 10) || 1, 1);
                 
                 // Add to quote
                 if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
+                    window.quoteModal.animateAddToQuote?.(this);
                     window.quoteModal.addToQuote({
                         id: productId,
                         name: productName,
-                        quantity: 1
+                        quantity
                     });
                     
                     // Update button state
@@ -1521,6 +1550,10 @@
           <div class="product-info">
             <h3>${product.product_name}</h3>
             <div class="product-action-buttons">
+              <label class="product-quantity-control">
+                <span>Qty</span>
+                <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.product_name}">
+              </label>
               <button class="add-to-quote-btn" 
                       data-product-id="${product.product_id}" 
                       data-product-name="${product.product_name}">
@@ -1539,13 +1572,16 @@
             e.preventDefault();
             const productId = this.getAttribute('data-product-id');
             const productName = this.getAttribute('data-product-name');
+            const quantityInput = this.closest('.product-info').querySelector('.product-quantity-input');
+            const quantity = Math.max(parseInt(quantityInput?.value || '1', 10) || 1, 1);
             
             // Add to quote
             if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
+                window.quoteModal.animateAddToQuote?.(this);
                 window.quoteModal.addToQuote({
                     id: productId,
                     name: productName,
-                    quantity: 1
+                    quantity
                 });
                 
                 // Update button state

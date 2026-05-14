@@ -215,8 +215,32 @@
     .product-action-buttons {
       margin-top: auto;
       display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       justify-content: center;
       padding: 0 1rem;
+    }
+
+    .product-quantity-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: #292524;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .product-quantity-input {
+      width: 4.5rem;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid #d6d3d1;
+      border-radius: 8px;
+      color: #111111;
+      font: inherit;
+      text-align: center;
+      background: #ffffff;
     }
     
     .primary-button {
@@ -434,6 +458,10 @@
             <h3>${product.name || ''}</h3>
             <p>${product.description ? product.description.substring(0, 60) + (product.description.length > 60 ? '...' : '') : ''}</p>
             <div class="product-action-buttons">
+              <label class="product-quantity-control">
+                <span>Qty</span>
+                <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.name || 'Product'}">
+              </label>
               <button class="primary-button add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name || 'Product'}">
                 Add to Quote
               </button>
@@ -449,10 +477,13 @@
         button.addEventListener('click', function() {
           const productId = this.dataset.productId;
           const productName = this.dataset.productName;
+          const quantityInput = this.closest('.product-info').querySelector('.product-quantity-input');
+          const quantity = Math.max(parseInt(quantityInput?.value || '1', 10) || 1, 1);
           
           // If addToQuote function exists (defined in modal.js), use it
           if (typeof window.addToQuote === 'function') {
-            window.addToQuote(productId, productName);
+            window.quoteModal?.animateAddToQuote?.(this);
+            window.addToQuote({ id: productId, name: productName, quantity });
           } else {
             // Otherwise, open the quote modal directly if it exists
             const modalOverlay = document.getElementById('quote-modal-overlay');
@@ -544,4 +575,4 @@
     });
   </script>
 </body>
-</html> 
+</html>

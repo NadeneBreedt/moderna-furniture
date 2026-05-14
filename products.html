@@ -441,6 +441,29 @@
         width: 18px;
         height: 18px;
     }
+
+    .product-quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        width: 80%;
+        margin: 0 auto 0.75rem;
+        color: #292524;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .product-quantity-input {
+        width: 4.5rem;
+        padding: 0.55rem 0.65rem;
+        border: 1px solid #d6d3d1;
+        border-radius: 8px;
+        color: #111111;
+        font: inherit;
+        text-align: center;
+        background: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -554,6 +577,10 @@
           <div class="product-info">
             <h3>${product.name}</h3>
             <div class="product-action-buttons">
+              <label class="product-quantity-control">
+                <span>Qty</span>
+                <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.name}">
+              </label>
               <button class="add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name}" style="width: 80%; margin: 0 auto;">
                 Add to Quote
               </button>
@@ -567,15 +594,18 @@
         button.addEventListener('click', function() {
           const productId = this.getAttribute('data-product-id');
           const productName = this.getAttribute('data-product-name');
+          const quantityInput = this.closest('.product-info').querySelector('.product-quantity-input');
+          const quantity = Math.max(parseInt(quantityInput?.value || '1', 10) || 1, 1);
           
           // Create a product object
           const productData = {
             id: productId,
             name: productName,
-            quantity: 1
+            quantity
           };
           
           // Call the global addToQuote function
+          window.quoteModal?.animateAddToQuote?.(this);
           window.addToQuote(productData);
         });
       });
@@ -600,7 +630,7 @@
       const existingItem = quoteItems.find(item => item.id === productData.id);
       
       if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity += Math.max(parseInt(productData.quantity || 1, 10) || 1, 1);
       } else {
         quoteItems.push(productData);
       }

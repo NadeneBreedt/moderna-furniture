@@ -10,6 +10,8 @@
   
   <!-- Add animations CSS -->
   <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/modal.css">
+  <script src="js/quote-animation.js" defer></script>
 
   <!-- Base Reset & Simple Font Setup -->
   <style>
@@ -362,7 +364,9 @@
   </div>
 
   <!-- Load Quote Modal -->
-  <div id="quote-modal-container"></div>
+  <div id="quote-modal-container">
+    <button id="quote-floating-btn" class="quote-floating-btn" type="button">Get My Quote</button>
+  </div>
   <script type="module">
     import { QuoteModal } from './js/modal.js';
     fetch('quote-modal.html')
@@ -482,7 +486,6 @@
           
           // If addToQuote function exists (defined in modal.js), use it
           if (typeof window.addToQuote === 'function') {
-            window.quoteModal?.animateAddToQuote?.(this);
             window.addToQuote({ id: productId, name: productName, quantity });
           } else {
             // Otherwise, open the quote modal directly if it exists

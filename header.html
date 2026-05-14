@@ -11,35 +11,37 @@
   .header {
     width: 100%;
     background-color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e7e5e4;
+    box-shadow: 0 6px 18px rgba(41, 37, 36, 0.05);
     position: relative;
     z-index: 100;
     padding: 0;
   }
   
   .header-content {
-    max-width: 100%;
+    max-width: 1440px;
     width: 100%;
-    margin: 0;
-    padding: 15px 0;
+    margin: 0 auto;
+    padding: 14px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
+    box-sizing: border-box;
   }
   
   /* Logo styling */
   .logo {
     position: relative;
     left: 0;
-    padding-left: 20px;
+    padding-left: 0;
     display: flex;
     align-items: center;
     height: 100%;
   }
   
   .logo img {
-    height: 40px;
+    height: 34px;
     display: block;
   }
   
@@ -49,15 +51,13 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    padding-right: 0;
-    margin-right: 0;
-    position: absolute;
-    right: 20px; /* Fixed position at right edge with padding */
+    align-items: center;
     justify-content: flex-end;
+    gap: 8px;
   }
   
   .menu li {
-    margin-left: 30px;
+    margin-left: 0;
   }
   
   .menu li:last-child {
@@ -66,16 +66,38 @@
   }
   
   .menu a {
-    color: #333;
+    color: #292524;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  }
+
+  .menu a:hover {
+    background-color: #f5f5f4;
+    color: #111111;
+    transform: translateY(-1px);
   }
   
   .menu a.admin-link {
-    background-color: #333;
+    background-color: #292524;
     color: white;
-    padding: 8px 15px;
-    border-radius: 4px;
+    min-height: 38px;
+    padding: 0 16px;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(41, 37, 36, 0.14);
+  }
+
+  .menu a.admin-link:hover {
+    background-color: #44403c;
+    color: white;
   }
   
   /* Mobile menu toggle - hide by default */
@@ -88,7 +110,7 @@
     display: none;
     cursor: pointer;
     position: absolute;
-    right: 20px;
+    right: 32px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 102;
@@ -101,7 +123,7 @@
     display: block;
     width: 100%;
     height: 3px;
-    background: #333;
+    background: #292524;
     position: absolute;
     left: 0;
     transition: all 0.3s;
@@ -127,8 +149,9 @@
     right: 0;
     top: 100%;
     background: white;
-    padding: 20px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    padding: 16px 24px 24px;
+    border-top: 1px solid #e7e5e4;
+    box-shadow: 0 12px 24px rgba(41,37,36,0.08);
   }
   
   .mobile-menu ul {
@@ -144,17 +167,17 @@
   
   .mobile-menu a {
     display: block;
-    color: #333;
+    color: #292524;
     text-decoration: none;
     font-weight: 500;
     padding: 10px;
   }
   
   .mobile-menu a.admin-link {
-    background-color: #333;
+    background-color: #292524;
     color: white;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 999px;
     display: inline-block;
   }
   
@@ -165,6 +188,14 @@
   
   /* Media queries for responsive design */
   @media (max-width: 768px) {
+    .header-content {
+      padding: 12px 24px;
+    }
+
+    .logo img {
+      height: 30px;
+    }
+
     .menu {
       display: none;
     }
@@ -252,33 +283,45 @@
   @media (min-width: 768px) {
     .trusted-grid img { height: 36px; }
   }
+
+  .contact-strip {
+    width: 100%;
+    background-color: #f7f5f2;
+    border-bottom: 1px solid #ece8e3;
+    padding: 6px 0;
+  }
+
+  .contact-strip-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .contact-strip a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #57534e;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .contact-strip svg {
+    width: 16px;
+    height: 16px;
+  }
 </style>
 
 <header class="header">
   <!-- Contact info bar centered -->
-  <div style="
-      width: 100%;
-      background-color: #f5f5f4;
-      padding: 8px 0;
-  ">
-      <div style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 0 12px;
-          width: 100%;
-          margin: 0;
-          box-sizing: border-box;
-      ">
-          <a href="mailto:hello@curvoffice.co.za" style="
-              display: flex;
-              align-items: center;
-              gap: 5px;
-              color: #57534e;
-              text-decoration: none;
-              font-size: 1rem;
-              font-weight: 500;
-          ">
+  <div class="contact-strip">
+      <div class="contact-strip-inner">
+          <a href="mailto:hello@curvoffice.co.za">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c1.1-.9 2-2 2-2z"></path>
                   <polyline points="22,6 12,13 2,6"></polyline>
@@ -356,28 +399,5 @@
       }
     }
     
-    // Ensure navigation menu hugs the right edge
-    function adjustNavigationPosition() {
-      var menu = document.querySelector('.menu');
-      if (menu) {
-        menu.style.position = 'absolute';
-        menu.style.right = '20px';
-        menu.style.justifyContent = 'flex-end';
-        
-        // Ensure the last item has no right margin
-        var menuItems = menu.querySelectorAll('li');
-        if (menuItems.length > 0) {
-          var lastItem = menuItems[menuItems.length - 1];
-          lastItem.style.marginRight = '0';
-          lastItem.style.paddingRight = '0';
-        }
-      }
-    }
-    
-    // Run the adjustment function
-    adjustNavigationPosition();
-    
-    // Run it again after a small delay to ensure it works after all content is rendered
-    setTimeout(adjustNavigationPosition, 100);
   });
 </script>

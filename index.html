@@ -27,6 +27,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/modal.css">
+  <script src="js/quote-animation.js" defer></script>
 
   <!-- Add fix-sticky.js script -->
   <script src="styles/fix-sticky.js" defer></script>
@@ -1065,7 +1067,9 @@
   <script src="js/footer-loader.js" defer></script>
   
   <!-- Load Quote Modal -->
-  <div id="quote-modal-container"></div>
+  <div id="quote-modal-container">
+    <button id="quote-floating-btn" class="quote-floating-btn" type="button">Get My Quote</button>
+  </div>
   <script type="module">
     import { QuoteModal } from './js/modal.js';
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
@@ -1303,7 +1307,6 @@
                 
                 // Add to quote
                 if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
-                    window.quoteModal.animateAddToQuote?.(this);
                     window.quoteModal.addToQuote({
                         id: productId,
                         name: productName,
@@ -1577,7 +1580,6 @@
             
             // Add to quote
             if (typeof window.quoteModal !== 'undefined' && window.quoteModal.addToQuote) {
-                window.quoteModal.animateAddToQuote?.(this);
                 window.quoteModal.addToQuote({
                     id: productId,
                     name: productName,

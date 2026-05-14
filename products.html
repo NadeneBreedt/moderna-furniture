@@ -10,6 +10,8 @@
   
   <!-- Add animations CSS -->
   <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/modal.css">
+  <script src="js/quote-animation.js" defer></script>
 
   <!-- Basic CSS for a two-column layout -->
   <style>
@@ -404,16 +406,25 @@
       margin-right: 0.5rem;
     }
 
+    .product-action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        margin-top: 1.25rem;
+    }
+
     /* Add to Quote button styling to match design */
     .add-to-quote-btn {
-        width: 100%;
-        padding: 0.75rem 1.5rem;
+        flex: 1;
+        min-width: 0;
+        padding: 0.85rem 1rem;
         background-color: #4a4a4a;
         color: white;
         border: none;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        font-weight: 500;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
         display: flex;
@@ -422,6 +433,7 @@
         gap: 0.5rem;
         text-transform: none;
         letter-spacing: normal;
+        white-space: nowrap;
     }
 
     .add-to-quote-btn:hover {
@@ -445,24 +457,38 @@
     .product-quantity-control {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        width: 80%;
-        margin: 0 auto 0.75rem;
+        justify-content: center;
+        gap: 0.5rem;
+        flex: 0 0 auto;
+        margin: 0;
         color: #292524;
         font-size: 0.9rem;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .product-quantity-input {
-        width: 4.5rem;
-        padding: 0.55rem 0.65rem;
+        width: 4rem;
+        min-height: 2.75rem;
+        padding: 0.45rem 0.5rem;
         border: 1px solid #d6d3d1;
-        border-radius: 8px;
+        border-radius: 10px;
         color: #111111;
         font: inherit;
+        font-size: 1rem;
+        font-weight: 700;
         text-align: center;
         background: #ffffff;
+    }
+
+    @media (max-width: 520px) {
+        .product-action-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .product-quantity-control {
+            justify-content: space-between;
+        }
     }
   </style>
 </head>
@@ -494,7 +520,9 @@
   </div>
 
   <!-- Load Quote Modal -->
-  <div id="quote-modal-container"></div>
+  <div id="quote-modal-container">
+    <button id="quote-floating-btn" class="quote-floating-btn" type="button">Get My Quote</button>
+  </div>
   <script type="module">
     import { QuoteModal } from './js/modal.js';
     fetch('quote-modal.html')
@@ -581,7 +609,7 @@
                 <span>Qty</span>
                 <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.name}">
               </label>
-              <button class="add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name}" style="width: 80%; margin: 0 auto;">
+              <button class="add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name}">
                 Add to Quote
               </button>
             </div>
@@ -605,7 +633,6 @@
           };
           
           // Call the global addToQuote function
-          window.quoteModal?.animateAddToQuote?.(this);
           window.addToQuote(productData);
         });
       });

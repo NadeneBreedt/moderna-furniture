@@ -8,6 +8,71 @@ const EMAILJS_SERVICE_ID = 'service_baixukr';
 const EMAILJS_TEMPLATE_ID = 'template_rtt96d9';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+function bounceQuoteTag() {
+  const quoteTag = document.getElementById('quote-floating-btn');
+  if (!quoteTag) return;
+
+  quoteTag.classList.remove('quote-bounce');
+  void quoteTag.offsetWidth;
+  quoteTag.classList.add('quote-bounce');
+}
+
+function flyProductToQuote(sourceElement) {
+  const quoteTag = document.getElementById('quote-floating-btn');
+  const card = sourceElement?.closest?.('.product-card');
+  if (!quoteTag || !card) {
+    bounceQuoteTag();
+    return;
+  }
+
+  const cardRect = card.getBoundingClientRect();
+  const tagRect = quoteTag.getBoundingClientRect();
+  const flyingCard = card.cloneNode(true);
+
+  flyingCard.classList.add('quote-fly-card');
+  flyingCard.style.left = `${cardRect.left}px`;
+  flyingCard.style.top = `${cardRect.top}px`;
+  flyingCard.style.width = `${cardRect.width}px`;
+  flyingCard.style.height = `${cardRect.height}px`;
+  document.body.appendChild(flyingCard);
+
+  const targetX = tagRect.left + tagRect.width / 2 - (cardRect.left + cardRect.width / 2);
+  const targetY = tagRect.top + tagRect.height / 2 - (cardRect.top + cardRect.height / 2);
+
+  window.quoteAddAnimationRunning = true;
+  if (!flyingCard.animate) {
+    flyingCard.style.transition = 'transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 900ms ease';
+    requestAnimationFrame(() => {
+      flyingCard.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.08)`;
+      flyingCard.style.opacity = '0';
+    });
+    window.setTimeout(() => {
+      flyingCard.remove();
+      window.quoteAddAnimationRunning = false;
+      bounceQuoteTag();
+    }, 920);
+    return;
+  }
+
+  const animation = flyingCard.animate([
+    { transform: 'translate(0, 0) scale(1)', opacity: 0.98 },
+    { transform: `translate(${targetX * 0.42}px, ${targetY * 0.18}px) scale(0.78)`, opacity: 0.86 },
+    { transform: `translate(${targetX * 0.78}px, ${targetY * 0.62}px) scale(0.35)`, opacity: 0.55 },
+    { transform: `translate(${targetX}px, ${targetY}px) scale(0.08)`, opacity: 0 }
+  ], {
+    duration: 900,
+    easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+  });
+
+  animation.onfinish = () => {
+    flyingCard.remove();
+    window.quoteAddAnimationRunning = false;
+    bounceQuoteTag();
+  };
+}
+
+window.flyProductToQuote = flyProductToQuote;
+
 function loadEmailJs() {
   if (window.emailjs) {
     return Promise.resolve(window.emailjs);
@@ -45,6 +110,7 @@ export class QuoteModal {
       }
       this.refreshQuoteTable();
     };
+    window.animateQuoteAdd = flyProductToQuote;
   }
 
   initElements() {
@@ -444,42 +510,17 @@ export class QuoteModal {
     localStorage.setItem('quoteItems', JSON.stringify(items));
     this.refreshQuoteTable();
     this.showQuoteNotification();
+    if (!window.quoteAddAnimationRunning) {
+      this.bounceQuoteTag();
+    }
   }
 
   animateAddToQuote(sourceElement) {
-    const quoteTag = this.floatingBtn || document.getElementById('quote-floating-btn');
-    const card = sourceElement?.closest?.('.product-card');
-    if (!quoteTag || !card) return;
+    flyProductToQuote(sourceElement);
+  }
 
-    const cardRect = card.getBoundingClientRect();
-    const tagRect = quoteTag.getBoundingClientRect();
-    const flyingCard = card.cloneNode(true);
-
-    flyingCard.classList.add('quote-fly-card');
-    flyingCard.style.left = `${cardRect.left}px`;
-    flyingCard.style.top = `${cardRect.top}px`;
-    flyingCard.style.width = `${cardRect.width}px`;
-    flyingCard.style.height = `${cardRect.height}px`;
-    document.body.appendChild(flyingCard);
-
-    const targetX = tagRect.left + tagRect.width / 2 - (cardRect.left + cardRect.width / 2);
-    const targetY = tagRect.top + tagRect.height / 2 - (cardRect.top + cardRect.height / 2);
-
-    const animation = flyingCard.animate([
-      { transform: 'translate(0, 0) scale(1)', opacity: 0.95 },
-      { transform: `translate(${targetX * 0.62}px, ${targetY * 0.25}px) scale(0.62)`, opacity: 0.72 },
-      { transform: `translate(${targetX}px, ${targetY}px) scale(0.08)`, opacity: 0 }
-    ], {
-      duration: 620,
-      easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
-    });
-
-    animation.onfinish = () => {
-      flyingCard.remove();
-      quoteTag.classList.remove('quote-bounce');
-      void quoteTag.offsetWidth;
-      quoteTag.classList.add('quote-bounce');
-    };
+  bounceQuoteTag() {
+    bounceQuoteTag();
   }
 
   showQuoteNotification() {

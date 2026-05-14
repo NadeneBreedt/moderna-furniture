@@ -1,9 +1,14 @@
-const CACHE_NAME = 'curv-static-v8';
+// IMPORTANT: bump this version any time js/modal.js, js/quote-animation.js,
+// or any precached asset below changes. The fetch handler is cache-first for
+// static assets, so without a version bump, users keep running the old code
+// indefinitely.
+const CACHE_NAME = 'curv-static-v9';
 const ASSETS = [
   '/styles/animations.css',
   '/styles/modal.css',
   '/js/header-loader.js',
   '/js/modal.js',
+  '/js/quote-animation.js',
 ];
 
 self.addEventListener('install', (event) => {

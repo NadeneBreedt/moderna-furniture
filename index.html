@@ -561,15 +561,17 @@
       color: var(--primary-color);
     }
 
-    .view-products {
+    .view-products,
+    .view-products:link,
+    .view-products:visited {
       background-color: #ffffff;
-      color: #111111;
+      color: #111111 !important;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 700;
       padding: 0.5rem 1rem;
       border-radius: 50px;
-      border: 1.5px solid #111111;
+      border: 1.5px solid #111111 !important;
       box-shadow: 0 2px 8px rgba(17, 17, 17, 0.08);
       transition: all var(--transition-fast);
       display: inline-flex;
@@ -577,11 +579,13 @@
       gap: 0.5rem;
     }
 
-    .view-products:hover {
+    .view-products:hover,
+    .view-products:focus-visible {
       background-color: #111111;
       border-color: #111111;
-      color: white;
+      color: #ffffff !important;
       transform: translateY(-1px);
+      outline: none;
     }
 
     .view-products:after {

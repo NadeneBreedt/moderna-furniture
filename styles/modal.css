@@ -26,31 +26,60 @@
 }
 
 .quote-floating-btn.quote-bounce {
-  animation: quoteTagBounce 0.55s ease;
+  animation: quoteTagBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.quote-fly-card {
+/* The flying "puck" cloned from the product image */
+.quote-fly-puck {
   position: fixed;
   z-index: 10001;
   pointer-events: none;
-  border-radius: 10px;
+  border-radius: 50%;
   overflow: hidden;
   background: #fff;
-  box-shadow: 0 18px 35px rgba(41, 37, 36, 0.22);
+  box-shadow:
+    0 12px 28px rgba(41, 37, 36, 0.28),
+    0 2px 6px rgba(41, 37, 36, 0.18);
   transform-origin: center;
   will-change: transform, opacity;
+  border: 2px solid #fff;
+}
+
+.quote-fly-puck img {
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 
 @keyframes quoteTagBounce {
-  0%, 100% {
+  0% {
     transform: translateY(-50%) scale(1);
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
   }
-  35% {
-    transform: translateY(-50%) scale(1.08);
+  30% {
+    transform: translateY(-50%) scale(1.14);
+    box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.35);
   }
-  65% {
-    transform: translateY(-50%) scale(0.96);
+  60% {
+    transform: translateY(-50%) scale(0.94);
+    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.2);
   }
+  100% {
+    transform: translateY(-50%) scale(1);
+    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Source button confirmation pulse — works regardless of which page renders
+   the .add-to-quote-btn, since the puck is optional. */
+.add-to-quote-btn.quote-btn-pulse {
+  animation: quoteBtnPulse 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes quoteBtnPulse {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-2px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
 }
 
 /* Modal Overlay */

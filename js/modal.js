@@ -8,70 +8,27 @@ const EMAILJS_SERVICE_ID = 'service_baixukr';
 const EMAILJS_TEMPLATE_ID = 'template_rtt96d9';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// The flying-puck animation and tag-bounce live in js/quote-animation.js,
+// loaded with `defer` on every page that needs them. We just delegate.
 function bounceQuoteTag() {
+  if (typeof window.bounceQuoteTag === 'function' && window.bounceQuoteTag !== bounceQuoteTag) {
+    window.bounceQuoteTag();
+    return;
+  }
   const quoteTag = document.getElementById('quote-floating-btn');
   if (!quoteTag) return;
-
   quoteTag.classList.remove('quote-bounce');
   void quoteTag.offsetWidth;
   quoteTag.classList.add('quote-bounce');
 }
 
 function flyProductToQuote(sourceElement) {
-  const quoteTag = document.getElementById('quote-floating-btn');
-  const card = sourceElement?.closest?.('.product-card');
-  if (!quoteTag || !card) {
-    bounceQuoteTag();
+  if (typeof window.flyProductToQuote === 'function' && window.flyProductToQuote !== flyProductToQuote) {
+    window.flyProductToQuote(sourceElement);
     return;
   }
-
-  const cardRect = card.getBoundingClientRect();
-  const tagRect = quoteTag.getBoundingClientRect();
-  const flyingCard = card.cloneNode(true);
-
-  flyingCard.classList.add('quote-fly-card');
-  flyingCard.style.left = `${cardRect.left}px`;
-  flyingCard.style.top = `${cardRect.top}px`;
-  flyingCard.style.width = `${cardRect.width}px`;
-  flyingCard.style.height = `${cardRect.height}px`;
-  document.body.appendChild(flyingCard);
-
-  const targetX = tagRect.left + tagRect.width / 2 - (cardRect.left + cardRect.width / 2);
-  const targetY = tagRect.top + tagRect.height / 2 - (cardRect.top + cardRect.height / 2);
-
-  window.quoteAddAnimationRunning = true;
-  if (!flyingCard.animate) {
-    flyingCard.style.transition = 'transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 900ms ease';
-    requestAnimationFrame(() => {
-      flyingCard.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.08)`;
-      flyingCard.style.opacity = '0';
-    });
-    window.setTimeout(() => {
-      flyingCard.remove();
-      window.quoteAddAnimationRunning = false;
-      bounceQuoteTag();
-    }, 920);
-    return;
-  }
-
-  const animation = flyingCard.animate([
-    { transform: 'translate(0, 0) scale(1)', opacity: 0.98 },
-    { transform: `translate(${targetX * 0.42}px, ${targetY * 0.18}px) scale(0.78)`, opacity: 0.86 },
-    { transform: `translate(${targetX * 0.78}px, ${targetY * 0.62}px) scale(0.35)`, opacity: 0.55 },
-    { transform: `translate(${targetX}px, ${targetY}px) scale(0.08)`, opacity: 0 }
-  ], {
-    duration: 900,
-    easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
-  });
-
-  animation.onfinish = () => {
-    flyingCard.remove();
-    window.quoteAddAnimationRunning = false;
-    bounceQuoteTag();
-  };
+  bounceQuoteTag();
 }
-
-window.flyProductToQuote = flyProductToQuote;
 
 function loadEmailJs() {
   if (window.emailjs) {
@@ -338,143 +295,166 @@ export class QuoteModal {
   async handleSubmit(e) {
     e.preventDefault();
     const items = this.getQuoteItems();
-    // Remove the validation check that was blocking submission
-    // if (!items.length) {
-    //   alert('Please add items to your quote first.');
-    //   return;
-    // }
-
     console.log('Quote items before submission:', items);
 
+    const submitBtn = this.quoteForm?.querySelector('button[type="submit"]');
+    const originalSubmitText = submitBtn?.textContent;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+    }
+
+    // Build the form payload once so both email and DB see identical data.
+    const formData = {
+      customer_name: document.getElementById('quote-name')?.value?.trim() || '',
+      customer_email: document.getElementById('quote-email')?.value?.trim() || '',
+      customer_phone: document.getElementById('quote-phone')?.value?.trim() || '',
+      customer_comments: document.getElementById('quote-comments')?.value?.trim() || '',
+      status: 'new',
+      created_at: new Date().toISOString()
+    };
+
+    // Attachment upload is best-effort: we don't want a Supabase storage glitch
+    // to swallow the customer's quote request before we email it.
     try {
-      // Get form data
-      const formData = {
-        customer_name: document.getElementById('quote-name').value,
-        customer_email: document.getElementById('quote-email').value,
-        customer_phone: document.getElementById('quote-phone').value,
-        status: 'new',
-        created_at: new Date().toISOString()
-      };
-
-      // Add comments if present
-      const comments = document.getElementById('quote-comments');
-      if (comments && comments.value) {
-        formData.customer_comments = comments.value;
-      }
-
-      // Handle file upload if present
       const fileInput = document.getElementById('quote-attachment');
-      if (fileInput.files.length > 0) {
+      if (fileInput && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const fileName = `${Date.now()}-${file.name}`;
-        
-        const { data: fileData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('quote-attachments')
           .upload(fileName, file);
-
-        if (uploadError) throw uploadError;
-
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-          .from('quote-attachments')
-          .getPublicUrl(fileName);
-
-        formData.attachment_url = publicUrl;
+        if (uploadError) {
+          console.warn('Attachment upload failed; continuing without it:', uploadError);
+        } else {
+          const { data: { publicUrl } } = supabase.storage
+            .from('quote-attachments')
+            .getPublicUrl(fileName);
+          formData.attachment_url = publicUrl;
+        }
       }
+    } catch (attachmentError) {
+      console.warn('Attachment step threw; continuing without attachment:', attachmentError);
+    }
 
-      // Insert quote request
+    // 1) EMAIL FIRST. This is the customer-critical action: even if Supabase
+    // is misconfigured, the lead reaches hello@curvoffice.co.za.
+    let emailError = null;
+    try {
+      const result = await this.sendQuoteNotification(formData, items);
+      console.log('Quote notification email sent:', result);
+    } catch (err) {
+      emailError = err;
+      console.error('Quote notification email failed:', err);
+    }
+
+    // 2) Then try the database. Failures here are logged but never block the
+    // customer's confirmation, because the email already captured the lead.
+    let dbError = null;
+    try {
       const { data: quoteData, error: quoteError } = await supabase
         .from('quote_requests')
         .insert([formData])
         .select()
         .single();
-
       if (quoteError) throw quoteError;
 
-      const emailResult = await this.sendQuoteNotification(formData, items);
-      console.log('Quote notification email sent:', emailResult);
-
-      // Only insert quote items if there are any
-      if (items.length > 0) {
-        // Insert quote items with variant_id
+      if (items.length > 0 && quoteData?.id) {
         const quoteItems = items.map(item => {
-          // Create the basic quote item
-          const quoteItem = {
+          const row = {
             quote_request_id: quoteData.id,
             product_id: item.id,
             product_name: item.name,
             quantity: item.quantity || item.qty || 1,
             specifications: item.specifications || item.variant || ''
           };
-          
-          // Add the selected_variant_id if it exists
-          if (item.variant_id) {
-            quoteItem.selected_variant_id = item.variant_id;
-          }
-          
-          return quoteItem;
+          if (item.variant_id) row.selected_variant_id = item.variant_id;
+          return row;
         });
-
-        console.log('Quote items to be inserted:', quoteItems);
-
-        const { error: itemsError } = await supabase
-          .from('quote_items')
-          .insert(quoteItems);
-
+        const { error: itemsError } = await supabase.from('quote_items').insert(quoteItems);
         if (itemsError) throw itemsError;
       }
+    } catch (err) {
+      dbError = err;
+      console.error('Quote DB persistence failed:', err);
+    }
 
-      // Success! Clear form and close modal
-      alert('Quote submitted successfully!');
+    // Restore submit button before any alert so the modal isn't left in a
+    // stuck "Sending…" state.
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      if (originalSubmitText) submitBtn.textContent = originalSubmitText;
+    }
+
+    if (!emailError) {
+      // Customer hears one clear success message regardless of DB.
+      alert('Thanks! Your quote request has been sent to Curv Office. We will be in touch shortly.');
       localStorage.removeItem('quoteItems');
       this.closeModal();
       this.quoteForm.reset();
       this.refreshQuoteTable();
-
-    } catch (error) {
-      console.error('Error submitting quote:', error);
-      alert('Error submitting quote. Please try again.');
+      return;
     }
+
+    // Email failed — surface a clear, actionable message rather than a
+    // generic "please try again" that hides the real problem.
+    const emailDetail = (emailError && (emailError.text || emailError.message)) || 'Unknown error';
+    alert(
+      'We could not send your quote request right now.\n\n' +
+      'Please email us directly at hello@curvoffice.co.za or try again in a moment.\n\n' +
+      'Details: ' + emailDetail
+    );
+    if (dbError) console.error('Both email and DB persistence failed.', { emailError, dbError });
   }
 
   async sendQuoteNotification(formData, items) {
-    try {
-      const emailjs = await loadEmailJs();
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-      const quoteItemsText = items.length
-        ? items.map(item => `${item.quantity || 1} x ${item.name}${item.variant ? ` (${item.variant})` : ''}`).join('\n')
-        : 'No products selected';
-      const emailMessage = [
-        formData.customer_comments || 'Quote request submitted from the website.',
-        '',
-        `Phone: ${formData.customer_phone || 'Not provided'}`,
-        'Quote items:',
-        quoteItemsText,
-        formData.attachment_url ? `Attachment: ${formData.attachment_url}` : ''
-      ].filter(Boolean).join('\n');
+    const emailjs = await loadEmailJs();
+    emailjs.init(EMAILJS_PUBLIC_KEY);
 
-      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email: COMPANY_EMAIL,
-        to_name: 'Admin',
-        from_name: formData.customer_name,
-        from_email: formData.customer_email,
-        reply_to: formData.customer_email,
-        name: formData.customer_name,
-        email: formData.customer_email,
-        customer_name: formData.customer_name,
-        customer_email: formData.customer_email,
-        subject: 'New quote request from Curv Office website',
-        phone: formData.customer_phone || 'Not provided',
-        customer_phone: formData.customer_phone || 'Not provided',
-        message: emailMessage,
-        quote_items: quoteItemsText,
-        attachment_url: formData.attachment_url || ''
-      });
-      return result;
-    } catch (error) {
-      console.error('Quote notification email could not be sent:', error);
-      throw error;
-    }
+    const quoteItemsText = items.length
+      ? items.map(item => {
+          const qty = item.quantity || item.qty || 1;
+          const variant = item.variant ? ` (${item.variant})` : '';
+          return `${qty} x ${item.name}${variant}`;
+        }).join('\n')
+      : 'No products selected';
+
+    const emailMessage = [
+      formData.customer_comments || 'Quote request submitted from the website.',
+      '',
+      `Name: ${formData.customer_name || 'Not provided'}`,
+      `Email: ${formData.customer_email || 'Not provided'}`,
+      `Phone: ${formData.customer_phone || 'Not provided'}`,
+      '',
+      'Quote items:',
+      quoteItemsText,
+      formData.attachment_url ? `\nAttachment: ${formData.attachment_url}` : ''
+    ].filter(Boolean).join('\n');
+
+    // Payload uses every common EmailJS template variable name so the existing
+    // template will pick up the fields it references — `to_email`, `reply_to`,
+    // `from_name`, `message`, `quote_items` are the ones that matter for the
+    // current `template_rtt96d9` template.
+    const payload = {
+      to_email: COMPANY_EMAIL,
+      to_name: 'Curv Office',
+      from_name: formData.customer_name || 'Website visitor',
+      from_email: formData.customer_email || COMPANY_EMAIL,
+      reply_to: formData.customer_email || COMPANY_EMAIL,
+      name: formData.customer_name || 'Website visitor',
+      email: formData.customer_email || '',
+      customer_name: formData.customer_name || '',
+      customer_email: formData.customer_email || '',
+      subject: 'New quote request from Curv Office website',
+      phone: formData.customer_phone || 'Not provided',
+      customer_phone: formData.customer_phone || 'Not provided',
+      message: emailMessage,
+      quote_items: quoteItemsText,
+      attachment_url: formData.attachment_url || ''
+    };
+
+    console.log('Sending quote email with payload:', payload);
+    return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, payload);
   }
 
   addToQuote(product, selectedVariant, variantId) {

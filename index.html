@@ -30,9 +30,6 @@
   <link rel="stylesheet" href="styles/modal.css">
   <script src="js/quote-animation.js" defer></script>
 
-  <!-- Add fix-sticky.js script -->
-  <script src="styles/fix-sticky.js" defer></script>
-  
   <!-- Add animations CSS -->
   <link rel="stylesheet" href="styles/animations.css">
   
@@ -627,43 +624,7 @@
         background: #ffffff;
     }
 
-    /* Update Add to Quote button styling to match design */
-    .add-to-quote-btn {
-        width: 100%;
-        padding: 0.75rem 1.5rem;
-        background-color: #4a4a4a;  /* Charcoal gray color */
-        color: white;
-        border: none;
-        border-radius: 50px;  /* Fully rounded corners */
-        font-size: 1rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all var(--transition-fast);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        text-transform: none;  /* Remove text transform */
-        letter-spacing: normal;  /* Reset letter spacing */
-    }
-
-    .add-to-quote-btn:hover {
-        background-color: #5c5c5c;  /* Slightly lighter on hover */
-        transform: translateY(-2px);
-    }
-
-    .add-to-quote-btn:active {
-        transform: translateY(0);
-    }
-
-    .add-to-quote-btn.added {
-        background-color: #4a4a4a;  /* Keep consistent with the design */
-    }
-
-    .add-to-quote-btn svg {
-        width: 18px;
-        height: 18px;
-    }
+    /* .add-to-quote-btn is now defined in styles/modal.css */
 
     /* Toast notification styling */
     .toast-notification {
@@ -699,7 +660,7 @@
       </div>
       <div class="hero-content">
         <h1 class="hero-title">Furniture your team can work around.</h1>
-        <p class="hero-subtitle">Browse Curv's office furniture catalogue, add products to a quote, and get help with space planning, rendering, boardrooms, workstations, seating, and storage for your next workspace project.</p>
+        <p class="hero-subtitle">Browse our office furniture catalogue and build a quote in minutes. We handle space planning, rendering, boardrooms, workstations, seating, and storage for your next workspace.</p>
         <form class="hero-search" action="search-results.html" method="get" aria-label="Search Curv products">
           <input type="search" name="q" placeholder="Search desks, chairs, boardroom tables..." autocomplete="off">
           <button type="submit">Search</button>

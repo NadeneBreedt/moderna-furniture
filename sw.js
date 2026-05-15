@@ -2,7 +2,7 @@
 // or any precached asset below changes. The fetch handler is cache-first for
 // static assets, so without a version bump, users keep running the old code
 // indefinitely.
-const CACHE_NAME = 'curv-static-v9';
+const CACHE_NAME = 'curv-static-v10';
 const ASSETS = [
   '/styles/animations.css',
   '/styles/modal.css',

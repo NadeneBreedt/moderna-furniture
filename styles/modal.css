@@ -1,28 +1,38 @@
-/* Floating Quote Button */
+/* Floating Quote Button — vertical tab anchored to the right edge.
+ * Slim profile, subtle shadow, accent on hover. Stays understated so
+ * product imagery leads. */
 .quote-floating-btn {
   position: fixed;
-  top: 30%;
+  top: 32%;
   right: 0;
   transform: translateY(-50%);
-  background: #292524;
-  color: #fff;
-  padding: 0.55rem 0.28rem;
+  background: #292524; /* stone-800 */
+  color: #ffffff;
+  padding: 0.85rem 0.6rem;
   border: none;
-  border-radius: 4px 0 0 4px;
+  border-radius: 8px 0 0 8px;
   cursor: pointer;
   z-index: 9999;
-  box-shadow: -2px 2px 5px rgba(0,0,0,0.2);
+  box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.18);
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size: 0.9rem;
+  font-family: inherit;
+  font-size: 0.85rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
   width: auto;
-  transition: background-color 0.2s ease, padding 0.2s ease;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, padding-right 0.2s ease;
 }
 
 .quote-floating-btn:hover {
-  background-color: #44403c;
-  padding-right: 0.48rem;
+  background-color: #44403c; /* stone-700 */
+  box-shadow: -6px 6px 18px rgba(41, 37, 36, 0.26);
+  padding-right: 0.85rem;
+}
+
+.quote-floating-btn:focus-visible {
+  outline: 2px solid #292524;
+  outline-offset: 2px;
 }
 
 .quote-floating-btn.quote-bounce {
@@ -54,19 +64,19 @@
 @keyframes quoteTagBounce {
   0% {
     transform: translateY(-50%) scale(1);
-    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.18);
   }
   30% {
-    transform: translateY(-50%) scale(1.14);
-    box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.35);
+    transform: translateY(-50%) scale(1.12);
+    box-shadow: -8px 8px 22px rgba(41, 37, 36, 0.32);
   }
   60% {
-    transform: translateY(-50%) scale(0.94);
-    box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(0.95);
+    box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.18);
   }
   100% {
     transform: translateY(-50%) scale(1);
-    box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: -4px 4px 14px rgba(41, 37, 36, 0.18);
   }
 }
 
@@ -248,4 +258,64 @@
 
 .quantity-btn:hover {
   background: #e7e5e4;
+}
+
+/* =========================================================================
+ * Canonical "Add to Quote" button.
+ *
+ * Lives in modal.css because every page that needs the quote tab already
+ * loads modal.css. Previously each page (index.html, products.html,
+ * search-results.html) declared its own copy with slightly different
+ * padding/radius/weight; this is the single source of truth.
+ * ========================================================================= */
+.add-to-quote-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  background-color: #292524; /* stone-800 — matches header text + nav admin */
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(41, 37, 36, 0.08);
+}
+
+.add-to-quote-btn:hover {
+  background-color: #44403c; /* stone-700 */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(41, 37, 36, 0.14);
+}
+
+.add-to-quote-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(41, 37, 36, 0.08);
+}
+
+.add-to-quote-btn:focus-visible {
+  outline: 2px solid #292524;
+  outline-offset: 2px;
+}
+
+.add-to-quote-btn.added {
+  background-color: #44403c;
+}
+
+.add-to-quote-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* On grid product cards the button stretches across the bottom row alongside
+ * the quantity input. */
+.product-action-buttons .add-to-quote-btn {
+  flex: 1;
+  min-width: 0;
 }

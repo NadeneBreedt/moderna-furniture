@@ -187,8 +187,8 @@
       height: 100%;
     }
     .product-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(41, 37, 36, 0.08);
     }
     .product-image {
       position: relative;
@@ -414,45 +414,7 @@
         margin-top: 1.25rem;
     }
 
-    /* Add to Quote button styling to match design */
-    .add-to-quote-btn {
-        flex: 1;
-        min-width: 0;
-        padding: 0.85rem 1rem;
-        background-color: #4a4a4a;
-        color: white;
-        border: none;
-        border-radius: 999px;
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        text-transform: none;
-        letter-spacing: normal;
-        white-space: nowrap;
-    }
-
-    .add-to-quote-btn:hover {
-        background-color: #5c5c5c;
-        transform: translateY(-2px);
-    }
-
-    .add-to-quote-btn:active {
-        transform: translateY(0);
-    }
-
-    .add-to-quote-btn.added {
-        background-color: #4a4a4a;
-    }
-
-    .add-to-quote-btn svg {
-        width: 18px;
-        height: 18px;
-    }
+    /* .add-to-quote-btn is now defined in styles/modal.css */
 
     .product-quantity-control {
         display: flex;

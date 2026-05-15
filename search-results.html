@@ -141,8 +141,8 @@
     }
     
     .product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(41, 37, 36, 0.08);
     }
     
     .product-image {
@@ -466,7 +466,7 @@
                 <span>Qty</span>
                 <input class="product-quantity-input" type="number" min="1" value="1" inputmode="numeric" aria-label="Quantity for ${product.name || 'Product'}">
               </label>
-              <button class="primary-button add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name || 'Product'}">
+              <button class="add-to-quote-btn" data-product-id="${product.id}" data-product-name="${product.name || 'Product'}">
                 Add to Quote
               </button>
             </div>

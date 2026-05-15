@@ -489,7 +489,10 @@
       position: relative;
       padding-top: 100%;
       overflow: hidden;
-      background-color: #f8f8f8;
+      /* Pure white matches the JPG product backgrounds with baked-in white
+       * and the PNG product transparencies that show through. Off-white here
+       * creates a visible square inside JPG images. */
+      background-color: #ffffff;
     }
 
     .product-image img {

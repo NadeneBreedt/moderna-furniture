@@ -172,8 +172,8 @@
 
     .category-image {
       position: relative;
-      height: 75%;
-      background: white;
+      height: 74%;
+      background: #ffffff;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -184,14 +184,15 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      padding: 1rem;
+      padding: 1.25rem;
+      filter: saturate(0.92) contrast(1.02);
     }
 
     .category-info {
       padding: 1.5rem;
       text-align: center;
       background: white;
-      height: 25%;
+      height: 26%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -376,6 +377,17 @@
       const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       const grid = document.getElementById('categories-grid');
+      const categoryCoverOverrides = {
+        15: 'images/category-cover-edits/boardroom-coimbra-photo.png',
+        407: 'images/category-cover-edits/coffee-tables-coimbra-photo.png',
+        408: 'images/category-cover-edits/wall-units-coimbra-photo.png',
+        411: 'images/category-cover-edits/steel-furniture-charcoal-photo.png',
+        413: 'images/category-cover-edits/training-coimbra-photo.png',
+        415: 'images/category-cover-edits/school-furniture-coimbra-photo.png',
+        417: 'images/category-cover-edits/server-coimbra-photo.png',
+        419: 'images/category-cover-edits/canteen-charcoal-photo.png',
+        420: 'images/category-cover-edits/benches-charcoal-photo.png'
+      };
 
       function renderCategories(categories) {
         if (!categories || categories.length === 0) {
@@ -393,7 +405,7 @@
         grid.innerHTML = categories.map(category => `
           <a href="products.html?category=${category.id}" class="category-card">
             <div class="category-image">
-              <img src="${category.image_url || 'images/placeholder.jpg'}" alt="${category.name || 'Category'}">
+              <img src="${categoryCoverOverrides[category.id] || category.image_url || 'images/placeholder.jpg'}" alt="${category.name || 'Category'}">
             </div>
             <div class="category-info" style="padding: 0.75rem 1rem;">
               <h3 style="margin: 0; font-size: 1rem; font-weight: 600; color: #292524;">${category.name || 'Untitled'}</h3>

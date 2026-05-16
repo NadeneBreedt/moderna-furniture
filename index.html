@@ -1358,16 +1358,21 @@
       try {
         console.log('Initializing app...');
         
-        // Load modal
-        const modalResponse = await fetch('quote-modal.html');
-        const modalData = await modalResponse.text();
-        document.getElementById('quote-modal-container').innerHTML = modalData;
-        
-        // Initialize modal
-        window.quoteModal = new QuoteModal();
-        
         // Load categories and products
         await loadCategoriesAndProducts();
+
+        try {
+          const modalResponse = await fetch('quote-modal.html');
+          if (!modalResponse.ok) {
+            throw new Error(`Quote modal request failed with ${modalResponse.status}`);
+          }
+
+          const modalData = await modalResponse.text();
+          document.getElementById('quote-modal-container').innerHTML = modalData;
+          window.quoteModal = new QuoteModal();
+        } catch (modalError) {
+          console.warn('Quote modal could not be loaded; categories remain available.', modalError);
+        }
         
         // Setup quote button
           const heroQuoteBtn = document.getElementById('hero-quote-btn');

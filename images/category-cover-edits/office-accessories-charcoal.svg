@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title">
+  <title id="title">Dark charcoal perforated office accessory bin</title>
+  <defs>
+    <linearGradient id="charcoal" x1="0" x2="1">
+      <stop offset="0" stop-color="#1b1a19"/>
+      <stop offset="0.34" stop-color="#3c3a37"/>
+      <stop offset="0.62" stop-color="#242321"/>
+      <stop offset="1" stop-color="#11100f"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" x2="1">
+      <stop offset="0" stop-color="#141312"/>
+      <stop offset="0.45" stop-color="#4a4743"/>
+      <stop offset="1" stop-color="#181716"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="22" stdDeviation="28" flood-color="#000" flood-opacity="0.16"/>
+    </filter>
+    <pattern id="punches" width="22" height="22" patternUnits="userSpaceOnUse">
+      <rect width="22" height="22" fill="none"/>
+      <rect x="5" y="5" width="9" height="9" rx="1.5" fill="#070706" opacity="0.8"/>
+    </pattern>
+    <clipPath id="bodyClip">
+      <path d="M218 257c0-54 464-54 464 0v410c0 58-464 58-464 0z"/>
+    </clipPath>
+  </defs>
+  <rect width="900" height="900" fill="#fff"/>
+  <ellipse cx="450" cy="754" rx="250" ry="42" fill="#111" opacity="0.08"/>
+  <g filter="url(#shadow)">
+    <path d="M218 257c0-54 464-54 464 0v410c0 58-464 58-464 0z" fill="url(#charcoal)"/>
+    <g clip-path="url(#bodyClip)">
+      <rect x="207" y="304" width="486" height="232" fill="url(#punches)" opacity="0.95"/>
+      <rect x="218" y="300" width="464" height="238" fill="url(#charcoal)" opacity="0.2"/>
+      <path d="M260 250v450" stroke="#fff" stroke-opacity="0.08" stroke-width="18"/>
+      <path d="M542 246v455" stroke="#fff" stroke-opacity="0.08" stroke-width="24"/>
+    </g>
+    <ellipse cx="450" cy="257" rx="232" ry="54" fill="url(#rim)"/>
+    <ellipse cx="450" cy="257" rx="190" ry="38" fill="#151413"/>
+    <ellipse cx="450" cy="250" rx="170" ry="27" fill="#242321"/>
+    <path d="M230 257c28 39 413 39 440 0" fill="none" stroke="#706b63" stroke-opacity="0.32" stroke-width="7"/>
+    <ellipse cx="450" cy="666" rx="232" ry="45" fill="#1d1c1a" opacity="0.22"/>
+  </g>
+</svg>
